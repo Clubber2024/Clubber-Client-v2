@@ -1,31 +1,47 @@
 'use client';
 
-import { UserRound } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import SearchBar from '../features/search/SearchBar';
 
 export default function Header() {
-  const accessToken = 1;
-
   return (
-    <>
-      {/* 헤더 상단 부분 */}
-      <div>
-        <Link href="/">
-          <Image src="/images/clubber_logo.png" alt="clubber-logo" width={20} height={20}></Image>
+    <header className="w-full bg-white">
+      {/* 로그인/공지사항 */}
+      <div className="mt-10 mb-5 mr-5 flex items-center gap-2 justify-end text-sm text-gray-500">
+        <Link href="#" className="hover:underline">
+          로그인
         </Link>
-        <SearchBar />
-        <div>
-          <UserRound />
-          <p>{accessToken ? 'MY' : '로그인'}</p>
-        </div>
+        <span className="mb-1">|</span>
+        <Link href="#" className="hover:underline">
+          공지사항
+        </Link>
       </div>
-
-      {/* 해시태그바 */}
-
-      {/* 헤더 네비게이션 */}
-      <div></div>
-    </>
+      <div className="flex items-center justify-between h-20 px-6">
+        <div className="flex flex-row items-center gap-10">
+          {/* 좌측: 로고 */}
+          <div className="flex items-center min-w-[120px]">
+            <Link href="/">
+              <Image
+                src="/images/clubber-logo.png"
+                alt="clubber-logo"
+                width={160}
+                height={70}
+                priority
+              />
+            </Link>
+          </div>
+          {/* 중앙: 네비게이션 */}
+          <nav className="flex-1 flex justify-center gap-8 text-[17px] font-semibold">
+            <Link href="#">한눈에 보기</Link>
+            <Link href="#">중앙 동아리</Link>
+            <Link href="#">자치 기구</Link>
+            <Link href="#">단과대</Link>
+          </nav>
+        </div>
+        {/* 우측: 검색 */}
+        <Search size={25} strokeWidth={2} color="var(--primary)" />
+      </div>
+    </header>
   );
 }
