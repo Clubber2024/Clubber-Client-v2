@@ -17,7 +17,7 @@ export default function SearchBar() {
     router.push(`/search?clubName=${searchTerm}`); // searchTerm 전달은 전역상태변수로
   };
 
-  const enterKeyDown = (event) => {
+  const enterKeyDown = (event: any) => {
     if (event.key === 'Enter' && event.target.value.trim() === '') {
       event.preventDefault();
     } else if (event.key === 'Enter' && event.target.value.trim() !== '') {
