@@ -1,0 +1,52 @@
+name: CI-CD
+
+on:
+  push:
+    branches: ['dev']
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.16.0]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js project
+        run: npm run build
+
+      - name: Set environment variables for dev
+        run: echo "${{ secrets.DEV_ENV }}" > .env
+
+      - name: Docker login
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image for dev
+        run: docker build -t ${{ secrets.DOCKER_REPO }}/clubber-front-dev .
+
+      - name: Push Docker image for dev
+        run: docker push ${{ secrets.DOCKER_REPO }}/clubber-front-dev
+
+      - name: Deploy to dev server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY_DEV }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            sudo docker rm -f $(docker ps -qa) || true
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-dev
+            sudo docker-compose -f docker-compose-dev.yml up -d
+            docker image prune -f
