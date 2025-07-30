@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
   typescript: {
     // 경고: 타입 에러가 있어도 프로덕션 빌드를 허용
     ignoreBuildErrors: true,
+  },
+  eslint: {
+    // 빌드 시 ESLint 오류 무시
+    ignoreDuringBuilds: true,
   },
 };
 

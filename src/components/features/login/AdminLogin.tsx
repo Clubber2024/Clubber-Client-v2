@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-
 import { useEffect, useState } from 'react';
 
 export default function AdminLogin() {
@@ -19,13 +18,13 @@ export default function AdminLogin() {
     }
   }, []);
 
-  const handleLogin = () => {
-    if (idRemember) {
-      localStorage.setItem('adminId', adminId); // 아이디 저장
-    } else {
-      localStorage.removeItem('adminId'); // 체크 안 하면 저장 삭제
-    }
-  };
+  // const handleLogin = () => {
+  //   if (idRemember) {
+  //     localStorage.setItem('adminId', adminId); // 아이디 저장
+  //   } else {
+  //     localStorage.removeItem('adminId'); // 체크 안 하면 저장 삭제
+  //   }
+  // };
 
   return (
     <div className="w-[300px] mt-[30px]">

@@ -1,7 +1,6 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { customAxios } from '@/lib/customAxios';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 interface Division {
