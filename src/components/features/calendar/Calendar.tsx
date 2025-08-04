@@ -6,10 +6,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Star } from 'lucide-react';
-import { CalendarResponse, NonAlwaysCalendar } from '@/types/calendar/calendarData';
+import { CalendarData, NonAlwaysCalendar } from '@/types/calendar/calendarData';
 
 interface CalendarProps {
-  calendarData: CalendarResponse | null;
+  calendarData: CalendarData | null;
   nonAlwaysCalendars: NonAlwaysCalendar[];
 }
 
@@ -58,7 +58,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
   }
 
   return (
-    <div className="flex justify-center items-center bg-primary mx-auto my-12 rounded-lg">
+    <div className="flex justify-center items-center bg-primary my-12 rounded-lg">
       <div className="w-full">
         {/* 헤더 */}
         <div className="flex flex-row justify-between items-center w-full px-5">
@@ -138,7 +138,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                 </span>
 
                 <div className="flex flex-col gap-1 overflow-y-auto">
-                  {nonAlwaysCalendars.map((item) => {
+                  {nonAlwaysCalendars.map((item, index) => {
                     // 시작일
                     const isStartDate =
                       currentMonthDate === getDate(new Date(item.startAt)) &&
@@ -155,7 +155,10 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                     const textColor = isStart ? 'text-blue-500' : 'text-red-500';
 
                     return (
-                      <div key={item.clubId} className={`flex items-center text-sm`}>
+                      <div
+                        key={`${item.clubId}-${index}-${isStart ? 'start' : 'end'}`}
+                        className={`flex items-center text-sm`}
+                      >
                         <div>
                           <span className={`font-semibold ${textColor}`}>
                             {isStart ? '시작' : '마감'}

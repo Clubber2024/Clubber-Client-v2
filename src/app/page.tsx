@@ -24,7 +24,7 @@ export default function MainPage() {
       </div>
       {/* 모집글 & 조회수 */}
       <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[#F9FAFF] pt-5 pb-14 mt-10">
-        <div className="max-w-7xl mx-auto flex flex-row gap-6 px-10">
+        <div className="max-w-6xl mx-auto flex flex-row gap-6 px-15">
           <div className="flex-2">
             <MainRecruitList />
           </div>

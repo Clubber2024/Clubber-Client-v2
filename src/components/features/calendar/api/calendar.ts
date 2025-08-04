@@ -9,5 +9,5 @@ export const getCalendarData = async (year: number, month: number) => {
     },
   });
   
-  return response.data;
+  return response.data.data;
 };

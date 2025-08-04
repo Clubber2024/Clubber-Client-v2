@@ -8,7 +8,7 @@ interface AlwaysCalendarProps {
 
 export default function AlwaysCalendar({ alwaysCalendars }: AlwaysCalendarProps) {
   return (
-    <div className="h-full bg-primary p-4 rounded-lg">
+    <div className="h-full bg-primary p-4 rounded-lg my-12">
       <Card className="bg-white p-6 rounded-none h-full">
         {/* 헤더 */}
         <div className="flex items-center justify-between mb-1">

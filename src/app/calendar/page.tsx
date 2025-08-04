@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import Calendar from '@/components/features/calendar/Calendar';
 import AlwaysCalendar from '@/components/features/calendar/AlwaysCalendar';
 import { getCalendarData } from '@/components/features/calendar/api/calendar';
-import { CalendarResponse } from '@/types/calendar/calendarData';
+import { CalendarData } from '@/types/calendar/calendarData';
 
 export default function CalendarPage() {
-  const [calendarData, setCalendarData] = useState<CalendarResponse | null>(null);
+  const [calendarData, setCalendarData] = useState<CalendarData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,6 +21,7 @@ export default function CalendarPage() {
         const month = currentDate.getMonth() + 1;
 
         const data = await getCalendarData(year, month);
+        console.log('Calendar data :', data);
         setCalendarData(data);
       } catch (err) {
         setError('캘린더 데이터를 불러오는데 실패했습니다.');
@@ -50,11 +51,11 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="flex flex-row gap-4 items-stretch">
-      <div className="flex-1">
+    <div className="flex flex-row gap-4 max-w-6xl mx-auto">
+      <div className="flex-1 flex flex-col">
         <AlwaysCalendar alwaysCalendars={calendarData?.alwaysCalendars || []} />
       </div>
-      <div className="flex-3">
+      <div className="flex-3 flex flex-col">
         <Calendar
           calendarData={calendarData}
           nonAlwaysCalendars={calendarData?.nonAlwaysCalendars || []}

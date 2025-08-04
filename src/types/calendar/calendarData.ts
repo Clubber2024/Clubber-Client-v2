@@ -1,4 +1,13 @@
 export interface CalendarResponse {
+    data: {
+        year: number;
+        month: number;
+        nonAlwaysCalendars: NonAlwaysCalendar[];
+        alwaysCalendars: AlwaysCalendar[];
+    }
+  }
+
+  export interface CalendarData {
     year: number;
     month: number;
     nonAlwaysCalendars: NonAlwaysCalendar[];
