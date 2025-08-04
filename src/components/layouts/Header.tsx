@@ -3,15 +3,29 @@
 import { Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
+  const [accessToken, setAccessToken] = useState('');
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setAccessToken(localStorage.getItem('accessToken') || '');
+      // localStorage 관련 작업 수행
+    }
+  }, []);
+
   return (
     <header className="w-full bg-white">
       {/* 로그인/공지사항 */}
       <div className="mt-10 mb-5 mr-5 flex items-center gap-2 justify-end text-sm text-gray-500">
-        <Link href="/login" className="hover:underline">
-          로그인
-        </Link>
+        {accessToken ? (
+          <Link href="/admin/mypage">마이페이지</Link>
+        ) : (
+          <Link href="/login" className="hover:underline">
+            로그인
+          </Link>
+        )}
+
         <span className="mb-1">|</span>
         <Link href="#" className="hover:underline">
           공지사항
