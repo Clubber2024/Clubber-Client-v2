@@ -3,8 +3,14 @@
 import { Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import HashTagBar from '@/components/features/hashtag/HashTagBar';
 
 export default function Header() {
+  const pathname = usePathname();
+  const isMainPage = pathname === '/';
+  const isLoginPage = pathname === '/login';
+
   return (
     <header className="w-full bg-white">
       {/* 로그인/공지사항 */}
@@ -42,6 +48,8 @@ export default function Header() {
         {/* 우측: 검색 */}
         <Search size={25} strokeWidth={2} color="var(--primary)" />
       </div>
+      {/* 해시태그 바 - 메인페이지와 로그인페이지가 아닐 때만 표시 */}
+      {!isMainPage && !isLoginPage && <HashTagBar />}
     </header>
   );
 }

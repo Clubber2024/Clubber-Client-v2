@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { customAxios } from '@/lib/customAxios';
+import { apiClient } from '@/lib/apiClient';
 import { useCallback, useEffect, useState } from 'react';
 
 type SignUpSearchClubProps = {
@@ -33,7 +33,7 @@ type Department = {
 };
 
 const getClubNames = (name: string) => {
-  return customAxios
+  return apiClient
     .get(`/v1/clubs/sign-up?clubName=${name}`)
     .then((res) => res.data) // API 응답에서 데이터 추출
     .catch((error) => {
@@ -77,7 +77,7 @@ export default function SearchClub({
   //동아리 소속분야 목록 조회
   const getClubTypes = async () => {
     try {
-      const res = await customAxios.get(`v1/clubs/category/club-types`);
+      const res = await apiClient.get(`v1/clubs/category/club-types`);
 
       if (res.data.success) {
         setClubTypes(res.data.data);
@@ -89,7 +89,7 @@ export default function SearchClub({
   //소모임 단과대 목록 조회
   const getCollegesList = async () => {
     try {
-      const res = await customAxios.get(`v1/clubs/category/colleges`);
+      const res = await apiClient.get(`v1/clubs/category/colleges`);
 
       if (res.data.success) {
         const collegeList = res.data.data;
@@ -107,7 +107,7 @@ export default function SearchClub({
   //단과대 소속 학과 목록 조회
   const getDepartmentsList = async (college: string) => {
     try {
-      const res = await customAxios.get(`v1/clubs/category/departments`, {
+      const res = await apiClient.get(`v1/clubs/category/departments`, {
         params: {
           college: college,
         },

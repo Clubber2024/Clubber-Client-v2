@@ -4,6 +4,9 @@ import MainCalendar from '@/components/features/main/MainCalendar';
 import MainRanking from '@/components/features/main/MainRanking';
 import MainRecruitList from '@/components/features/main/MainRecruitList';
 import QuickServices from '@/components/features/main/QuickServices';
+import GoToNotion from '@/components/features/main/GoToNotion';
+import MainNotice from '@/components/features/main/MainNotice';
+import MainFaq from '@/components/features/main/MainFaq';
 
 export default function MainPage() {
   return (
@@ -31,10 +34,16 @@ export default function MainPage() {
         </div>
       </div>
       {/* 노션 & 공지사항 & 자주 묻는 질문 */}
-      <div>
-        <div className="flex-1"></div>
-        <div className="flex-1"></div>
-        <div className="flex-1"></div>
+      <div className="flex flex-row gap-6 mt-10">
+        <div className="flex-1">
+          <GoToNotion />
+        </div>
+        <div className="flex-1">
+          <MainNotice />
+        </div>
+        <div className="flex-1">
+          <MainFaq />
+        </div>
       </div>
     </div>
   );
