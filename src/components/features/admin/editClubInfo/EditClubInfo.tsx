@@ -3,7 +3,7 @@
 import { getAccessToken } from '@/auth/AuthService';
 import { Card } from '@/components/ui/card';
 import TitleDiv from '@/components/ui/title-div';
-import { customAxios } from '@/lib/customAxios';
+import { apiClient } from '@/lib/apiClient';
 import { useEffect, useState } from 'react';
 
 type Club = {
@@ -34,7 +34,7 @@ export default function EditClubInfo() {
   const getClubInfo = async () => {
     try {
       const accessToken = getAccessToken();
-      const res = await customAxios.get(`/v1/admins/mypage`, {
+      const res = await apiClient.get(`/v1/admins/mypage`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
