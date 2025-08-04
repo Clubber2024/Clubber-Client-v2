@@ -1,3 +1,10 @@
-export default function Divider() {
-  return <div className="w-full border-t m-0 bg-[#808080]" />;
+import { cn } from '@/lib/utils';
+
+interface DividerProps {
+  className?: string;
+}
+
+export default function Divider({ className }: DividerProps) {
+  return <div className={cn(' border-b bg-[#808080]', className)} />;
+
 }
