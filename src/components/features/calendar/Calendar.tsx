@@ -1,44 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getMonth, getDate, getDay } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Star } from 'lucide-react';
+import { CalendarResponse, NonAlwaysCalendar } from '@/types/calendar/calendarData';
 
-interface CalendarData {
-  year: number;
-  month: number;
-  recruitList: RecruitItem[];
+interface CalendarProps {
+  calendarData: CalendarResponse | null;
+  nonAlwaysCalendars: NonAlwaysCalendar[];
 }
 
-interface RecruitItem {
-  clubId: number;
-  clubName: string;
-  semester: string;
-  startAt: Date;
-  endAt: Date;
-  everytimeUrl: string;
-}
-
-// interface FavoriteClub {
-//   favoriteId: number;
-//   favoriteClub: {
-//     clubId: number;
-//   };
-// }
-
-export default function Calendar() {
-  //   const [isMobile, setIsMobile] = useState(false);
+export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [calendarData, setCalendarData] = useState<CalendarData>({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    recruitList: [],
-  });
-  //   const [favoriteClubIds, setFavoriteClubIds] = useState<number[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -58,63 +34,6 @@ export default function Calendar() {
 
   const totalCells = curMonthFirstDay + curMonthLastDate > 35 ? 42 : 35;
 
-  //   useEffect(() => {
-  //     const handleResize = () => {
-  //       setIsMobile(window.innerWidth <= 768);
-  //     };
-
-  //     handleResize();
-  //     window.addEventListener('resize', handleResize);
-  //     return () => window.removeEventListener('resize', handleResize);
-  //   }, []);
-
-  // 캘린더 조회 API
-  const getCalendarData = async () => {
-    try {
-      setIsLoading(true);
-      // 실제 API 호출로 대체 필요
-      const mockData: CalendarData = {
-        year,
-        month,
-        recruitList: [
-          {
-            clubId: 1,
-            clubName: '클러버',
-            semester: 'REGULAR',
-            startAt: new Date(year, month - 1, 1),
-            endAt: new Date(year, month - 1, 15),
-            everytimeUrl: 'https://everytime.kr',
-          },
-          {
-            clubId: 2,
-            clubName: '클러버',
-            semester: 'REGULAR',
-            startAt: new Date(year, month - 1, 1),
-            endAt: new Date(year, month - 1, 10),
-            everytimeUrl: 'https://everytime.kr',
-          },
-          {
-            clubId: 3,
-            clubName: '클러버',
-            semester: 'REGULAR',
-            startAt: new Date(year, month - 1, 5),
-            endAt: new Date(year, month - 1, 1),
-            everytimeUrl: 'https://everytime.kr',
-          },
-        ],
-      };
-      setCalendarData(mockData);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getCalendarData();
-  }, [currentDate]);
-
   const changeMonth = (offset: number) => {
     if (month === 1 && offset === -1) {
       setModalMessage('이전 달로 이동할 수 없습니다.');
@@ -130,47 +49,10 @@ export default function Calendar() {
     setCurrentDate(newDate);
   };
 
-  // 즐겨찾기 조회 API
-  //   const getFavoriteData = async () => {
-  //     const token = localStorage.getItem('accessToken');
-  //     if (!token) return;
-
-  //     try {
-  //       // 실제 API 호출로 대체 필요
-  //       const mockFavorites: FavoriteClub[] = [{ favoriteId: 1, favoriteClub: { clubId: 1 } }];
-  //       const clubIds = mockFavorites.map((item) => item.favoriteClub.clubId);
-  //       setFavoriteClubIds(clubIds);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     getFavoriteData();
-  //   }, []);
-
-  //   const handleFavorite = async (clubId: number) => {
-  //     const token = localStorage.getItem('accessToken');
-  //     if (!token) {
-  //       setModalMessage('로그인 후 즐겨찾기를 이용해주세요!');
-  //       setIsLoginModalOpen(true);
-  //       return;
-  //     }
-
-  //     // 실제 API 호출 로직으로 대체 필요
-  //     if (favoriteClubIds.includes(clubId)) {
-  //       setModalMessage('동아리가 즐겨찾기에서 해제되었습니다.');
-  //     } else {
-  //       setModalMessage('동아리가 즐겨찾기에 추가되었습니다.');
-  //     }
-  //     setIsModalOpen(true);
-  //     getFavoriteData();
-  //   };
-
-  if (isLoading) {
+  if (!calendarData) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="text-lg">로딩 중...</div>
+        <div className="text-lg">데이터를 불러오는 중...</div>
       </div>
     );
   }
@@ -256,18 +138,16 @@ export default function Calendar() {
                 </span>
 
                 <div className="flex flex-col gap-1 overflow-y-auto">
-                  {calendarData?.recruitList?.map((item) => {
+                  {nonAlwaysCalendars.map((item) => {
                     // 시작일
                     const isStartDate =
-                      item.semester !== 'ALWAYS' &&
-                      currentMonthDate === getDate(item.startAt) &&
-                      month === getMonth(item.startAt) + 1;
+                      currentMonthDate === getDate(new Date(item.startAt)) &&
+                      month === getMonth(new Date(item.startAt)) + 1;
 
                     // 마감일
                     const isEndDate =
-                      item.semester !== 'ALWAYS' &&
-                      currentMonthDate === getDate(item.endAt) &&
-                      month === getMonth(item.endAt) + 1;
+                      currentMonthDate === getDate(new Date(item.endAt)) &&
+                      month === getMonth(new Date(item.endAt)) + 1;
 
                     if (!isStartDate && !isEndDate) return null;
 
