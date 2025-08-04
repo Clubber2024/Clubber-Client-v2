@@ -6,19 +6,13 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import HashTagBar from '@/components/features/hashtag/HashTagBar';
-        
+import { getAccessToken } from '@/auth/AuthService';
+
 export default function Header() {
-  const [accessToken, setAccessToken] = useState('');
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setAccessToken(localStorage.getItem('accessToken') || '');
-      // localStorage 관련 작업 수행
-    }
-  }, []);
+  const accessToken = getAccessToken();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
   const isLoginPage = pathname === '/login';
-
 
   return (
     <header className="w-full bg-white">
