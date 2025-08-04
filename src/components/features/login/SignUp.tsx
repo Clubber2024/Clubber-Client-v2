@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { customAxios } from '@/lib/customAxios';
+import { apiClient } from '@/lib/apiClient';
 import { useEffect, useRef, useState } from 'react';
 import SearchClub from './signup/SearchClub';
 import axios from 'axios';
@@ -106,7 +106,7 @@ export default function SignUp() {
         return;
       }
 
-      const res = await customAxios.post(`/v1/admins/sign-up`, {
+      const res = await apiClient.post(`/v1/admins/sign-up`, {
         username: id,
         password: password,
         clubType: clubType,
@@ -140,7 +140,7 @@ export default function SignUp() {
   const getIdDuplicate = async () => {
     if (!isId1) return;
     try {
-      const res = await customAxios.get(`/v1/admins/username/duplicate?username=${id}`);
+      const res = await apiClient.get(`/v1/admins/username/duplicate?username=${id}`);
       console.log(res.data.data.isAvailable);
       if (res.data.data.isAvailable) {
         setId(res.data.data.username);
@@ -238,7 +238,7 @@ export default function SignUp() {
   const postSignUpCode = async (currentEmail: string) => {
     setEmail(currentEmail);
     try {
-      const res = await customAxios.post(`/v1/admins/auths/sign-up/send`, {
+      const res = await apiClient.post(`/v1/admins/auths/sign-up/send`, {
         clubName: clubName,
         email: currentEmail,
       });
@@ -254,7 +254,7 @@ export default function SignUp() {
   //인증번호 검증 api
   const postVerfifyCode = async () => {
     try {
-      const res = await customAxios.post(`/v1/admins/auths/sign-up/verify`, {
+      const res = await apiClient.post(`/v1/admins/auths/sign-up/verify`, {
         clubName: clubName,
         email: email,
         authCode: code,
@@ -332,7 +332,7 @@ export default function SignUp() {
   //증빙 이미지 등록 Presigned URL 생성 api
   const postVerifyPresignedURL = async (extension: any) => {
     try {
-      const res = await customAxios.post(
+      const res = await apiClient.post(
         `/v1/images/admin/sign-up/verify`,
         {
           username: id,

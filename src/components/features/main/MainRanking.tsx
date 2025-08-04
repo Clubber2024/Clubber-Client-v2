@@ -18,15 +18,15 @@ export default function MainRanking() {
     <>
       <h2 className="font-bold text-lg py-3 mt-2">조회수</h2>
       <Card>
-        <div className="grid grid-cols-2 pl-10 gap-x-8 font-medium">
-          <div className="space-y-2">
+        <div className="grid grid-cols-2 pl-10 gap-x-8 font-medium text-sm pb-1">
+          <div className="space-y-3">
             {rank.slice(0, 5).map((club, idx) => (
               <p key={idx}>
                 {idx + 1}. {club.name}
               </p>
             ))}
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {rank.slice(5, 10).map((club, idx) => (
               <p key={idx}>
                 {idx + 6}. {club.name}
