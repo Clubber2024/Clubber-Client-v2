@@ -4,10 +4,10 @@ import { getAccessToken } from '@/auth/AuthService';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import TitleDiv from '@/components/ui/title-div';
-import { customAxios } from '@/lib/customAxios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import { getAdminRecruit } from './recruit';
 
 interface RecruitListProps {
   recruitId: number;
@@ -29,29 +29,14 @@ export default function RecruitList() {
   const [sort] = useState('desc'); // 정렬 기준
 
   useEffect(() => {
-    getAdminRecruit(currentPage);
+    const fetchData = async () => {
+      const res = await getAdminRecruit(currentPage, pageSize);
+      console.log(res.content);
+      setRecruitList(res.content);
+      setTotalPages(res.totalPages);
+    };
+    fetchData();
   }, [currentPage]);
-
-  const getAdminRecruit = async (page: Number) => {
-    try {
-      const accessToken = getAccessToken();
-      const res = await customAxios.get(`/v1/admins/recruits`, {
-        params: {
-          page: page,
-          size: pageSize,
-          sort: sort,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (res.data.success) {
-        setRecruitList(res.data.data.content);
-        setTotalPages(res.data.data.totalPages);
-      }
-    } catch {}
-  };
 
   const handlePageChange = ({ selected }: { selected: number }) => {
     setCurrentPage(selected + 1);

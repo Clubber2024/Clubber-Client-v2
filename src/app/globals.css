@@ -124,7 +124,7 @@
 }
 
 .container {
-  @apply mx-auto max-w-7xl px-10;
+  @apply mx-auto max-w-6xl px-10;
   width: 100%;
 }
 

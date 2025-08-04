@@ -7,7 +7,6 @@ import Divider from '@/components/ui/divider';
 import UserLogin from './UserLogin';
 import AdminLogin from './AdminLogin';
 import { useRouter } from 'next/navigation';
-import { customAxios } from '@/lib/customAxios';
 
 export default function Login() {
   const router = useRouter();

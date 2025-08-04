@@ -1,20 +1,14 @@
 'use client';
 
-interface LoginResponse {
-  data: {
-    accessToken: string;
-    refreshToken: string;
-  };
-}
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { saveTokens } from '../../../auth/AuthService';
 import { AxiosError } from 'axios';
-import { customAxios } from '@/lib/customAxios';
+
 import { useRouter } from 'next/navigation';
+import { adminLoginHandler } from './login';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -43,30 +37,6 @@ export default function AdminLogin() {
     }
   };
 
-  // 관리자 로그인 핸들러
-  const adminLoginHandler = async (): Promise<void> => {
-    if (!isId || !isPw) return;
-    try {
-      console.log('kk');
-      const res = await customAxios.post<LoginResponse>(`/v1/admins/login`, {
-        username: adminId,
-        password: adminPw,
-      });
-
-      const { accessToken, refreshToken } = res.data.data;
-      // 로컬스토리지에 accessToken, refreshToken, isAdmin 값 저장
-      saveTokens(accessToken, refreshToken, true);
-
-      router.push('/');
-    } catch (error) {
-      if (error instanceof AxiosError && error.response?.data?.status === 401) {
-        setModalMessage(error.response.data.reason);
-        setIsModalOpen(true);
-      }
-      console.error(error);
-    }
-  };
-
   const saveAdminId = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setAdminId(value);
@@ -92,12 +62,31 @@ export default function AdminLogin() {
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => event.preventDefault();
 
+  const handleLoginSubmit = async () => {
+    try {
+      const res = await adminLoginHandler(adminId, adminPw);
+
+      console.log('res', res.data);
+      const { accessToken, refreshToken } = res.data;
+
+      console.log('AccessToken:', accessToken);
+      console.log('RefreshToken:', refreshToken);
+
+      // 예: localStorage 저장
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+
+      // 라우팅 또는 상태 업데이트 등 수행
+      router.push('/');
+    } catch (err: any) {}
+  };
+
   return (
     <div className="w-[300px] mt-[30px]">
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          adminLoginHandler();
+          handleLoginSubmit();
         }}
       >
         <p
@@ -144,7 +133,7 @@ mb-[9px]"
             아이디 저장
           </span>
         </label>
-        <Button type="submit" onClick={adminLoginHandler} className="w-[300px] h-[40px] mt-2">
+        <Button type="submit" onClick={handleLoginSubmit} className="w-[300px] h-[40px] mt-2">
           관리자 로그인
         </Button>
       </form>

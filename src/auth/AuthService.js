@@ -1,5 +1,5 @@
 // src/auth/AuthService.js
-import { customAxios } from '@/lib/customAxios';
+import { apiClient } from '@/lib/apiClient';
 
 // 로컬 스토리지 키 설정
 const ACCESS_TOKEN_KEY = 'accessToken';
@@ -7,7 +7,13 @@ const REFRESH_TOKEN_KEY = 'refreshToken';
 const IS_ADMIN_KEY = 'isAdmin';
 
 // 액세스 토큰 가져오기
-export const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_KEY);
+// export const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_KEY);
+export const getAccessToken = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(ACCESS_TOKEN_KEY);
+  }
+  return null;
+};
 
 // 리프레시 토큰 가져오기
 export const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN_KEY);
@@ -49,7 +55,7 @@ export const refreshAccessToken = async () => {
     console.log(getIsAdmin());
     const isAdmin = getIsAdmin();
     const endpoint = getIsAdmin() ? `v1/admins/refresh` : `v1/auths/refresh`;
-    const response = await customAxios.post(
+    const response = await apiClient.post(
       endpoint,
       {},
       {
@@ -75,8 +81,7 @@ export const refreshAccessToken = async () => {
   }
 };
 
-// 요청 인터셉터 : 모든 요청에 액세스 토큰 추가
-customAxios.interceptors.request.use(
+apiClient.interceptors.request.use(
   async (config) => {
     let token = getAccessToken();
     if (token) {
@@ -90,7 +95,7 @@ customAxios.interceptors.request.use(
 // 응답 인터셉터 : 액세스 토큰이 만료되었을 때 자동 갱신
 let isRefreshing = false;
 
-customAxios.interceptors.response.use(
+apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -105,7 +110,7 @@ customAxios.interceptors.response.use(
 
       if (newAccessToken) {
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return customAxios(originalRequest);
+        return apiClient(originalRequest);
       }
     }
     return Promise.reject(error);
