@@ -6,4 +6,5 @@ interface DividerProps {
 
 export default function Divider({ className }: DividerProps) {
   return <div className={cn(' border-b bg-[#808080]', className)} />;
+
 }
