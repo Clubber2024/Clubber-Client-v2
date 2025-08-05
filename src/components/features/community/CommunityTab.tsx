@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { getNoticeListData } from './api/notice';
 
 interface CommunityItem {
   id: number;
@@ -12,33 +13,94 @@ interface CommunityItem {
 }
 
 interface CommunityTabProps {
-  title: string;
-  items: CommunityItem[];
+  type: 'notices' | 'faq' | 'inquiries';
+  items?: CommunityItem[]; // Mock 데이터용
 }
 
-export default function CommunityTab({ items, onItemClick }: CommunityTabProps) {
+export default function CommunityTab({ type, items: mockItems }: CommunityTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [items, setItems] = useState<CommunityItem[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(items.length / itemsPerPage);
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = items.slice(startIndex, endIndex);
+  // 공지사항 API 호출
+  const fetchNotices = async (page: number) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getNoticeListData({
+        page: page, // API는 0-based, UI는 1-based
+        size: itemsPerPage,
+      });
+
+      const noticeItems = response.content.map((notice) => ({
+        id: notice.noticeId,
+        title: notice.title,
+        date: notice.createdAt,
+        content: notice.content,
+      }));
+
+      setItems(noticeItems);
+      setTotalPages(response.totalPages);
+    } catch (err) {
+      setError('데이터를 불러오는데 실패했습니다.');
+      console.error('데이터 불러오기 오류:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Mock 데이터 처리
+  const processMockData = (page: number) => {
+    if (!mockItems) return;
+
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = mockItems.slice(startIndex, endIndex);
+
+    setItems(currentItems);
+    setTotalPages(Math.ceil(mockItems.length / itemsPerPage));
+  };
+
+  // 초기 데이터 로드
+  useEffect(() => {
+    if (type === 'notices') {
+      fetchNotices(1);
+    } else if (mockItems) {
+      processMockData(1);
+    }
+  }, [type, mockItems]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+
+    if (type === 'notices') {
+      fetchNotices(page);
+    } else if (mockItems) {
+      processMockData(page);
+    }
   };
+
+  if (isLoading) {
+    return <div className="text-center py-8">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-500">{error}</div>;
+  }
 
   return (
     <div className="w-full mx-auto">
       <div>
         {/* 목록 */}
         <div>
-          {currentItems.map((item) => (
+          {items.map((item) => (
             <div
               key={item.id}
               className="flex justify-between items-center py-4 px-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
-              onClick={() => onItemClick?.(item)}
+              onClick={() => console.log(item)}
             >
               <div className="flex-1">
                 <h3 className="text-gray-900 text-sm">{item.title}</h3>

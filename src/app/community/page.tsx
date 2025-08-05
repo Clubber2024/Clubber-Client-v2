@@ -19,7 +19,7 @@ export default function Community() {
   const [activeTab, setActiveTab] = useState<TabType>('notices');
   const [selectedItem, setSelectedItem] = useState<CommunityItem | null>(null);
 
-  // URL 쿼리 파라미터에서 탭 정보 읽기
+  // URL 쿼리 파라미터에서 탭 확인
   useEffect(() => {
     const tabParam = searchParams.get('tab') as TabType;
     if (tabParam && ['notices', 'faq', 'inquiries'].includes(tabParam)) {
@@ -27,14 +27,8 @@ export default function Community() {
     }
   }, [searchParams]);
 
-  // Mock 데이터
+  // Mock 데이터 (FAQ, 문의사항용)
   const mockData = {
-    notices: Array.from({ length: 25 }, (_, i) => ({
-      id: i + 1,
-      title: "클러버 '서비스 이용약관' 변경에 대한 안내 말씀드립니다.",
-      date: '2025.07.10',
-      content: '클러버 서비스 이용약관이 변경되었습니다. 자세한 내용은 아래와 같습니다...',
-    })),
     faq: Array.from({ length: 20 }, (_, i) => ({
       id: i + 1,
       title: `자주 묻는 질문 ${i + 1}`,
@@ -54,10 +48,6 @@ export default function Community() {
     { id: 'faq' as TabType, label: '자주 묻는 질문' },
     { id: 'inquiries' as TabType, label: '문의사항' },
   ];
-
-  const handleItemClick = (item: CommunityItem) => {
-    setSelectedItem(item);
-  };
 
   const handleBack = () => {
     setSelectedItem(null);
@@ -95,9 +85,8 @@ export default function Community() {
 
         {/* 탭 컨텐츠 */}
         <CommunityTab
-          title={tabs.find((tab) => tab.id === activeTab)?.label || ''}
-          items={mockData[activeTab]}
-          onItemClick={handleItemClick}
+          type={activeTab}
+          items={activeTab !== 'notices' ? mockData[activeTab] : undefined}
         />
       </div>
     </div>
