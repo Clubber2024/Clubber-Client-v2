@@ -34,19 +34,19 @@ export default function Header() {
       <div className="flex items-center justify-between h-20 px-6">
         <div className="flex flex-row items-center gap-10">
           {/* 좌측: 로고 */}
-          <div className="flex items-center min-w-[120px]">
+          <div className="flex items-center">
             <Link href="/">
               <Image
                 src="/images/clubber-logo.png"
                 alt="clubber-logo"
-                width={160}
-                height={70}
+                width={180}
+                height={85}
                 priority
               />
             </Link>
           </div>
           {/* 중앙: 네비게이션 */}
-          <nav className="flex-1 flex justify-center gap-8 text-[18px] font-semibold">
+          <nav className="flex-1 flex justify-center gap-8 text-[19px] font-bold">
             <Link href="/">한눈에 보기</Link>
             <Link href={'/center/branch'}>중앙 동아리</Link>
             <Link href="/">자치 기구</Link>
