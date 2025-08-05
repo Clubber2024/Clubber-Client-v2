@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getNoticeListData } from './api/notice';
+import { Notice } from '@/types/community/noticeData';
 
 interface CommunityItem {
   id: number;
@@ -14,71 +15,72 @@ interface CommunityItem {
 
 interface CommunityTabProps {
   type: 'notices' | 'faq' | 'inquiries';
-  items?: CommunityItem[]; // Mock 데이터용
 }
 
-export default function CommunityTab({ type, items: mockItems }: CommunityTabProps) {
+export default function CommunityTab({ type }: CommunityTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [items, setItems] = useState<CommunityItem[]>([]);
+  const [notices, setNotices] = useState<Notice[]>([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading] = useState(false);
+  const [error] = useState<string | null>(null);
   const itemsPerPage = 10;
+  const sort = 'desc';
 
-  // 공지사항 API 호출
   const fetchNotices = async (page: number) => {
     try {
-      setIsLoading(true);
-      setError(null);
-      const response = await getNoticeListData({
-        page: page, // API는 0-based, UI는 1-based
-        size: itemsPerPage,
-      });
-
-      const noticeItems = response.content.map((notice) => ({
-        id: notice.noticeId,
-        title: notice.title,
-        date: notice.createdAt,
-        content: notice.content,
-      }));
-
-      setItems(noticeItems);
-      setTotalPages(response.totalPages);
-    } catch (err) {
-      setError('데이터를 불러오는데 실패했습니다.');
-      console.error('데이터 불러오기 오류:', err);
-    } finally {
-      setIsLoading(false);
+      const response = await getNoticeListData({ page, size: itemsPerPage, sort: sort });
+      setNotices(response.data.content);
+      console.log(notices);
+    } catch (error) {
+      console.error('Error fetching notices:', error);
     }
+  };
+
+  // Mock 데이터 (FAQ, 문의사항용)
+  const mockItems = {
+    faq: Array.from({ length: 20 }, (_, i) => ({
+      id: i + 1,
+      title: `자주 묻는 질문 ${i + 1}`,
+      date: '2025.07.10',
+      content: '자주 묻는 질문에 대한 답변입니다...',
+    })),
+    inquiries: Array.from({ length: 15 }, (_, i) => ({
+      id: i + 1,
+      title: `문의사항 ${i + 1}`,
+      date: '2025.07.10',
+      content: '문의사항에 대한 답변입니다...',
+    })),
   };
 
   // Mock 데이터 처리
   const processMockData = (page: number) => {
-    if (!mockItems) return;
+    if (type === 'notices') return;
+    if (!mockItems || !mockItems[type as 'faq' | 'inquiries']) return;
 
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentItems = mockItems.slice(startIndex, endIndex);
+    const currentItems = mockItems[type as 'faq' | 'inquiries'].slice(startIndex, endIndex);
 
     setItems(currentItems);
-    setTotalPages(Math.ceil(mockItems.length / itemsPerPage));
+    setTotalPages(Math.ceil(mockItems[type as 'faq' | 'inquiries'].length / itemsPerPage));
   };
 
   // 초기 데이터 로드
   useEffect(() => {
     if (type === 'notices') {
       fetchNotices(1);
-    } else if (mockItems) {
+    } else {
       processMockData(1);
     }
-  }, [type, mockItems]);
+  }, [type]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
 
     if (type === 'notices') {
       fetchNotices(page);
-    } else if (mockItems) {
+    } else {
       processMockData(page);
     }
   };
@@ -95,20 +97,37 @@ export default function CommunityTab({ type, items: mockItems }: CommunityTabPro
     <div className="w-full mx-auto">
       <div>
         {/* 목록 */}
-        <div>
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between items-center py-4 px-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
-              onClick={() => console.log(item)}
-            >
-              <div className="flex-1">
-                <h3 className="text-gray-900 text-sm">{item.title}</h3>
+        {type === 'notices' ? (
+          <div>
+            {notices.map((item) => (
+              <div
+                key={item.noticeId}
+                className="flex justify-between items-center py-4 px-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => console.log(item)}
+              >
+                <div className="flex-1">
+                  <h3 className="text-gray-900 text-sm">{item.title}</h3>
+                </div>
+                <span className="text-gray-500 text-sm">{item.createdAt}</span>
               </div>
-              <span className="text-gray-500 text-sm">{item.date}</span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center py-4 px-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => console.log(item)}
+              >
+                <div className="flex-1">
+                  <h3 className="text-gray-900 text-sm">{item.title}</h3>
+                </div>
+                <span className="text-gray-500 text-sm">{item.date}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* 페이지네이션 */}
         <div className="flex justify-center items-center gap-2 mt-8">

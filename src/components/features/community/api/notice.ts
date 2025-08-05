@@ -3,9 +3,7 @@ import { NoticeResponse, NoticeParams } from '@/types/community/noticeData';
 
 export const getNoticeListData = async (params: NoticeParams) => {
   const response = await apiClient.get<NoticeResponse>('/v1/notices', {
-    params: {
-      params,
-    },
+    params: params
   });
   
   return response.data;
@@ -13,5 +11,5 @@ export const getNoticeListData = async (params: NoticeParams) => {
 
 export const getNoticeDetailData = async (noticeId: number) => {
   const response = await apiClient.get<NoticeResponse>(`/v1/notices/${noticeId}`);
-  return response.data;
+  return response.data.data;
 }

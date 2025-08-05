@@ -1,10 +1,12 @@
 export interface NoticeResponse {
-  content: Notice[];
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-  hasNextPage: boolean;
+  data: {
+    content: Notice[];
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    hasNextPage: boolean;
+  };
 }
 
 export interface Notice {
@@ -19,5 +21,5 @@ export interface Notice {
 export interface NoticeParams {
   page: number;
   size: number;
-  sort?: string[];
+  sort?: string;
 }

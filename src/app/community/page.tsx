@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import CommunityTab from '@/components/features/community/CommunityTab';
@@ -14,34 +14,18 @@ interface CommunityItem {
 
 type TabType = 'notices' | 'faq' | 'inquiries';
 
-export default function Community() {
+function CommunityContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('notices');
   const [selectedItem, setSelectedItem] = useState<CommunityItem | null>(null);
 
-  // URL 쿼리 파라미터에서 탭 확인
+  // URL 쿼리 파라미터에서 탭
   useEffect(() => {
     const tabParam = searchParams.get('tab') as TabType;
     if (tabParam && ['notices', 'faq', 'inquiries'].includes(tabParam)) {
       setActiveTab(tabParam);
     }
   }, [searchParams]);
-
-  // Mock 데이터 (FAQ, 문의사항용)
-  const mockData = {
-    faq: Array.from({ length: 20 }, (_, i) => ({
-      id: i + 1,
-      title: `자주 묻는 질문 ${i + 1}`,
-      date: '2025.07.10',
-      content: '자주 묻는 질문에 대한 답변입니다...',
-    })),
-    inquiries: Array.from({ length: 15 }, (_, i) => ({
-      id: i + 1,
-      title: `문의사항 ${i + 1}`,
-      date: '2025.07.10',
-      content: '문의사항에 대한 답변입니다...',
-    })),
-  };
 
   const tabs = [
     { id: 'notices' as TabType, label: '공지사항' },
@@ -84,11 +68,20 @@ export default function Community() {
         </div>
 
         {/* 탭 컨텐츠 */}
-        <CommunityTab
-          type={activeTab}
-          items={activeTab !== 'notices' ? mockData[activeTab] : undefined}
-        />
+        <CommunityTab type={activeTab} />
       </div>
     </div>
+  );
+}
+
+export default function Community() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen py-8 flex items-center justify-center">로딩 중...</div>
+      }
+    >
+      <CommunityContent />
+    </Suspense>
   );
 }
