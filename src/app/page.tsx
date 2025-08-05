@@ -7,6 +7,7 @@ import QuickServices from '@/components/features/main/QuickServices';
 import GoToNotion from '@/components/features/main/GoToNotion';
 import MainNotice from '@/components/features/main/MainNotice';
 import MainFaq from '@/components/features/main/MainFaq';
+import Link from 'next/link';
 
 export default function MainPage() {
   return (
@@ -38,12 +39,12 @@ export default function MainPage() {
         <div className="flex-1">
           <GoToNotion />
         </div>
-        <div className="flex-1">
+        <Link href="/community?tab=notices" className="flex-1">
           <MainNotice />
-        </div>
-        <div className="flex-1">
+        </Link>
+        <Link href="/community?tab=faq" className="flex-1">
           <MainFaq />
-        </div>
+        </Link>
       </div>
     </div>
   );
