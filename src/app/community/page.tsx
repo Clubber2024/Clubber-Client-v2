@@ -5,19 +5,14 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import CommunityTab from '@/components/features/community/CommunityTab';
 import CommunityDetail from '@/components/features/community/CommunityDetail';
-
-interface CommunityItem {
-  id: number;
-  title: string;
-  date: string;
-}
+import { Notice } from '@/types/community/noticeData';
 
 type TabType = 'notices' | 'faq' | 'inquiries';
 
 function CommunityContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('notices');
-  const [selectedItem, setSelectedItem] = useState<CommunityItem | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
   // URL 쿼리 파라미터에서 탭
   useEffect(() => {
@@ -33,12 +28,27 @@ function CommunityContent() {
     { id: 'inquiries' as TabType, label: '문의사항' },
   ];
 
-  const handleBack = () => {
-    setSelectedItem(null);
+  const handleItemClick = (item: Notice) => {
+    setSelectedItemId(item.noticeId);
   };
 
-  if (selectedItem) {
-    return <CommunityDetail item={selectedItem} onBack={handleBack} />;
+  const handleBack = () => {
+    setSelectedItemId(null);
+  };
+
+  const handleItemChange = (newItemId: number) => {
+    setSelectedItemId(newItemId);
+  };
+
+  if (selectedItemId) {
+    return (
+      <CommunityDetail
+        itemId={selectedItemId}
+        type={activeTab}
+        onBack={handleBack}
+        onItemChange={handleItemChange}
+      />
+    );
   }
 
   return (
@@ -68,7 +78,7 @@ function CommunityContent() {
         </div>
 
         {/* 탭 컨텐츠 */}
-        <CommunityTab type={activeTab} />
+        <CommunityTab type={activeTab} onItemClick={handleItemClick} />
       </div>
     </div>
   );

@@ -2,26 +2,24 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { getNoticeListData } from './api/notice';
+import { getFaqListData } from './api/faq';
 import { Notice } from '@/types/community/noticeData';
-
-interface CommunityItem {
-  id: number;
-  title: string;
-  date: string;
-  content?: string;
-}
+import { FaqItem } from '@/types/community/faqData';
+import ComingSoon from '@/components/common/ComingSoon';
 
 interface CommunityTabProps {
   type: 'notices' | 'faq' | 'inquiries';
+  onItemClick: (item: Notice) => void;
 }
 
-export default function CommunityTab({ type }: CommunityTabProps) {
+export default function CommunityTab({ type, onItemClick }: CommunityTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [items, setItems] = useState<CommunityItem[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
+  const [faq, setFaq] = useState<FaqItem[]>([]);
+  const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
+  const [totalPages] = useState(1);
   const [isLoading] = useState(false);
   const [error] = useState<string | null>(null);
   const itemsPerPage = 10;
@@ -37,33 +35,13 @@ export default function CommunityTab({ type }: CommunityTabProps) {
     }
   };
 
-  // Mock 데이터 (FAQ, 문의사항용)
-  const mockItems = {
-    faq: Array.from({ length: 20 }, (_, i) => ({
-      id: i + 1,
-      title: `자주 묻는 질문 ${i + 1}`,
-      date: '2025.07.10',
-      content: '자주 묻는 질문에 대한 답변입니다...',
-    })),
-    inquiries: Array.from({ length: 15 }, (_, i) => ({
-      id: i + 1,
-      title: `문의사항 ${i + 1}`,
-      date: '2025.07.10',
-      content: '문의사항에 대한 답변입니다...',
-    })),
-  };
-
-  // Mock 데이터 처리
-  const processMockData = (page: number) => {
-    if (type === 'notices') return;
-    if (!mockItems || !mockItems[type as 'faq' | 'inquiries']) return;
-
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentItems = mockItems[type as 'faq' | 'inquiries'].slice(startIndex, endIndex);
-
-    setItems(currentItems);
-    setTotalPages(Math.ceil(mockItems[type as 'faq' | 'inquiries'].length / itemsPerPage));
+  const fetchFaq = async () => {
+    try {
+      const response = await getFaqListData({ page: 1, size: 10 });
+      setFaq(response.data);
+    } catch (error) {
+      console.error('Error fetching faq:', error);
+    }
   };
 
   // 초기 데이터 로드
@@ -71,7 +49,7 @@ export default function CommunityTab({ type }: CommunityTabProps) {
     if (type === 'notices') {
       fetchNotices(1);
     } else {
-      processMockData(1);
+      fetchFaq();
     }
   }, [type]);
 
@@ -81,7 +59,7 @@ export default function CommunityTab({ type }: CommunityTabProps) {
     if (type === 'notices') {
       fetchNotices(page);
     } else {
-      processMockData(page);
+      fetchFaq();
     }
   };
 
@@ -97,13 +75,13 @@ export default function CommunityTab({ type }: CommunityTabProps) {
     <div className="w-full mx-auto">
       <div>
         {/* 목록 */}
-        {type === 'notices' ? (
+        {type == 'notices' && (
           <div>
             {notices.map((item) => (
               <div
                 key={item.noticeId}
                 className="flex justify-between items-center py-4 px-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => console.log(item)}
+                onClick={() => onItemClick(item)}
               >
                 <div className="flex-1">
                   <h3 className="text-gray-900 text-sm">{item.title}</h3>
@@ -112,57 +90,84 @@ export default function CommunityTab({ type }: CommunityTabProps) {
               </div>
             ))}
           </div>
-        ) : (
+        )}
+        {type == 'faq' && (
           <div>
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between items-center py-4 px-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => console.log(item)}
-              >
-                <div className="flex-1">
-                  <h3 className="text-gray-900 text-sm">{item.title}</h3>
+            {faq.map((item) => (
+              <div key={item.code} className="border-b border-gray-200">
+                {/* 질문 */}
+                <div
+                  className="flex items-center p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                  onClick={() => setExpandedFaq(expandedFaq === item.code ? null : item.code)}
+                >
+                  <div className="flex items-center flex-1">
+                    <div className="w-6 h-6 text-gray-900 text-lg font-extrabold flex items-center justify-center mr-3">
+                      Q
+                    </div>
+                    <h3 className="text-gray-900 text-sm font-medium">{item.title}</h3>
+                  </div>
+                  <div className="text-gray-500">
+                    {expandedFaq === item.code ? (
+                      <ChevronDown className="w-5 h-5" />
+                    ) : (
+                      <ChevronUp className="w-5 h-5" />
+                    )}
+                  </div>
                 </div>
-                <span className="text-gray-500 text-sm">{item.date}</span>
+
+                {/* 답변 */}
+                {expandedFaq === item.code && (
+                  <div className="px-4 pb-4 bg-[#6666660D]">
+                    <div className="flex flex-col">
+                      <div className="w-6 h-6 text-primary text-lg font-extrabold flex items-center justify-center mr-3 my-2">
+                        A
+                      </div>
+                      <div className="flex-1 text-gray-700 text-sm pl-1">{item.answer}</div>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         )}
+        {type == 'inquiries' && <ComingSoon />}
 
         {/* 페이지네이션 */}
-        <div className="flex justify-center items-center gap-2 mt-8">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="w-10 h-10 rounded-sm"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+        {type == 'inquiries' || (
+          <div className="flex justify-center items-center gap-2 mt-8">
             <Button
-              key={page}
-              variant={currentPage === page ? 'default' : 'outline'}
+              variant="outline"
               size="sm"
-              onClick={() => handlePageChange(page)}
-              className="w-9 h-10 rounded-sm"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="w-10 h-10 rounded-sm"
             >
-              {page}
+              <ChevronLeft className="w-4 h-4" />
             </Button>
-          ))}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="w-10 h-10 rounded-sm"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Button
+                key={page}
+                variant={currentPage === page ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handlePageChange(page)}
+                className="w-9 h-10 rounded-sm"
+              >
+                {page}
+              </Button>
+            ))}
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="w-10 h-10 rounded-sm"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
