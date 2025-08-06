@@ -26,14 +26,8 @@ export default function Login() {
       <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw]">
         <Divider />
       </div>
-      <div
-        className="flex flex-col
-			 justify-center items-center"
-      >
-        <div
-          className="shadow-sm w-[460px] h-[418px] rounded-[25px] flex flex-col
-			 justify-center items-center mt-20"
-        >
+      <div className="flex flex-col justify-center items-center">
+        <div className="shadow-sm w-[460px] h-[418px] rounded-[25px] flex flex-col justify-center items-center mt-20">
           <h1 className="font-bold text-[34px] leading-[100%] tracking-normal text-center font-pretendard">
             로그인
           </h1>

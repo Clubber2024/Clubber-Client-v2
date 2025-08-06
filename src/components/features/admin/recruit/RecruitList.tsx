@@ -7,7 +7,10 @@ import TitleDiv from '@/components/ui/title-div';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { getAdminRecruit } from './recruit';
+import { deleteAdminRecruit, getAdminRecruit } from './recruit';
+import { Divide, EllipsisVertical, PencilLine, Trash2 } from 'lucide-react';
+import Divider from '@/components/ui/divider';
+import Modal from '@/app/modal/Modal';
 
 interface RecruitListProps {
   recruitId: number;
@@ -27,14 +30,18 @@ export default function RecruitList() {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(6); // 한 페이지에 표시할 항목 수
   const [sort] = useState('desc'); // 정렬 기준
+  const [openToggle, setOpenToggle] = useState(false);
+  const [openToggleId, setOpenToggleId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mdoalmessage, setModalMessage] = useState('');
+  const fetchData = async () => {
+    const res = await getAdminRecruit(currentPage, pageSize);
+    console.log(res.content);
+    setRecruitList(res.content);
+    setTotalPages(res.totalPages);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await getAdminRecruit(currentPage, pageSize);
-      console.log(res.content);
-      setRecruitList(res.content);
-      setTotalPages(res.totalPages);
-    };
     fetchData();
   }, [currentPage]);
 
@@ -42,11 +49,20 @@ export default function RecruitList() {
     setCurrentPage(selected + 1);
   };
 
-  // const onClickRecruit = (recruitId) => {
-  //     navigate(`/admin/recruit/${recruitId}`, {
-  //         state: { recruitId: recruitId },
-  //     });
-  // };
+  const handleDeleteRecruit = async (recruitId: number) => {
+    const res = await deleteAdminRecruit(recruitId);
+    console.log('res', res);
+
+    if (res.success) {
+      setIsModalOpen(true);
+      setModalMessage('해당 모집글 삭제가 완료되었습니다.');
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    fetchData();
+  };
 
   return (
     <>
@@ -61,17 +77,48 @@ export default function RecruitList() {
             key={item.recruitId}
             className="mb-6 h-[200px] pl-[20px] pr-[20px] flex flex-row justify-between"
           >
-            <div className="w-full">
-              <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate">
-                {item.title}
-              </p>
-              <p className="font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-4">
-                {item.content}
-              </p>
+            <div
+              onClick={() => router.push(`/admin/recruitContent?recruitId=${item.recruitId}`)}
+              className=" flex flex-row justify-between"
+            >
+              {item.imageUrl && (
+                <img src={item.imageUrl} className=" w-fit min-w-[178px] aspect-square mr-2" />
+              )}
+              <div className="w-full">
+                <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate">
+                  {item.title}
+                </p>
+                <p className="font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-4">
+                  {item.content}
+                </p>
+              </div>
             </div>
-            {item.imageUrl && (
-              <img src={item.imageUrl} className=" w-fit min-w-[178px] aspect-square" />
-            )}
+            <div className="relative w-fit h-fit">
+              <EllipsisVertical
+                size={18}
+                onClick={(e) => {
+                  e.stopPropagation(); // 카드 클릭 방지
+                  setOpenToggleId((prev) => (prev === item.recruitId ? null : item.recruitId));
+                }}
+              />
+              {openToggleId === item.recruitId && (
+                <div className="border-[1px] border-[#D6D6D6] shadow-[0_2px_4px_0_rgba(0,0,0,0.15)] w-[117px] h-[75px] absolute top-5 left-0 m-0  rounded-xs bg-white">
+                  <p
+                    className="flex items-center text-[#a7a7a7] justify-between font-pretendard text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
+                    onClick={() => router.push(`/admin/recruitWrite?recruitId=${item.recruitId}`)}
+                  >
+                    수정하기 <PencilLine size={15} color="#a7a7a7" className="ml-1" />
+                  </p>
+                  <Divider className="w-full" />
+                  <p
+                    className="flex items-center text-[#fd3c56] justify-between font-pretendard text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
+                    onClick={() => handleDeleteRecruit(item.recruitId)}
+                  >
+                    삭제하기 <Trash2 size={15} color="#fd3c56" className="ml-1" />
+                  </p>
+                </div>
+              )}
+            </div>
           </Card>
         ))}
 
@@ -98,6 +145,7 @@ export default function RecruitList() {
           disabledLinkClassName="text-gray-400 cursor-not-allowed"
         />
       </div>
+      {isModalOpen && <Modal isOpen={isModalOpen} message={mdoalmessage} onClose={closeModal} />}
     </>
   );
 }

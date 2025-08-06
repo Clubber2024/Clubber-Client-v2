@@ -8,14 +8,22 @@ import HashTagBar from '@/components/features/hashtag/HashTagBar';
 import { getAccessToken } from '@/auth/AuthService';
 
 export default function Header() {
-  const accessToken = getAccessToken();
+  // const accessToken = getAccessToken();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
   const isLoginPage = pathname === '/login';
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    setIsLoggedIn(!!accessToken);
+  }, []);
+
   return (
     <header className="w-full bg-white">
       {/* 로그인/공지사항 */}
+
       <div className="py-1 mb-5 flex w-screen relative left-1/2 right-1/2 -mx-[50vw] text-xs font-medium bg-[#F6F6F6]">
         <div className="flex items-center justify-end gap-1 w-5xl mx-auto">
           {accessToken ? (
@@ -28,6 +36,7 @@ export default function Header() {
           <span className="mb-1">|</span>
           <Link href="#" className="hover:underline">
             공지사항
+
           </Link>
         </div>
       </div>
