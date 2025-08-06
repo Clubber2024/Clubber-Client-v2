@@ -7,6 +7,7 @@ import QuickServices from '@/components/features/main/QuickServices';
 import GoToNotion from '@/components/features/main/GoToNotion';
 import MainNotice from '@/components/features/main/MainNotice';
 import MainFaq from '@/components/features/main/MainFaq';
+import Link from 'next/link';
 
 export default function MainPage() {
   return (
@@ -24,7 +25,7 @@ export default function MainPage() {
       </div>
       {/* 모집글 & 조회수 */}
       <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[#F9FAFF] pt-5 pb-14 mt-10">
-        <div className="max-w-7xl mx-auto flex flex-row gap-6 px-10">
+        <div className="max-w-6xl mx-auto flex flex-row gap-6 px-15">
           <div className="flex-2">
             <MainRecruitList />
           </div>
@@ -38,12 +39,12 @@ export default function MainPage() {
         <div className="flex-1">
           <GoToNotion />
         </div>
-        <div className="flex-1">
+        <Link href="/community?tab=notices" className="flex-1">
           <MainNotice />
-        </div>
-        <div className="flex-1">
+        </Link>
+        <Link href="/community?tab=faq" className="flex-1">
           <MainFaq />
-        </div>
+        </Link>
       </div>
     </div>
   );
