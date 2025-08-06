@@ -9,16 +9,23 @@ import HashTagBar from '@/components/features/hashtag/HashTagBar';
 import { getAccessToken } from '@/auth/AuthService';
 
 export default function Header() {
-  const accessToken = getAccessToken();
+  // const accessToken = getAccessToken();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
   const isLoginPage = pathname === '/login';
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    setIsLoggedIn(!!accessToken);
+  }, []);
 
   return (
     <header className="w-full bg-white">
       {/* 로그인/공지사항 */}
       <div className="mt-10 mb-5 mr-5 flex items-center gap-2 justify-end text-sm text-gray-500">
-        {accessToken ? (
+        {isLoggedIn ? (
           <Link href="/admin/mypage">마이페이지</Link>
         ) : (
           <Link href="/login" className="hover:underline">

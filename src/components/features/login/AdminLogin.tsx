@@ -4,8 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { saveTokens } from '../../../auth/AuthService';
-import { AxiosError } from 'axios';
 
 import { useRouter } from 'next/navigation';
 import { adminLoginHandler } from './login';
@@ -17,8 +15,8 @@ export default function AdminLogin() {
   const [adminPw, setAdminPw] = useState<string>('');
   const [isId, setIsId] = useState(false);
   const [isPw, setIsPw] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [modalMessage, setModalMessage] = useState('');
 
   // 페이지가 로드될 때 저장된 아이디 불러오기
   useEffect(() => {
