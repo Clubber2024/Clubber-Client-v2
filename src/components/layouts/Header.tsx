@@ -1,24 +1,71 @@
 'use client';
 
-import { Search } from 'lucide-react';
+import { ChevronDown, CircleUserRound, House, Search, UserRound } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import HashTagBar from '@/components/features/hashtag/HashTagBar';
 import { getAccessToken } from '@/auth/AuthService';
+import { useEffect, useState } from 'react';
+import { getAdminsMe } from './header';
+import { Button } from '../ui/button';
+import Divider from '../ui/divider';
+import { adminsLogout } from '../features/login/login';
+import Modal from '@/app/modal/Modal';
+
+interface AdminMeProps {
+  username: string;
+  email: string;
+  contact: any;
+}
 
 export default function Header() {
-  // const accessToken = getAccessToken();
+  const accessToken = getAccessToken();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
   const isLoginPage = pathname === '/login';
+  const router = useRouter();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [adminMe, setAdminMe] = useState<AdminMeProps>();
+  const [isOpenToggle, setIsOpenToggle] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    setIsLoggedIn(!!accessToken);
-  }, []);
+    if (accessToken) {
+      fetchAdminMe();
+      setIsOpenToggle(false);
+    }
+  }, [accessToken]);
+
+  const handleAdminLogOut = () => {
+    fetchLogoutAdmin();
+  };
+
+  const closeModal = () => {
+    setIsOpenModal(false);
+    router.refresh();
+  };
+
+  //api 관련
+  const fetchAdminMe = async () => {
+    const res = await getAdminsMe();
+    console.log(res.data);
+
+    if (res.success) {
+      setAdminMe(res.data);
+      // router.refresh();
+    }
+  };
+
+  const fetchLogoutAdmin = async () => {
+    const res = await adminsLogout();
+    // console.log(res.data);
+
+    setModalMessage('로그아웃 되었습니다.');
+    setIsOpenModal(true);
+  };
 
   return (
     <header className="w-full bg-white">
@@ -27,7 +74,48 @@ export default function Header() {
       <div className="py-1 mb-5 flex w-screen relative left-1/2 right-1/2 -mx-[50vw] text-xs font-medium bg-[#F6F6F6]">
         <div className="flex items-center justify-end gap-1 w-5xl mx-auto">
           {accessToken ? (
-            <Link href="/admin/mypage">마이페이지</Link>
+            <span className="relative">
+              {adminMe ? (
+                <div
+                  className="flex flex-row items-center cursor-pointer"
+                  onClick={() => setIsOpenToggle((prev) => !prev)}
+                >
+                  {adminMe.username}님 <ChevronDown size={12} />
+                </div>
+              ) : (
+                ''
+              )}
+              {isOpenToggle ? (
+                <div className="w-[276px] h-[138px] border border-[#E3E3E3] rounded-[10px] shadow-[0px_0px_5px_0px_#0000001A] bg-white  absolute right-1 z-1000 pl-7 pr-7 flex items-center flex flex-col">
+                  {' '}
+                  <div className="flex flex-row items-center justify-between h-[100px] w-full">
+                    <UserRound size={50} strokeWidth={1} />
+                    <div className="flex flex-col font-[Pretendard] font-normal text-[14px] leading-[100%] tracking-[0%] items-end mt-2">
+                      {adminMe?.email}
+                      <Button
+                        variant="outline"
+                        onClick={handleAdminLogOut}
+                        className="rounded-10 w-[64px] h-[25px] mt-3 font-normal cursor-pointer"
+                      >
+                        로그아웃
+                      </Button>
+                    </div>
+                  </div>
+                  <Divider className="w-[276px]" />
+                  <Link
+                    href="/admin/mypage"
+                    onClick={() => setIsOpenToggle(false)}
+                    className="h-[38px] flex flex-row w-full justify-center items-center font-medium text-[12px] leading-[100%] text-center cursor-pointer"
+                  >
+                    {' '}
+                    <House size={20} className="mr-1" strokeWidth={1} />
+                    마이페이지
+                  </Link>
+                </div>
+              ) : (
+                ''
+              )}
+            </span>
           ) : (
             <Link href="/login" className="hover:underline">
               로그인
@@ -36,7 +124,6 @@ export default function Header() {
           <span className="mb-1">|</span>
           <Link href="#" className="hover:underline">
             공지사항
-
           </Link>
         </div>
       </div>
@@ -67,6 +154,7 @@ export default function Header() {
       </div>
       {/* 해시태그 바 - 메인페이지와 로그인페이지가 아닐 때만 표시 */}
       {!isMainPage && !isLoginPage && <HashTagBar />}
+      {isOpenModal && <Modal isOpen={isOpenModal} message={modalMessage} onClose={closeModal} />}
     </header>
   );
 }

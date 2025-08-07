@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 import { adminLoginHandler } from './login';
+import Modal from '@/app/modal/Modal';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -15,8 +16,8 @@ export default function AdminLogin() {
   const [adminPw, setAdminPw] = useState<string>('');
   const [isId, setIsId] = useState(false);
   const [isPw, setIsPw] = useState(false);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [modalMessage, setModalMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   // 페이지가 로드될 때 저장된 아이디 불러오기
   useEffect(() => {
@@ -55,28 +56,36 @@ export default function AdminLogin() {
     }
   };
 
-  console.log(adminId);
-  console.log(adminPw);
-
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => event.preventDefault();
 
   const handleLoginSubmit = async () => {
     try {
-      const res = await adminLoginHandler(adminId, adminPw);
+      const res = await adminLoginHandler({ adminId, adminPw });
+      console.log('res', res);
+      if (res.success) {
+        const { accessToken, refreshToken } = res.data;
 
-      console.log('res', res.data);
-      const { accessToken, refreshToken } = res.data;
+        console.log('AccessToken:', accessToken);
+        console.log('RefreshToken:', refreshToken);
 
-      console.log('AccessToken:', accessToken);
-      console.log('RefreshToken:', refreshToken);
+        // 예: localStorage 저장
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
 
-      // 예: localStorage 저장
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
+        console.log('res', res.data);
 
-      // 라우팅 또는 상태 업데이트 등 수행
-      router.push('/');
-    } catch (err: any) {}
+        // 라우팅 또는 상태 업데이트 등 수행
+        router.push('/');
+      } else {
+        setModalMessage('아이디 또는 비밀번호를 확인해주세요.');
+        setIsModalOpen(true);
+        setAdminPw('');
+      }
+    } catch (err: any) {
+      setModalMessage('아이디 또는 비밀번호를 확인해주세요.');
+      setIsModalOpen(true);
+      setAdminPw('');
+    }
   };
 
   return (
@@ -136,13 +145,19 @@ mb-[9px]"
         </Button>
       </form>
       <div className="text-center">
-        <span className="font-pretendard font-normal text-[10px] leading-[100%] cursor-pointer hover:text-primary">
+        <Link
+          href="/findId"
+          className="font-pretendard font-normal text-[10px] leading-[100%] cursor-pointer hover:text-primary"
+        >
           아이디 찾기
-        </span>
+        </Link>
         <span className="font-pretendard font-normal text-[10px] leading-[100%] ml-1 mr-1">|</span>
-        <span className="font-pretendard font-normal text-[10px] leading-[100%] cursor-pointer hover:text-primary">
+        <Link
+          href="/findPw"
+          className="font-pretendard font-normal text-[10px] leading-[100%] cursor-pointer hover:text-primary"
+        >
           비밀번호 찾기
-        </span>
+        </Link>
         <span className="font-pretendard font-normal text-[10px] leading-[100%] ml-1 mr-1">|</span>
         <Link
           href="/signup"
@@ -151,6 +166,9 @@ mb-[9px]"
           회원가입
         </Link>
       </div>
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} message={modalMessage} onClose={() => setIsModalOpen(false)} />
+      )}
     </div>
   );
 }

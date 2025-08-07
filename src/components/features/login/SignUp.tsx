@@ -55,7 +55,7 @@ export default function SignUp() {
   const [isShowPwChecked, setIsShowPwChecked] = useState(false);
   const [isShowPwConfirmChecked, setIsShowPwConfirmChecked] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
-  const [isVerfiyEmail, setIsVerifyEmail] = useState(false);
+  const [isVerifyEmail, setIsVerifyEmail] = useState(false);
   // 오류메세지 상태 저장
   const [idMessage1, setIdMessage1] = useState('');
   // const [idMessage2, setIdMessage2] = useState('');
@@ -279,7 +279,7 @@ export default function SignUp() {
   };
 
   const handleEmailVerificationButton = () => {
-    if (isVerfiyEmail) {
+    if (isVerifyEmail) {
       return;
     }
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -566,7 +566,7 @@ mb-[9px]"
           </Button>
         </div>
         <p
-          className={`font-pretendard font-normal text-[10px] leading-[100%] tracking-[0] mt-2 ${isVerfiyEmail ? 'text-primary' : 'text-red-400'}`}
+          className={`font-pretendard font-normal text-[10px] leading-[100%] tracking-[0] mt-2 ${isVerifyEmail ? 'text-primary' : 'text-red-400'}`}
         >
           {emailMessage}
         </p>
