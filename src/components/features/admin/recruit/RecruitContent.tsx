@@ -2,10 +2,9 @@
 
 import Container from '@/components/ui/container';
 import Divider from '@/components/ui/divider';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { getAdminRecruitContent } from './recruit';
-import dayjs from 'dayjs';
 
 export interface AdminRecruitContentProps {
   clubId: number;
