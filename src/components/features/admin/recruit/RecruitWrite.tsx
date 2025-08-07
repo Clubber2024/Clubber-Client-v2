@@ -13,18 +13,20 @@ import {
 } from './api/recruit';
 import Modal from '@/app/modal/Modal';
 import { AdminRecruitContentProps } from './RecruitContent';
-import { apiClient } from '@/lib/apiClient';
 import { Square, SquareCheck } from 'lucide-react';
 
-export default function RecruitWrite() {
+interface RecruitWriteProps {
+  recruitId?: string;
+}
+
+export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const recruitId = searchParams.get('recruitId');
+  // const searchParams = useSearchParams();
+  // const recruitId = searchParams.get('recruitId');
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const [accessToken, setAccessToken] = useState();
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [everytimeUrl, setEverytimeUrl] = useState('');
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -465,6 +467,7 @@ export default function RecruitWrite() {
                     <div className="flex items-center relative">
                       <input
                         type="text"
+                        readOnly
                         value={formatDate(startDate)}
                         className="
     max-w-[177px] h-[55px] rounded-[5px] bg-white
@@ -507,6 +510,7 @@ export default function RecruitWrite() {
                     <div className="flex items-center relative">
                       <input
                         type="text"
+                        readOnly
                         value={formatDate(endDate)}
                         className=" max-w-[177px] h-[55px] rounded-[5px] bg-white
     border border-[#d6d6d6]
@@ -653,13 +657,13 @@ export default function RecruitWrite() {
                       className="w-full h-full object-cover box-border rounded-[5px] "
                     />
 
-                    <button
+                    <div
                       onClick={() => handleRemoveImage(index)}
                       className="absolute left-[90px] top-[5px] z-[10]
   text-red-500 rounded-[3px] border-none"
                     >
                       X
-                    </button>
+                    </div>
                   </button>
                 </div>
               ))}

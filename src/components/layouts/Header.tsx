@@ -86,7 +86,7 @@ export default function Header() {
                 ''
               )}
               {isOpenToggle ? (
-                <div className="w-[276px] h-[138px] border border-[#E3E3E3] rounded-[10px] shadow-[0px_0px_5px_0px_#0000001A] bg-white  absolute right-1 z-1000 pl-7 pr-7 flex items-centervflex-col">
+                <div className="w-[276px] h-[138px] border border-[#E3E3E3] rounded-[10px] shadow-[0px_0px_5px_0px_#0000001A] bg-white  absolute right-1 z-1000 pl-7 pr-7 flex items-center flex-col">
                   {' '}
                   <div className="flex flex-row items-center justify-between h-[100px] w-full">
                     <UserRound size={50} strokeWidth={1} />
@@ -102,15 +102,17 @@ export default function Header() {
                     </div>
                   </div>
                   <Divider className="w-[276px]" />
-                  <Link
-                    href="/admin/mypage"
-                    onClick={() => setIsOpenToggle(false)}
-                    className="h-[38px] flex flex-row w-full justify-center items-center font-medium text-[12px] leading-[100%] text-center cursor-pointer"
-                  >
-                    {' '}
-                    <House size={20} className="mr-1" strokeWidth={1} />
-                    마이페이지
-                  </Link>
+                  <div>
+                    <Link
+                      href="/admin/mypage"
+                      onClick={() => setIsOpenToggle(false)}
+                      className="h-[38px] flex flex-row w-full justify-center items-center font-medium text-[12px] leading-[100%] text-center cursor-pointer"
+                    >
+                      {' '}
+                      <House size={20} className="mr-1" strokeWidth={1} />
+                      마이페이지
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 ''
