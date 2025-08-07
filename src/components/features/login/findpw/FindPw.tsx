@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRef, useState } from 'react';
-import { patchResetPW, postFindPwCode, postFindPwEmail } from './findPw';
+import { patchResetPW, postFindPwCode, postFindPwEmail } from './api/findPw';
 import { useRouter } from 'next/navigation';
 import Modal from '@/app/modal/Modal';
 

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
-import { adminLoginHandler } from './login';
+import { adminLoginHandler } from './api/login';
 import Modal from '@/app/modal/Modal';
 
 export default function AdminLogin() {

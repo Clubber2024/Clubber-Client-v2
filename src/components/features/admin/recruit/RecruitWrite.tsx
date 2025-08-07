@@ -10,7 +10,7 @@ import {
   handleSubmitRecruit,
   patchAdminRecruitWrite,
   uploadImages,
-} from './recruit';
+} from './api/recruit';
 import Modal from '@/app/modal/Modal';
 import { AdminRecruitContentProps } from './RecruitContent';
 import { apiClient } from '@/lib/apiClient';

@@ -4,7 +4,7 @@ import Container from '@/components/ui/container';
 import Divider from '@/components/ui/divider';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { getAdminRecruitContent } from './recruit';
+import { getAdminRecruitContent } from './api/recruit';
 
 export interface AdminRecruitContentProps {
   clubId: number;

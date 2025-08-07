@@ -7,7 +7,7 @@ import TitleDiv from '@/components/ui/title-div';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { deleteAdminRecruit, getAdminRecruit } from './recruit';
+import { deleteAdminRecruit, getAdminRecruit } from './api/recruit';
 import { Divide, EllipsisVertical, PencilLine, Trash2 } from 'lucide-react';
 import Divider from '@/components/ui/divider';
 import Modal from '@/app/modal/Modal';
