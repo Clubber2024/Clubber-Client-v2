@@ -4,7 +4,7 @@ import { useState } from 'react';
 import SearchClub from '../signup/SearchClub';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { postFindId, postFindIdCode, postFindIdEmail } from './findId';
+import { postFindId, postFindIdCode, postFindIdEmail } from './api/findId';
 import { useRouter } from 'next/navigation';
 
 export default function FindId() {
@@ -15,10 +15,12 @@ export default function FindId() {
   const [findId, setFindId] = useState('');
   const [email, setEmail] = useState('');
   const [emailCode, setEmailCode] = useState('');
-  const [authEmail, setAuthEmail] = useState('');
-  const [authCode, setAuthCode] = useState('');
+  // const [authEmail, setAuthEmail] = useState('');
+  // const [authCode, setAuthCode] = useState('');
   const [isVerifyEmail, setIsVerifyEmail] = useState(false);
   const [isVerifyCode, setIsVerifyCode] = useState(false);
+  const [college, setCollege] = useState('');
+  const [department, setDepartment] = useState('');
   //타이머
   const [showTimer, setShowTimer] = useState(false);
   const [start, setStart] = useState(0);
@@ -129,6 +131,10 @@ export default function FindId() {
               setClubType={setClubType}
               clubId={clubId}
               setClubId={setClubId}
+              college={college}
+              setCollege={setCollege}
+              department={department}
+              setDepartment={setDepartment}
               type="find"
             />
           </div>

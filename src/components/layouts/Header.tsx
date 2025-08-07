@@ -7,11 +7,11 @@ import { usePathname, useRouter } from 'next/navigation';
 import HashTagBar from '@/components/features/hashtag/HashTagBar';
 import { getAccessToken } from '@/auth/AuthService';
 import { useEffect, useState } from 'react';
-import { getAdminsMe } from './header';
+import { getAdminsMe } from './api/header';
 import { Button } from '../ui/button';
 import Divider from '../ui/divider';
-import { adminsLogout } from '../features/login/login';
 import Modal from '@/app/modal/Modal';
+import { adminsLogout } from '../features/login/api/login';
 
 interface AdminMeProps {
   username: string;
