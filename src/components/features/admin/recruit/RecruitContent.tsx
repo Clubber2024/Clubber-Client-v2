@@ -21,10 +21,13 @@ export interface AdminRecruitContentProps {
   createdAt: string;
 }
 
-export default function RecruitContent() {
-  const searchParams = useSearchParams();
+interface RecruitContentProps {
+  recruitId?: string;
+}
+export default function RecruitContent({ recruitId }: RecruitContentProps) {
+  // const searchParams = useSearchParams();
   const containerRef = useRef<HTMLDivElement>(null);
-  const recruitId = searchParams.get('recruitId');
+  // const recruitId = searchParams.get('recruitId');
   const [content, setContent] = useState<AdminRecruitContentProps>();
   const [formattedStartAt, setFormattedStartAt] = useState();
   const [formattedEndAt, setFormattedEndAt] = useState();
