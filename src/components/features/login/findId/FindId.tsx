@@ -72,7 +72,6 @@ export default function FindId() {
       if (emailCode) {
         fetchCodeData();
       }
-      f;
     }
   };
 
