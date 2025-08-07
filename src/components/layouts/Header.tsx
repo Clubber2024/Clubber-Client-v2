@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, CircleUserRound, House, Search, UserRound } from 'lucide-react';
+import { ChevronDown, House, Search, UserRound } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -33,10 +33,12 @@ export default function Header() {
   const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
-    if (accessToken) {
-      fetchAdminMe();
-      setIsOpenToggle(false);
+    if (!accessToken) {
+      setAdminMe(undefined); // 토큰 없으면 초기화
+      return;
     }
+    fetchAdminMe();
+    setIsOpenToggle(false);
   }, [accessToken]);
 
   const handleAdminLogOut = () => {
@@ -119,9 +121,11 @@ export default function Header() {
               )}
             </span>
           ) : (
-            <Link href="/login" className="hover:underline">
-              로그인
-            </Link>
+            <div>
+              <Link href="/login" className="hover:underline">
+                로그인
+              </Link>
+            </div>
           )}
           <span className="mb-1">|</span>
           <Link href="#" className="hover:underline">
