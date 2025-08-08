@@ -17,6 +17,9 @@ export const getAdminsMe = async () => {
       return;
     }
   } catch (error) {
+    console.error('getAdminsMe error:', error);
+    // console.error('Error response:', error.response?.data);
+    // console.error('Error status:', error.response?.status);
     throw error;
   }
 };

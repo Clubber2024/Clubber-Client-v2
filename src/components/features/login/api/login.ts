@@ -37,7 +37,7 @@ export const adminLoginHandler = async ({ adminId, adminPw }: LoginRequest) => {
 export const adminsLogout = async () => {
   const accessToken = getAccessToken();
   try {
-    const res = await apiClient.post(`/v1/admins/logout`, {
+    const res = await apiClient.post(`/v1/admins/logout`, {}, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
@@ -50,6 +50,8 @@ export const adminsLogout = async () => {
     //   return;
     // }
   } catch (error) {
+    console.error('Admin logout error:', error);
+    clearTokens(); // Even if logout fails, clear tokens locally
     throw error;
   }
 };

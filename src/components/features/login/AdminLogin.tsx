@@ -71,6 +71,7 @@ export default function AdminLogin() {
         // 예: localStorage 저장
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('isAdmin', 'true');
 
         console.log('res', res.data);
 
