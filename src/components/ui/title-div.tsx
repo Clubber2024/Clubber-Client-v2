@@ -8,13 +8,18 @@ interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function TitleDiv({ children, className }: DivProps) {
   const router = useRouter();
   return (
-    <div className="bg-primary w-full h-[100px] flex flex-row items-center ">
+    <div className="bg-primary w-screen h-[100px] flex flex-row items-center relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+      <div
+        className='w-full max-w-7xl mx-auto flex flex-row items-center'
+        style={{ paddingInline: 'calc(var(--spacing) * 32)' }} 
+      >
       <img
         src={'/images/admin/arrow-narrow-left.png'}
         onClick={() => router.back()}
-        className="w-[29px] h-[29px] ml-[20px] cursor-pointer"
+        className="w-[29px] h-[29px] cursor-pointer mr-2"
       />
       {children}
+      </div>
     </div>
   );
 }

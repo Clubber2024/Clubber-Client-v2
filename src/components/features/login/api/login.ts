@@ -1,4 +1,4 @@
-import { getAccessToken } from '@/auth/AuthService';
+import { getAccessToken, clearTokens } from '@/auth/AuthService';
 import { apiClient } from '@/lib/apiClient';
 
 // interface LoginResponse {
@@ -56,9 +56,27 @@ export const adminsLogout = async () => {
   }
 };
 
-//토큰 삭제
-export const clearTokens = () => {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
-  localStorage.removeItem('isAdmin');
-};
+// 토큰 삭제는 AuthService.js에서 import하여 사용
+
+//동아리 계정 회원탈퇴
+export const deleteWithdrawal = async () => {
+  const accessToken = getAccessToken();
+  try {
+    const res = await apiClient.delete(`/v1/admins/withdraw`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (res.data.success) {
+      clearTokens(); // 성공 시 토큰 클리어
+      return res.data;
+    } else {
+      throw new Error('회원탈퇴 실패');
+    }
+  } catch (error) {
+    console.error('Withdrawal error:', error);
+    throw error;
+  }
+}

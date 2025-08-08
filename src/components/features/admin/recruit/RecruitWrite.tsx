@@ -382,8 +382,8 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
           모집글 작성
         </p>
       </TitleDiv>
-      <div className="flex items-center justify-center mt-[32px]">
-        <div className="flex flex-col shadow-sm w-[80%] pl-8 pr-8">
+      <div className="flex items-center justify-center mt-[32px] mb-[32px] flex-col">
+        <div className="flex flex-col shadow-sm w-[80%] pl-8 pr-8 pb-[32px]">
           <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
             제목
           </p>
@@ -669,10 +669,11 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
               ))}
             </div>
           </div>
-          <Button className="mt-10 h-[64px] rounded-[5px]" onClick={handleSubmitButton}>
+         
+        </div>
+        <Button className="mt-10 h-[60px] rounded-[5px] w-[80%] text-[16px] font-semibold" onClick={handleSubmitButton}>
             작성 완료
           </Button>
-        </div>
         {isModalOpen && <Modal isOpen={isModalOpen} message={modalMessage} onClose={closeModal} />}
       </div>
     </>
