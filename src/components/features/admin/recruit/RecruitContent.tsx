@@ -5,6 +5,7 @@ import Divider from '@/components/ui/divider';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { getAdminRecruitContent } from './api/recruit';
+import RecruitStatusLabel from '@/components/ui/recruit-status-label';
 
 export interface AdminRecruitContentProps {
   clubId: number;
@@ -19,15 +20,14 @@ export interface AdminRecruitContentProps {
   isCalendarLinked: boolean;
   totalView: number;
   createdAt: string;
+  recruitStatus: string;
 }
 
 interface RecruitContentProps {
   recruitId?: string;
 }
 export default function RecruitContent({ recruitId }: RecruitContentProps) {
-  // const searchParams = useSearchParams();
   const containerRef = useRef<HTMLDivElement>(null);
-  // const recruitId = searchParams.get('recruitId');
   const [content, setContent] = useState<AdminRecruitContentProps>();
   const [formattedStartAt, setFormattedStartAt] = useState();
   const [formattedEndAt, setFormattedEndAt] = useState();
@@ -37,7 +37,6 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
       const res = await getAdminRecruitContent(recruitId);
       console.log(res);
       setContent(res);
-      // const formatted = dayjs(res.startAt);
     }
   };
 
@@ -70,9 +69,10 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
   return (
     <>
       <Container>
-        <Divider className="shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] border-black" />
+        <Divider className="shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] border-black mt-[46px]" />
         {content ? (
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center mt-[30px]">
+            <RecruitStatusLabel status={content.recruitStatus} />
             <p className="font-semibold text-[24px] leading-[100%] tracking-[0%] font-pretendard mt-[13px] mb-[14px]">
               {content.title}
             </p>
@@ -85,7 +85,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
                 <span className="font-semibold text-[16px] leading-[100%] tracking-[0%] font-pretendard">
                   • 모집기간{' '}
                 </span>
-                <span className="font-normal text-[16px] leading-[100%] tracking-[0%] font-pretendard">
+                <span className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard">
                   {formatDateArray(content.startAt)} ~ <br />
                   {formatDateArray(content.endAt)}
                 </span>

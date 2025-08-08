@@ -75,7 +75,8 @@ export default function AdminLogin() {
         console.log('res', res.data);
 
         // 라우팅 또는 상태 업데이트 등 수행
-        router.push('/');
+
+        window.location.href = '/';
       } else {
         setModalMessage('아이디 또는 비밀번호를 확인해주세요.');
         setIsModalOpen(true);
