@@ -75,20 +75,20 @@ export default function RecruitList() {
         {recruitList?.map((item) => (
           <Card
             key={item.recruitId}
-            className="mb-6 h-[200px] pl-[20px] pr-[20px] flex flex-row justify-between"
+            className="mb-6 h-[200px] pl-[20px] pr-[20px] flex flex-row justify-between cursor-pointer"
           >
             <div
               onClick={() => router.push(`/admin/recruitContent?recruitId=${item.recruitId}`)}
-              className=" flex flex-row justify-between"
+              className=" flex flex-row justify-between cursor-pointer"
             >
               {item.imageUrl && (
                 <img src={item.imageUrl} className=" w-fit min-w-[178px] aspect-square mr-2" />
               )}
               <div className="w-full">
-                <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate">
+                <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate cursor-pointer">
                   {item.title}
                 </p>
-                <p className="font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-4">
+                <p className="cursor-pointer font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-4">
                   {item.content}
                 </p>
               </div>
@@ -102,7 +102,7 @@ export default function RecruitList() {
                 }}
               />
               {openToggleId === item.recruitId && (
-                <div className="border-[1px] border-[#D6D6D6] shadow-[0_2px_4px_0_rgba(0,0,0,0.15)] w-[117px] h-[75px] absolute top-5 left-0 m-0  rounded-xs bg-white">
+                <div className="border-[1px] border-[#D6D6D6] shadow-[0_2px_4px_0_rgba(0,0,0,0.15)] w-[117px] h-[75px] absolute top-5 left-0 m-0  rounded-xs bg-white cursor-pointer">
                   <p
                     className="flex items-center text-[#a7a7a7] justify-between font-pretendard text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
                     onClick={() => router.push(`/admin/recruitWrite?recruitId=${item.recruitId}`)}

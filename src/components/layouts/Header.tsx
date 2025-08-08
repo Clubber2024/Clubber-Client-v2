@@ -20,23 +20,40 @@ interface AdminMeProps {
 }
 
 export default function Header() {
-  const accessToken = getAccessToken();
+  // const accessToken = getAccessToken();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
   const isLoginPage = pathname === '/login';
   const router = useRouter();
 
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [adminMe, setAdminMe] = useState<AdminMeProps>();
   const [isOpenToggle, setIsOpenToggle] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
+    const token = getAccessToken();
+    setAccessToken(token);
+    console.log('토큰 가져오기');
+  }, []);
+
+  // 만약 로그인 상태가 바뀔 때마다 갱신하고 싶으면 storage 이벤트 사용
+  useEffect(() => {
+    const onStorageChange = () => setAccessToken(getAccessToken());
+    window.addEventListener('storage', onStorageChange);
+    return () => window.removeEventListener('storage', onStorageChange);
+  }, []);
+
+  useEffect(() => {
+    const token = getAccessToken();
+    setAccessToken(token);
     if (!accessToken) {
       setAdminMe(undefined); // 토큰 없으면 초기화
       return;
     }
+    console.log('토큰 가져오기');
     fetchAdminMe();
     setIsOpenToggle(false);
   }, [accessToken]);
@@ -65,8 +82,15 @@ export default function Header() {
     const res = await adminsLogout();
     // console.log(res.data);
 
+    // 상태 즉시 변경 → UI 즉시 반영
+    setAccessToken(null);
+    setAdminMe(undefined);
+
     setModalMessage('로그아웃 되었습니다.');
     setIsOpenModal(true);
+
+    // storage 이벤트 발생 → 다른 탭/컴포넌트에서도 갱신
+    window.dispatchEvent(new Event('storage'));
   };
 
   return (

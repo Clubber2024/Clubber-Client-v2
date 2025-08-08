@@ -7,12 +7,12 @@ import React from 'react';
 */
 
 interface RecruitStatusBadgeProps {
-  status: 'open' | 'closed'; // 'open'이면 진행 중, 'closed'면 마감
+  status: string;
 }
 
 const RecruitStatusLabel: React.FC<RecruitStatusBadgeProps> = ({ status }) => {
-  const isOpen = status === 'open';
-  const label = isOpen ? '진행 중' : '마감';
+  const isOpen = status === '진행중';
+  const label = isOpen ? '모집중' : '마감';
   const bgColor = isOpen ? 'bg-[#4C9DB5]' : 'bg-[#334A52]';
 
   return (
