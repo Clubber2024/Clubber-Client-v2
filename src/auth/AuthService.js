@@ -52,9 +52,12 @@ export const refreshAccessToken = async () => {
     const refreshToken = getRefreshToken();
     if (!refreshToken) throw new Error('No refresh token available');
 
-    console.log(getIsAdmin());
+    console.log('IsAdmin:', getIsAdmin());
+    console.log('RefreshToken exists:', !!refreshToken);
     const isAdmin = getIsAdmin();
-    const endpoint = getIsAdmin() ? `v1/admins/refresh` : `v1/auths/refresh`;
+    const endpoint = getIsAdmin() ? `/v1/admins/refresh` : `/v1/auths/refresh`;
+    console.log('Using endpoint:', endpoint);
+    
     const response = await apiClient.post(
       endpoint,
       {},
@@ -70,6 +73,8 @@ export const refreshAccessToken = async () => {
     return accessToken;
   } catch (error) {
     console.error('Failed to refresh access token', error);
+    console.error('Error response:', error.response?.data);
+    console.error('Error status:', error.response?.status);
     clearTokens();
     if (error.response?.status === 403) {
       if (onAuthErrorCallback) {

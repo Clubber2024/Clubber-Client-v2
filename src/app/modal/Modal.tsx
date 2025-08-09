@@ -1,14 +1,16 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
   message: string;
-
   onClose: () => void;
+  onConfirm?: () => void;
+  showConfirmButton?: boolean;
 }
 
-export default function Modal({ isOpen, message, onClose }: ModalProps) {
+export default function Modal({ isOpen, message, onClose, onConfirm, showConfirmButton }: ModalProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -37,12 +39,30 @@ export default function Modal({ isOpen, message, onClose }: ModalProps) {
         >
           <p className="mb-6 font-medium">{message}</p>
           <div className="flex gap-3">
-            <Button
-              onClick={onClose}
-              className="px-4 py-2 rounded text-white hover:bg-blue-700 transition"
-            >
-              확인
-            </Button>
+            {showConfirmButton ? (
+              <>
+                <Button
+                  onClick={onClose}
+                  variant="outline"
+                  className="px-4 py-2 rounded"
+                >
+                  취소
+                </Button>
+                <Button
+                  onClick={onConfirm}
+                  className="px-4 py-2 rounded text-white hover:bg-blue-700 transition"
+                >
+                  확인
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={onClose}
+                className="px-4 py-2 rounded text-white hover:bg-blue-700 transition"
+              >
+                확인
+              </Button>
+            )}
           </div>
         </div>
       </div>

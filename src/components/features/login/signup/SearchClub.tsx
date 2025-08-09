@@ -161,15 +161,19 @@ export default function SearchClub({
   // }, [clubType]);
 
   useEffect(() => {
-    if (showSuggestions) {
+    if (showSuggestions && !isName) {
       fetchSuggestions(clubName);
     }
-  }, [clubName, fetchSuggestions, showSuggestions]);
+  }, [clubName, fetchSuggestions, showSuggestions, isName]);
+  // !isName 조건 추가해서 한번 더 뜨는 추천리스트 없애줌
 
   const onChangeName = (e: any) => {
-    setShowSuggestions(true);
     const currentName = e.target.value;
     setClubName(currentName);
+
+    if (!isName) {
+      setShowSuggestions(true);
+    }
 
     if (currentName.length < 1) {
       setIsName(false);
@@ -200,22 +204,27 @@ export default function SearchClub({
 
   const handleClubNameSelect = (club: Club) => {
     //소속 분야갸 소모임이 아니면 단과대/학과 "ETC"로 설정
-    if (club.clubType != 'SMALL') {
-      setCollege('ETC');
-      setDepartment('ETC');
+    if (type === 'signup') {
+      if (club.clubType != 'SMALL') {
+        setCollege('ETC');
+        setDepartment('ETC');
+      }
     }
-
-    setShowSuggestions(false);
-    setClubName(club.clubName);
+    setShowSuggestions(false); //1. 슴기기
+    setClubName(club.clubName); //2. 변경 -> 여기서 다시 추천 리스트 뜸
     setClubType(club.clubType);
     setClubId(club.clubId);
     setIsType(true);
     setIsName(true);
   };
 
+  /*
+  //동아리명 검색 시 추천에서 선택하고 한번 더 추천리스트가 뜨는 이유
+   1->2 이렇게 순서가 되어있어도 리렌더링 사이클 중 setClubName이 먼저 반영되기 때문에 useEffect가 다시 실행됨
+*/
   return (
     <>
-      <div className="relative">
+      <div className="relative w-[370px]">
         <img src="/images/login/search.png" className="absolute w-4 top-2.5 left-2" />
         <Input
           id="name"
@@ -264,74 +273,78 @@ export default function SearchClub({
           )}
         </ul>
       )}
-      <p
-        className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px]
-mb-[9px] mt-4 rounded-[5px]"
-      >
-        동아리 소속 분야
-      </p>
-      <div className="flex flex-row w-[370px] justify-between align-middle">
-        {' '}
-        {clubTypes?.map(({ code, title }, idx) => (
-          <label key={idx} htmlFor={code} className="flex items-center cursor-pointer">
-            <input
-              type="radio"
-              name="clubType"
-              id={code}
-              value={code}
-              checked={clubType === code}
-              onChange={handleCheckboxChange} // 선택한 값 설정
-              className="hidden peer"
-            />
-            <img
-              src={
-                clubType === code
-                  ? '/images/login/checkbox-color.png'
-                  : '/images/login/checkbox.png'
-              }
-              className="w-4 h-4 mr-1
-						"
-            />
-            <span className="text-xs font-semibold">{title}</span>
-          </label>
-        ))}
-      </div>
-      {clubType === 'SMALL' ? (
-        <div>
+      {type === 'signup' && (
+        <>
           <p
             className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px]
 mb-[9px] mt-4 rounded-[5px]"
           >
-            단과대 선택
+            동아리 소속 분야
           </p>
-          <div>
-            <form>
-              {' '}
-              <select
-                className=" w-1/2 h-[40px] text-sm rounded-[5px] border"
-                onChange={onClickDepartment}
-              >
-                {colleges.map((colleges: College) => (
-                  <option key={colleges.code} value={colleges.code}>
-                    {colleges.title}
-                  </option>
-                ))}
-              </select>
-              <select
-                className=" w-1/2 h-[40px] text-sm rounded-[5px] border"
-                onChange={(e) => setDepartment(e.target.value)}
-              >
-                {departments?.map((departments) => (
-                  <option key={departments.code} value={departments.code}>
-                    {departments.title}
-                  </option>
-                ))}
-              </select>
-            </form>{' '}
+          <div className="flex flex-row w-[370px] justify-between align-middle">
+            {' '}
+            {clubTypes?.map(({ code, title }, idx) => (
+              <label key={idx} htmlFor={code} className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="clubType"
+                  id={code}
+                  value={code}
+                  checked={clubType === code}
+                  onChange={handleCheckboxChange} // 선택한 값 설정
+                  className="hidden peer"
+                />
+                <img
+                  src={
+                    clubType === code
+                      ? '/images/login/checkbox-color.png'
+                      : '/images/login/checkbox.png'
+                  }
+                  className="w-4 h-4 mr-1
+						"
+                />
+                <span className="text-xs font-semibold">{title}</span>
+              </label>
+            ))}
           </div>
-        </div>
-      ) : (
-        ''
+          {clubType === 'SMALL' ? (
+            <div>
+              <p
+                className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px]
+mb-[9px] mt-4 rounded-[5px]"
+              >
+                단과대 선택
+              </p>
+              <div>
+                <form>
+                  {' '}
+                  <select
+                    className=" w-1/2 h-[40px] text-sm rounded-[5px] border"
+                    onChange={onClickDepartment}
+                  >
+                    {colleges.map((colleges: College) => (
+                      <option key={colleges.code} value={colleges.code}>
+                        {colleges.title}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className=" w-1/2 h-[40px] text-sm rounded-[5px] border"
+                    onChange={(e) => setDepartment(e.target.value)}
+                  >
+                    {departments?.map((departments) => (
+                      <option key={departments.code} value={departments.code}>
+                        {departments.title}
+                      </option>
+                    ))}
+                  </select>
+                </form>{' '}
+              </div>
+            </div>
+          ) : (
+            ''
+          )}
+        </>
       )}
     </>
   );
