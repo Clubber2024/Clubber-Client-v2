@@ -50,14 +50,18 @@ export const setAuthErrorCallback = (callback) => {
 export const refreshAccessToken = async () => {
   try {
     const refreshToken = getRefreshToken();
-    if (!refreshToken) throw new Error('No refresh token available');
+    // if (!refreshToken) throw new Error('No refresh token available');
+    if (!refreshToken) {
+      console.log('No refresh token available - skipping token refresh');
+      return null;
+    }
 
     console.log('IsAdmin:', getIsAdmin());
     console.log('RefreshToken exists:', !!refreshToken);
     const isAdmin = getIsAdmin();
     const endpoint = getIsAdmin() ? `/v1/admins/refresh` : `/v1/auths/refresh`;
     console.log('Using endpoint:', endpoint);
-    
+
     const response = await apiClient.post(
       endpoint,
       {},
@@ -105,6 +109,13 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // refresh token이 없으면 토큰 갱신 시도 X
+      const refreshToken = getRefreshToken();
+      if (!refreshToken) {
+        console.log('No refresh token - cannot refresh access token');
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) return Promise.reject(error); // 무한 루프 방지
 
       isRefreshing = true;
