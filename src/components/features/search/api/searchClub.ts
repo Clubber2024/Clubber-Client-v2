@@ -1,4 +1,14 @@
-import axios from 'axios';
+import { apiClient } from '@/lib/apiClient';
+import { ClubCardRes } from '@/types/club/clubCardData';
+
+interface SearchResponse {
+  success: boolean;
+  data: {
+    clubs: {
+      [divisionName: string]: ClubCardRes[];
+    };
+  };
+}
 
 export const searchClub = async (params: {
     clubName?: string;
@@ -13,8 +23,17 @@ export const searchClub = async (params: {
     if (params.division) searchParams.append('division', params.division);
     if (params.department) searchParams.append('department', params.department);
   
-    // const response = await apiClient.get(`/api/v1/clubs?${searchParams.toString()}`);
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/clubs?${searchParams.toString()}`);
+    const response = await apiClient.get(`/v1/clubs?${searchParams.toString()}`);
+    const data = response.data as SearchResponse;
     
-    return response.data.data;
+    if (data.success && data.data.clubs) {
+      // 모든 분과의 동아리들 하나의 배열로
+      const allClubs: ClubCardRes[] = [];
+      Object.values(data.data.clubs).forEach(divisionClubs => {
+        allClubs.push(...divisionClubs);
+      });
+      return allClubs;
+    }
+    
+    return [];
   };

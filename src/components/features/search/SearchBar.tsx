@@ -2,7 +2,6 @@ import { Input } from '@/components/ui/input';
 import { Search, Clock, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { searchClub } from './api/searchClub';
 
 interface SearchBarProps {
   onClose?: () => void;
@@ -54,9 +53,6 @@ export default function SearchBar({ onClose }: SearchBarProps) {
 
     setLoading(true);
     try {
-      // searchClub API 호출
-      const result = await searchClub({ clubName: term });
-
       // 검색어 저장
       saveRecentSearch(term);
 

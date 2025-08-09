@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { ChevronDown, House, Search, X, UserRound } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,18 +12,17 @@ import { getAdminsMe } from './api/header';
 import { Button } from '../ui/button';
 import Divider from '../ui/divider';
 import Modal from '@/app/modal/Modal';
-import { adminsLogout } from '../features/login/api/login';
+// import { adminsLogout } from '../features/login/api/login';
 
 interface AdminMeProps {
   username: string;
   email: string;
-  contact: any;
+  contact: string;
 }
 
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const accessToken = getAccessToken();
   const pathname = usePathname();
   const isMainPage = pathname === '/';
   const isLoginPage = pathname === '/login';
@@ -95,7 +93,7 @@ export default function Header() {
   };
 
   const fetchLogoutAdmin = async () => {
-    const res = await adminsLogout();
+    // const res = await adminsLogout();
     // console.log(res.data);
 
     // 상태 즉시 변경 → UI 즉시 반영
@@ -167,7 +165,7 @@ export default function Header() {
               </Link>
             </div>
           )}
-          <span className="mb-1">|</span>
+          <span className="mb-0.5">|</span>
           <Link href="#" className="hover:underline">
             공지사항
           </Link>
