@@ -49,7 +49,7 @@ export default function AdminMy() {
                 리뷰 관리
               </Button>
               <Divider className="w-[230px]" />
-              <Button variant={'outline'} className="w-[210px] h-[40px]">
+              <Button variant={'outline'} className="w-[210px] h-[40px]" onClick={()=>router.push('/admin/editMyInfo')}>
                 회원정보 수정
               </Button>
             </Card>
