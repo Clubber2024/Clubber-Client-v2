@@ -10,7 +10,13 @@ interface ModalProps {
   showConfirmButton?: boolean;
 }
 
-export default function Modal({ isOpen, message, onClose, onConfirm, showConfirmButton }: ModalProps) {
+export default function Modal({
+  isOpen,
+  message,
+  onClose,
+  onConfirm,
+  showConfirmButton,
+}: ModalProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -41,16 +47,12 @@ export default function Modal({ isOpen, message, onClose, onConfirm, showConfirm
           <div className="flex gap-3">
             {showConfirmButton ? (
               <>
-                <Button
-                  onClick={onClose}
-                  variant="outline"
-                  className="px-4 py-2 rounded"
-                >
+                <Button onClick={onClose} variant="outline" className="px-4 py-2 rounded">
                   취소
                 </Button>
                 <Button
                   onClick={onConfirm}
-                  className="px-4 py-2 rounded text-white hover:bg-blue-700 transition"
+                  className="px-4 py-2 rounded text-white hover:bg-primary/80 transition"
                 >
                   확인
                 </Button>
@@ -58,7 +60,7 @@ export default function Modal({ isOpen, message, onClose, onConfirm, showConfirm
             ) : (
               <Button
                 onClick={onClose}
-                className="px-4 py-2 rounded text-white hover:bg-blue-700 transition"
+                className="px-4 py-2 rounded text-white hover:bg-primary/80 transition"
               >
                 확인
               </Button>
