@@ -1,14 +1,14 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { kakaoLoginWithCode, saveTokens, getUserInfo } from './api/kakaoLogin';
 import { useLoginStore } from '../../../stores/login/useLoginStore';
 
-export default function KakaoRedirection() {
+function KakaoRedirectionContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [isProcessing, setIsProcessing] = useState(false); // 중복 요청 방지
+  const [isProcessing, setIsProcessing] = useState(false);
   const { login } = useLoginStore();
 
   const handleKakaoLogin = async (code: string) => {
@@ -59,5 +59,22 @@ export default function KakaoRedirection() {
         <p className="text-gray-600">카카오 로그인 처리중...</p>
       </div>
     </div>
+  );
+}
+
+export default function KakaoRedirection() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-gray-600">로딩중...</p>
+          </div>
+        </div>
+      }
+    >
+      <KakaoRedirectionContent />
+    </Suspense>
   );
 }
