@@ -16,27 +16,39 @@ export const getAccessToken = () => {
 };
 
 // 리프레시 토큰 가져오기
-export const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN_KEY);
+export const getRefreshToken = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(REFRESH_TOKEN_KEY);
+  }
+  return null;
+};
 
 // 관리자 여부 가져오기
 // export const getIsAdmin = () => localStorage.getItem(IS_ADMIN_KEY);
 export const getIsAdmin = () => {
-  return localStorage.getItem(IS_ADMIN_KEY) === 'true'; // 문자열이 아니라 Boolean을 반환
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(IS_ADMIN_KEY) === 'true'; // 문자열이 아니라 Boolean을 반환
+  }
+  return false; // 서버 사이드에서는 기본값 false 반환
 };
 
 // 토큰 저장 -> isAdmin default value가 false였음 바보야
 export const saveTokens = (accessToken, refreshToken, isAdmin) => {
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-  localStorage.setItem(IS_ADMIN_KEY, isAdmin ? 'true' : 'false');
-  // localStorage.setItem(IS_ADMIN_KEY, isAdmin);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    localStorage.setItem(IS_ADMIN_KEY, isAdmin ? 'true' : 'false');
+    // localStorage.setItem(IS_ADMIN_KEY, isAdmin);
+  }
 };
 
 // 토큰 삭제 (로그아웃)
 export const clearTokens = () => {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
-  localStorage.removeItem(IS_ADMIN_KEY);
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(IS_ADMIN_KEY);
+  }
 };
 
 let onAuthErrorCallback = null; // 콜백 함수 저장 변수
