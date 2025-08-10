@@ -35,10 +35,10 @@ export default function Footer() {
       await deleteWithdrawal();
       setModalMessage('회원탈퇴가 완료되었습니다.');
       setIsModalOpen(true);
-      
+
       // 토큰 클리어
       clearTokens();
-      
+
       // 홈페이지로 리다이렉트
       setTimeout(() => {
         window.location.href = '/';
@@ -62,36 +62,30 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="w-screen h-[52px] bg-white border-t border-[#808080] mt-10 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+      <footer className="w-screen h-[52px] bg-white border-t text-sm font-normal border-[#808080] mt-30 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
         <div className="flex flex-row justify-center items-center h-full">
           <span className="text-[#646464] pr-2">
             Copyrightⓒ2025-2025 Clubber Inc. All rights reserved.
           </span>
           <div className="text-[#646464]">
-            <span className="cursor-pointer">이용약관</span> | 
-            <span className="cursor-pointer"> 개인정보처리방침</span> | 
-            <span 
-              className={`cursor-pointer ${isAdmin ? 'hover:text-red-500' : 'text-gray-400'}`}
+            <span className="cursor-pointer">이용약관 </span> |
+            <span className="cursor-pointer"> 개인정보처리방침 </span> |
+            <span
+              className={`cursor-pointer ${isAdmin ? 'hover:text-red-500' : 'text-[#646464]'}`}
               onClick={handleWithdrawal}
             >
-              {isLoading ? '처리중...' : '회원탈퇴'}
-            </span> | 
-            <span className="cursor-pointer"> FAQ</span>
+              {isLoading ? '처리중...' : ' 회원탈퇴'}
+            </span>{' '}
+            |<span className="cursor-pointer"> FAQ</span>
           </div>
         </div>
       </footer>
-      
-      {isModalOpen && (
-        <Modal 
-          isOpen={isModalOpen} 
-          message={modalMessage} 
-          onClose={closeModal} 
-        />
-      )}
-      
+
+      {isModalOpen && <Modal isOpen={isModalOpen} message={modalMessage} onClose={closeModal} />}
+
       {showConfirmModal && (
-        <Modal 
-          isOpen={showConfirmModal} 
+        <Modal
+          isOpen={showConfirmModal}
           message="정말로 회원탈퇴를 하시겠습니까? 이 작업은 되돌릴 수 없습니다."
           onClose={closeConfirmModal}
           onConfirm={handleConfirmWithdrawal}

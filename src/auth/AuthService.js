@@ -16,27 +16,39 @@ export const getAccessToken = () => {
 };
 
 // 리프레시 토큰 가져오기
-export const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN_KEY);
+export const getRefreshToken = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(REFRESH_TOKEN_KEY);
+  }
+  return null;
+};
 
 // 관리자 여부 가져오기
 // export const getIsAdmin = () => localStorage.getItem(IS_ADMIN_KEY);
 export const getIsAdmin = () => {
-  return localStorage.getItem(IS_ADMIN_KEY) === 'true'; // 문자열이 아니라 Boolean을 반환
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(IS_ADMIN_KEY) === 'true'; // 문자열이 아니라 Boolean을 반환
+  }
+  return false; // 서버 사이드에서는 기본값 false 반환
 };
 
 // 토큰 저장 -> isAdmin default value가 false였음 바보야
 export const saveTokens = (accessToken, refreshToken, isAdmin) => {
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-  localStorage.setItem(IS_ADMIN_KEY, isAdmin ? 'true' : 'false');
-  // localStorage.setItem(IS_ADMIN_KEY, isAdmin);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    localStorage.setItem(IS_ADMIN_KEY, isAdmin ? 'true' : 'false');
+    // localStorage.setItem(IS_ADMIN_KEY, isAdmin);
+  }
 };
 
 // 토큰 삭제 (로그아웃)
 export const clearTokens = () => {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-  localStorage.removeItem(REFRESH_TOKEN_KEY);
-  localStorage.removeItem(IS_ADMIN_KEY);
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(IS_ADMIN_KEY);
+  }
 };
 
 let onAuthErrorCallback = null; // 콜백 함수 저장 변수
@@ -50,14 +62,18 @@ export const setAuthErrorCallback = (callback) => {
 export const refreshAccessToken = async () => {
   try {
     const refreshToken = getRefreshToken();
-    if (!refreshToken) throw new Error('No refresh token available');
+    // if (!refreshToken) throw new Error('No refresh token available');
+    if (!refreshToken) {
+      console.log('No refresh token available - skipping token refresh');
+      return null;
+    }
 
     console.log('IsAdmin:', getIsAdmin());
     console.log('RefreshToken exists:', !!refreshToken);
     const isAdmin = getIsAdmin();
     const endpoint = getIsAdmin() ? `/v1/admins/refresh` : `/v1/auths/refresh`;
     console.log('Using endpoint:', endpoint);
-    
+
     const response = await apiClient.post(
       endpoint,
       {},
@@ -105,6 +121,13 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // refresh token이 없으면 토큰 갱신 시도 X
+      const refreshToken = getRefreshToken();
+      if (!refreshToken) {
+        console.log('No refresh token - cannot refresh access token');
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) return Promise.reject(error); // 무한 루프 방지
 
       isRefreshing = true;
