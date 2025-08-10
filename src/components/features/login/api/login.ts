@@ -58,7 +58,7 @@ export const adminsLogout = async () => {
 
 // 토큰 삭제는 AuthService.js에서 import하여 사용
 
-//동아리 계정 회원탈퇴
+//동아리 계정 회원탈퇴 
 export const deleteWithdrawal = async () => {
   const accessToken = getAccessToken();
   try {
