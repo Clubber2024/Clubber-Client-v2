@@ -103,7 +103,7 @@ interface CollegeCardProps {
 function CollegeCard({ college, departments, onClick }: CollegeCardProps) {
   return (
     <Card
-      className="overflow-hidden w-50 h-80 p-6 hover:scale-105 transition-all duration-300 cursor-pointer bg-white shadow-lg hover:shadow-xl border border-gray-200"
+      className="overflow-hidden w-50 h-80 p-6 hover:scale-103 transition-all duration-300 cursor-pointer bg-white shadow-lg hover:shadow-xl border border-gray-200"
       onClick={onClick}
     >
       <div className="flex flex-col h-full">
