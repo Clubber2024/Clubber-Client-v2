@@ -208,3 +208,5 @@ export const deleteAdminRecruit = async (recruitId: number) => {
     throw error;
   }
 };
+
+

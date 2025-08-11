@@ -23,6 +23,14 @@ function KakaoRedirectionContent() {
 
       // Header 컴포넌트에 로그인 상태 변경 알림
       window.dispatchEvent(new Event('storage'));
+      
+      // 추가로 storage 이벤트를 시뮬레이션하여 Footer 컴포넌트도 업데이트
+      setTimeout(() => {
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'accessToken',
+          newValue: response.data.accessToken
+        }));
+      }, 100);
 
       // 실제 사용자 정보 가져오기
       try {

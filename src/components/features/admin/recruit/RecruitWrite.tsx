@@ -81,6 +81,9 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   const getRecruitContent = async () => {
     if (recruitId) {
       const res = await getAdminRecruitContent(recruitId);
+      
+      console.log('API 응답:', res);
+      console.log('isCalendarLinked 값:', res.isCalendarLinked);
 
       setRecruitData(res);
       setTitle(res.title);
@@ -93,6 +96,9 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
       setRemainedImages(res.imageUrls);
       setApplyLink(res.applyLink);
       setIsCalendarLink(res.isCalendarLinked);
+      
+      console.log('설정된 isCalendarLink 상태:', res.isCalendarLinked);
+      
       const endDate = res.endAt;
       const fullDate = new Date(
         res.startAt[0],
@@ -121,6 +127,11 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
       return;
     }
   }, [recruitId]);
+
+  // isCalendarLink 상태 변경 추적
+  useEffect(() => {
+    console.log('isCalendarLink 상태 변경:', isCalendarLink);
+  }, [isCalendarLink]);
 
   //캘린더 관련 함수
   const formatDate = (date: Date) => {
@@ -547,10 +558,8 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
           <div className="flex items-center mt-4">
             {isCalendarLink ? (
-              // <div className="w-[16px] h-[16px] bg-primary">
               <SquareCheck onClick={() => setIsCalendarLink(false)} size={20} color="#71b1dd" />
             ) : (
-              // </div>
               <Square onClick={() => setIsCalendarLink(true)} size={20} color="#d6d6d6" />
             )}
 

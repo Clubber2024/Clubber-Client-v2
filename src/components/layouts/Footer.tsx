@@ -1,7 +1,7 @@
 'use client';
 
-import { getIsAdmin, clearTokens } from '@/auth/AuthService';
-import { deleteWithdrawal } from '@/components/features/login/api/login';
+import { getIsAdmin, clearTokens, getAccessToken } from '@/auth/AuthService';
+import { deleteWithdrawal, deleteUserWithdrawal } from '@/components/features/login/api/login';
 import { useState, useEffect } from 'react';
 import Modal from '@/app/modal/Modal';
 
@@ -10,16 +10,59 @@ export default function Footer() {
   const [modalMessage, setModalMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isUser, setIsUser] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(() => {
+    // 초기값을 함수로 설정하여 컴포넌트 마운트 시점에 토큰을 가져옴
+    if (typeof window !== 'undefined') {
+      return getAccessToken();
+    }
+    return null;
+  });
 
-  // 컴포넌트 마운트 시 관리자 여부 확인
+  // 컴포넌트 마운트 시 관리자 여부와 액세스 토큰 확인
   useEffect(() => {
-    setIsAdmin(getIsAdmin());
+    const updateUserState = () => {
+      const adminStatus = getIsAdmin();
+      const token = getAccessToken();
+      console.log('Footer useEffect - adminStatus:', adminStatus, 'token:', token, 'token exists:', !!token);
+      console.log('LocalStorage - accessToken:', localStorage.getItem('accessToken'));
+      console.log('LocalStorage - isAdmin:', localStorage.getItem('isAdmin'));
+      setIsAdmin(adminStatus);
+      setAccessToken(token);
+      setIsUser(!adminStatus && !!token); // 관리자가 아니고 토큰이 있으면 일반 사용자
+    };
+
+    // 초기 상태 설정
+    updateUserState();
+
+    // 로컬스토리지 변경 감지
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'accessToken' || e.key === 'isAdmin') {
+        console.log('Storage changed:', e.key, e.newValue);
+        updateUserState();
+      }
+    };
+
+    // 커스텀 이벤트 리스너 추가 (같은 탭에서의 변경 감지)
+    const handleCustomStorageChange = () => {
+      console.log('Custom storage event triggered');
+      updateUserState();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('storage', handleCustomStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage', handleCustomStorageChange);
+    };
   }, []);
 
   const handleWithdrawal = async () => {
-    if (!isAdmin) {
-      setModalMessage('관리자만 회원탈퇴가 가능합니다.');
+    // 토큰이 없으면 로그인이 필요함
+    if (!accessToken) {
+      setModalMessage('로그인이 필요한 서비스입니다.');
       setIsModalOpen(true);
       return;
     }
@@ -31,13 +74,18 @@ export default function Footer() {
   const handleConfirmWithdrawal = async () => {
     setShowConfirmModal(false);
     setIsLoading(true);
+    
     try {
-      await deleteWithdrawal();
+      if (isAdmin) {
+        // 관리자 회원탈퇴
+        await deleteWithdrawal();
+      } else if (isUser) {
+        // 일반 사용자 회원탈퇴
+        await deleteUserWithdrawal();
+      }
+      
       setModalMessage('회원탈퇴가 완료되었습니다.');
       setIsModalOpen(true);
-
-      // 토큰 클리어
-      clearTokens();
 
       // 홈페이지로 리다이렉트
       setTimeout(() => {
@@ -50,7 +98,7 @@ export default function Footer() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -60,6 +108,9 @@ export default function Footer() {
     setShowConfirmModal(false);
   };
 
+  // 회원탈퇴 버튼이 클릭 가능한지 확인
+  const canWithdraw = isAdmin || isUser;
+console.log(isAdmin,isUser);
   return (
     <>
       <footer className="w-screen h-[52px] bg-white border-t text-sm font-normal border-[#808080] mt-30 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
@@ -68,11 +119,11 @@ export default function Footer() {
             Copyrightⓒ2025-2025 Clubber Inc. All rights reserved.
           </span>
           <div className="text-[#646464]">
-            <span className="cursor-pointer">이용약관 </span> |
-            <span className="cursor-pointer"> 개인정보처리방침 </span> |
+            <a href="https://polymorphismj.notion.site/clubber-19cfbba2687280089490c05f188083f8?pvs=4" className="cursor-pointer hover:text-primary">이용약관 </a> |
+            <a href="https://polymorphismj.notion.site/clubber-198fbba26872804ba430c3801b4e7b54?pvs=4" className="cursor-pointer hover:text-primary"> 개인정보처리방침 </a> |
             <span
-              className={`cursor-pointer ${isAdmin ? 'hover:text-red-500' : 'text-[#646464]'}`}
-              onClick={handleWithdrawal}
+              className={`cursor-pointer ${canWithdraw ? 'hover:text-red-500' : 'text-[#646464]'}`}
+              onClick={canWithdraw ? handleWithdrawal : undefined}
             >
               {isLoading ? '처리중...' : ' 회원탈퇴'}
             </span>{' '}

@@ -84,6 +84,13 @@ export default function Header() {
 
   const handleAdminLogOut = () => {
     fetchLogoutAdmin();
+    setIsOpenToggle(false);
+    setAccessToken(null);
+    setAdminMe(undefined);
+    removeTokens();
+    setModalMessage('로그아웃 되었습니다.');
+    
+    window.dispatchEvent(new Event('storage'));
   };
 
   const handleUserLogOut = async () => {
@@ -159,7 +166,7 @@ export default function Header() {
                 onClick={() => setIsOpenToggle((prev) => !prev)}
               >
                 {isAdmin ? (
-                  <div>
+                  <div className='flex flex-row justify-center items-center'>
                     {adminMe?.username}님 <ChevronDown size={12} />
                   </div>
                 ) : (

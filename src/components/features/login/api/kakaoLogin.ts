@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/apiClient';
 import { KakaoLoginResponse } from '@/types/login/kakaoLoginData';
-import { getAccessToken } from '@/auth/AuthService';
+import { getAccessToken, saveTokens as authSaveTokens } from '@/auth/AuthService';
 
 /**
  * 카카오 OAuth 코드로 로그인하여 토큰 받아오기
@@ -31,8 +31,8 @@ export const kakaoLogout = async () => {
  */
 export const saveTokens = (accessToken: string, refreshToken: string): void => {
   try {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
+    // AuthService의 saveTokens 사용 (일반 사용자는 isAdmin = false)
+    authSaveTokens(accessToken, refreshToken, false);
     console.log('토큰 저장 완료');
   } catch (error) {
     console.error('토큰 저장 실패:', error);
