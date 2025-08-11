@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminLoginHandler } from './api/login';
 import Modal from '@/app/modal/Modal';
+import { saveTokens } from '@/auth/AuthService';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -68,10 +69,8 @@ export default function AdminLogin() {
         console.log('AccessToken:', accessToken);
         console.log('RefreshToken:', refreshToken);
 
-        // 예: localStorage 저장
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('isAdmin', 'true');
+        // AuthService의 saveTokens 함수 사용
+        saveTokens(accessToken, refreshToken, true);
 
         console.log('res', res.data);
 

@@ -69,14 +69,34 @@ export const deleteWithdrawal = async () => {
       },
     });
     
-    if (res.data.success) {
+    
       clearTokens(); // 성공 시 토큰 클리어
-      return res.data;
-    } else {
-      throw new Error('회원탈퇴 실패');
-    }
+     
   } catch (error) {
     console.error('Withdrawal error:', error);
+    throw error;
+  }
+}
+
+// 일반 사용자 회원탈퇴
+export const deleteUserWithdrawal = async () => {
+  const accessToken = getAccessToken();
+  try {
+    console.log('회원탈퇴 API 호출 시작');
+    const res = await apiClient.delete(`/v1/auths/withdraw`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    console.log('회원탈퇴 API 응답:', res.data);
+    
+    clearTokens(); // 성공 시 토큰 클리어
+  } catch (error: any) {
+    console.error('User withdrawal error:', error);
+    console.error('Error response:', error.response?.data);
+    console.error('Error status:', error.response?.status);
     throw error;
   }
 }

@@ -1,0 +1,222 @@
+/* Desktop styles */
+@media screen and (min-width: 768px) {
+  .bookmark-div {
+    margin-bottom: 200px;
+  }
+  
+  .title {
+    margin: 40px auto;
+    width: 200px;
+    height: 40px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 34.75px;
+    text-align: center;
+  }
+
+  .rectangle {
+    align-items: center;
+    width: 528px;
+    height: 123px;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    margin: auto;
+    margin-bottom: 30px;
+    position: relative;
+    display: flex;
+    padding: 10px;
+  }
+
+  .club-logo {
+    flex-shrink: 0;
+  }
+
+  .club-image {
+    width: 100px;
+    height: 103px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .favorite-clubs-div {
+    flex: 1;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .club-name {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 26.06px;
+    margin: 0;
+    margin-bottom: 5px;
+  }
+
+  .club-type {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 0;
+    color: #666;
+  }
+
+  .div-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bookmark-icon {
+    cursor: pointer;
+  }
+
+  .bookmark-button-div {
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+
+  .more-button {
+    margin-top: 20px;
+    padding-bottom: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: white;
+    border: 1.5px solid #7bc8e0;
+    color: #7bc8e0;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .more-button:hover {
+    background-color: #d3f2fbb7;
+  }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+  .bookmark-div {
+    margin-bottom: 100px;
+  }
+  
+  .title {
+    margin: 40px auto;
+    width: 200px;
+    height: 40px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 34.75px;
+    text-align: center;
+  }
+
+  .rectangle {
+    align-items: center;
+    width: 300px;
+    height: 100px;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    margin: auto;
+    margin-bottom: 20px;
+    position: relative;
+    display: flex;
+    padding: 10px;
+  }
+
+  .club-logo {
+    flex-shrink: 0;
+  }
+
+  .club-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .favorite-clubs-div {
+    flex: 1;
+    margin-left: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .club-name {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+    margin-bottom: 5px;
+  }
+
+  .club-type {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 0;
+    color: #666;
+  }
+
+  .div-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .star-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bookmark-icon {
+    cursor: pointer;
+  }
+
+  .bookmark-button-div {
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+
+  .more-button {
+    margin-top: 15px;
+    padding-bottom: 3px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: white;
+    border: 1.5px solid #7bc8e0;
+    color: #7bc8e0;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .more-button:hover {
+    background-color: #d3f2fbb7;
+  }
+}

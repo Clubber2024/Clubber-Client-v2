@@ -681,6 +681,9 @@ mb-[9px]"
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={handleModalClose} message={modalMessage} />
       )}
+      {isTotalModalOpen && (
+        <Modal isOpen={isTotalModalOpen} onClose={handleTotalModalClose} message={modalTotalMessage} />
+      )}
     </div>
   );
 }

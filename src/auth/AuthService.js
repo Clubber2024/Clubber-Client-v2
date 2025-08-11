@@ -10,6 +10,7 @@ const IS_ADMIN_KEY = 'isAdmin';
 // export const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_KEY);
 export const getAccessToken = () => {
   if (typeof window !== 'undefined') {
+    // console.log("getAccessToken",localStorage.getItem(ACCESS_TOKEN_KEY));
     return localStorage.getItem(ACCESS_TOKEN_KEY);
   }
   return null;
@@ -48,6 +49,7 @@ export const clearTokens = () => {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(IS_ADMIN_KEY);
+    localStorage.removeItem('isAdmin');
   }
 };
 
