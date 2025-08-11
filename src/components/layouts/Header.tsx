@@ -248,7 +248,7 @@ export default function Header() {
             <Link href="/">한눈에 보기</Link>
             <Link href={'/center'}>중앙 동아리</Link>
             <Link href="/">자치 기구</Link>
-            <Link href="/">단과대</Link>
+            <Link href="/college">단과대</Link>
           </nav>
         </div>
         {/* 우측: 검색 버튼 */}
