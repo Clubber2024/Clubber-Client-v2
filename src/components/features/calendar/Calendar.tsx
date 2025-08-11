@@ -35,17 +35,16 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
   const totalCells = curMonthFirstDay + curMonthLastDate > 35 ? 42 : 35;
 
   const changeMonth = (offset: number) => {
-    if (month === 1 && offset === -1) {
-      setModalMessage('이전 달로 이동할 수 없습니다.');
-      setIsModalOpen(true);
-      return;
-    } else if (month === 12 && offset === 1) {
-      setModalMessage('다음 달로 이동할 수 없습니다.');
+    const newDate = new Date(currentDate);
+    newDate.setMonth(currentDate.getMonth() + offset);
+
+    // 연도 경계 체크 (2025년만 허용)
+    if (newDate.getFullYear() !== 2025) {
+      setModalMessage('2025년만 조회 가능합니다.');
       setIsModalOpen(true);
       return;
     }
 
-    const newDate = new Date(year, month - 1 + offset, 1);
     setCurrentDate(newDate);
   };
 
@@ -64,7 +63,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
         <div className="flex flex-row justify-between items-center w-full px-5">
           <div className="flex flex-row items-center">
             <h1 className="text-white py-6 pl-2 text-6xl font-bold">
-              {calendarData.year}.{String(calendarData.month).padStart(2, '0')}
+              {year}.{String(month).padStart(2, '0')}
             </h1>
             <div className="flex items-center ml-8 text-white">
               <Button
@@ -79,7 +78,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                 variant="ghost"
                 size="icon"
                 className="text-white font-extrabold hover:bg-white/20 p-2"
-                onClick={() => changeMonth(1)}
+                onClick={() => changeMonth(+1)}
               >
                 <ChevronRight className="size-8 stroke-[2.5]" />
               </Button>

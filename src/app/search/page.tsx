@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import ClubCard from '@/components/features/club/ClubCard';
+import ClubList from '@/components/features/club/ClubList';
 import { ClubCardRes } from '@/types/club/clubCardData';
 import { searchClub } from '@/components/features/search/api/searchClub';
 import { CircleAlert } from 'lucide-react';
@@ -60,17 +60,7 @@ function SearchContent() {
             <p className="mt-4 text-gray-600">검색 중...</p>
           </div>
         ) : clubs.length > 0 ? (
-          <div
-            className={`${
-              clubs.length <= 4
-                ? 'flex flex-wrap justify-center gap-6'
-                : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
-            }`}
-          >
-            {clubs.map((club) => (
-              <ClubCard key={club.clubId} club={club} />
-            ))}
-          </div>
+          <ClubList clubs={clubs} />
         ) : (
           searchTerm && (
             <div className="flex flex-col items-center justify-center py-10">
