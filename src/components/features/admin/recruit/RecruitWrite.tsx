@@ -8,6 +8,7 @@ import MyCalendar from './Calendar';
 import {
   getAdminRecruitContent,
   handleSubmitRecruit,
+  linkCalendar,
   patchAdminRecruitWrite,
   uploadImages,
 } from './api/recruit';
@@ -82,8 +83,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
     if (recruitId) {
       const res = await getAdminRecruitContent(recruitId);
       
-      console.log('API 응답:', res);
-      console.log('isCalendarLinked 값:', res.isCalendarLinked);
+      
 
       setRecruitData(res);
       setTitle(res.title);
@@ -97,7 +97,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
       setApplyLink(res.applyLink);
       setIsCalendarLink(res.isCalendarLinked);
       
-      console.log('설정된 isCalendarLink 상태:', res.isCalendarLinked);
+    
       
       const endDate = res.endAt;
       const fullDate = new Date(
@@ -144,13 +144,13 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   const handleToggleCalendar = () => {
     if (recruitType === 'ADDITIONAL' || recruitType === 'REGULAR') {
       setCalendarIsOpen(!calendarIsOpen);
-      console.log(recruitType);
+     
     } else {
       return;
     }
   };
 
-  console.log(startTime);
+
 
   const handleToggleEndCalendar = () => {
     if (recruitType === 'ADDITIONAL' || recruitType === 'REGULAR') {
@@ -189,7 +189,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
     setIsErrorTitle(false);
     setTitle(e.target.value);
     setTitleCount(e.target.value.length);
-    console.log(e.target.value);
+   
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -200,7 +200,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
   const handleApplyLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setApplyLink(e.target.value);
-    console.log(e.target.value);
+  
   };
 
   // 파일 선택 핸들러
@@ -355,9 +355,41 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
           },
           recruitId
         );
+        console.log("모집글 수정 응답:", res);
+        console.log("응답 구조:", {
+          success: res.success,
+          data: res.data,
+          shouldCreateCalendar: res.data?.shouldCreateCalendar
+        });
+        
         if (res.success) {
-          setIsModalOpen(true);
-          setModalMessage('모집글 수정이 완료되었습니다.');
+          if(res.data && res.data.shouldCreateCalendar){
+            console.log("캘린더 연동 시도 중...");
+            try {
+              const resLinkCalendar= await linkCalendar(recruitId);
+              console.log("캘린더 연동 결과:", resLinkCalendar);
+
+              if(resLinkCalendar.success){
+               
+                setIsModalOpen(true);
+                setModalMessage('모집글 수정이 완료되었습니다.');
+              } else {
+                console.error("캘린더 연동 실패:", resLinkCalendar);
+                setIsModalOpen(true);
+                setModalMessage('모집글 수정이 완료되었습니다.');
+              }
+            } catch (error) {
+              // console.error("캘린더 연동 중 에러:", error);
+              // setIsModalOpen(true);
+              // setModalMessage('모집글 수정이 완료되었습니다. (캘린더 연동 에러)');
+            }
+          } 
+          else{
+            console.log("캘린더 연동 조건 불충족:", res.data?.shouldCreateCalendar);
+            setIsModalOpen(true);
+            setModalMessage('모집글 수정이 완료되었습니다.');
+          }
+          
         }
       } else {
         const res = await handleSubmitRecruit({
@@ -384,7 +416,6 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
     router.back();
   };
 
-  console.log(recruitType);
 
   return (
     <>

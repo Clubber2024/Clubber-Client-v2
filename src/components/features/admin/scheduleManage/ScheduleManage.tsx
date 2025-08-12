@@ -2,7 +2,7 @@
 
 import TitleDiv from "@/components/ui/title-div";
 import { useEffect, useState, useCallback } from "react";
-import { CalendarPros, deleteCalendar, getCalendar, getCalendarList, patchCalendar, postCalendar, postCalendarDuplicate } from "./api/scheduleManage";
+import { CalendarPros, deleteCalendar, deletedCalendarLink, getCalendar, getCalendarList, patchCalendar, postCalendar, postCalendarDuplicate } from "./api/scheduleManage";
 import ReactPaginate from "react-paginate";
 import { ChevronDown, PencilLine, Trash2 } from "lucide-react";
 import Divider from "@/components/ui/divider";
@@ -10,6 +10,8 @@ import Modal from "@/app/modal/Modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MyCalendar from "../recruit/Calendar";
+import { count } from "console";
+import { useRouter } from "next/navigation";
 
 interface CalendarGetProps extends CalendarPros{
 recruitStatus:string;
@@ -43,6 +45,7 @@ const optionsData = {
 type Category = keyof typeof optionsData; // '정렬' | '상태' | '유형'
 
 export default function ScheduleManage(){
+  const router=useRouter();
   const [selected, setSelected] = useState<Record<Category, string>>({
     정렬: '최신순',
     상태: '전체',
@@ -60,6 +63,7 @@ const [isOpenModal, setIsOpenModal] = useState(false);
 const [isOpenModal2, setIsOpenModal2] = useState(false);
 const [modalMessage, setModalMessage] = useState("")
 const [selectedId, setSelectedId] = useState<number>();
+const [isLinkedModal, setIsLinkedModal] = useState(false);
   const [isOpenWriteContent,setIsOpenWriteContent] = useState(false);
 const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
@@ -78,6 +82,7 @@ const [startDate, setStartDate] = useState<Date>(new Date());
   const [isErrorLink, setIsErrorLink] = useState(false);
   const [calendarData, setCalendarData]= useState<CalendarProps>();
   const [isEditMode, setIsEditMode] = useState(false);
+  const [url,setUrl] = useState('');
 
   const handleClick = (category: Category, option: string) => {
     setSelected((prev) => ({ ...prev, [category]: option }));
@@ -161,9 +166,19 @@ setIsOpenModal(false);
 
 //수정하기 버튼 클릭 시
   const modifyCalendar=async(id:number) => {
+    // 해당 아이템의 isCalendarLinked 확인
+    const targetItem = calendarList.find(item => item.id === id);
+setSelectedId(id);
+    if (targetItem?.isCalendarLinked) {
+      // isCalendarLinked가 true인 경우 모달 띄우기
+      setModalMessage("해당 일정은 모집글과 연동되어 있습니다.");
+      setIsLinkedModal(true);
+      return;
+    }
+    
     setIsOpenWriteContent(true);
     setIsEditMode(true);
-    setSelectedId(id);
+    // setSelectedId(id);
 
     if(id!==null){
      const res = await getCalendar(id);
@@ -189,6 +204,33 @@ setIsOpenModal(false);
      }
     }
     
+  }
+
+  const handleUnlinkCalendar = async () => {
+    if(selectedId!==undefined){
+    const res = await deletedCalendarLink(selectedId);
+    console.log("연동 끊기:", res.data);
+    setIsLinkedModal(false);
+    if(res.success){
+setIsOpenModal(true);
+setModalMessage("연동이 해제되었습니다.");   
+  }
+  }
+}
+  
+  const handleViewRecruitPost = () => {
+    if(selectedId!==undefined){
+      // 해당 아이템의 URL 찾기
+      const targetItem = calendarList.find(item => item.id === selectedId);
+      if (targetItem?.url) {
+        // URL이 있으면 해당 URL로 이동
+        router.push(targetItem.url);
+      } else {
+        console.log("모집글 URL이 없습니다:", selectedId);
+      }
+      console.log("모집글 보러가기:", selectedId);
+      setIsLinkedModal(false);
+    }
   }
 
 useEffect(()=>{
@@ -359,6 +401,12 @@ const closeModal2 = () =>{
 
 }
 
+const closeLinkedModal = () => {
+  setIsLinkedModal(false);
+}
+
+
+
   return(
     <>
     <TitleDiv><p className="font-pretendard font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">모집일정 관리</p></TitleDiv>
@@ -457,8 +505,20 @@ const closeModal2 = () =>{
           disabledLinkClassName="text-gray-400 cursor-not-allowed"
         />
       </div>
-      {isOpenModal&&(<Modal isOpen={isOpenModal} message={modalMessage} onConfirm={confrimModal} onClose={closeModal} showConfirmButton={true}/>)}
-      {isOpenModal2&&(<Modal isOpen={isOpenModal2} message={modalMessage}  onClose={closeModal2} />)}
+             {isOpenModal&&(<Modal isOpen={isOpenModal} message={modalMessage} onConfirm={confrimModal} onClose={closeModal} showConfirmButton={true}/>)}
+       {isOpenModal2&&(<Modal isOpen={isOpenModal2} message={modalMessage} onClose={closeModal2} closeText="확인" />)}
+       {isLinkedModal&&(
+         <Modal 
+           isOpen={isLinkedModal} 
+           message={modalMessage} 
+           onConfirm={handleViewRecruitPost} 
+           onCancel={handleUnlinkCalendar}
+           onClose={closeLinkedModal} 
+           showConfirmButton={true}
+           confirmText="모집글 보러가기"
+           cancelText="연동 끊기"
+         />
+       )}
       {isOpenWriteContent && (
    <div
    className="fixed flex inset-0 bg-black/50 z-50 justify-center items-center"
@@ -640,10 +700,10 @@ const closeModal2 = () =>{
 
              <div className="mt-10 flex justify-center space-x-2">
        <Button onClick={handleSubmitButton} className="h-[55px] w-[40%] text-[16px]">
-         {isEditMode && calendarData?.isCalendarLinked ? '모집글 보러가기' : isEditMode ? '수정' : '등록'}
+         {isEditMode ? '수정' : '등록'}
        </Button>
          <Button variant="outline" onClick={cancelWriteButton} className="text-[16px] h-[55px] w-[40%]">
-           {isEditMode && calendarData?.isCalendarLinked ? '연동끊기' : isEditMode ? '취소' : '취소'}
+           {isEditMode ? '취소' : '취소'}
          </Button>
        
        </div>

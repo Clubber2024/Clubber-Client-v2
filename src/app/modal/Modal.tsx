@@ -7,7 +7,11 @@ interface ModalProps {
   message: string;
   onClose: () => void;
   onConfirm?: () => void;
+  onCancel?: () => void;
   showConfirmButton?: boolean;
+  confirmText?: string;
+  cancelText?: string;
+  closeText?: string;
 }
 
 export default function Modal({
@@ -15,7 +19,11 @@ export default function Modal({
   message,
   onClose,
   onConfirm,
+  onCancel,
   showConfirmButton,
+  confirmText = "확인",
+  cancelText = "취소",
+  closeText = "확인",
 }: ModalProps) {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -47,14 +55,14 @@ export default function Modal({
           <div className="flex gap-3">
             {showConfirmButton ? (
               <>
-                <Button onClick={onClose} variant="outline" className="px-4 py-2 rounded">
-                  취소
+                <Button onClick={onCancel || onClose} variant="outline" className="px-4 py-2 rounded">
+                  {cancelText}
                 </Button>
                 <Button
                   onClick={onConfirm}
                   className="px-4 py-2 rounded text-white hover:bg-primary/80 transition"
                 >
-                  확인
+                  {confirmText}
                 </Button>
               </>
             ) : (
@@ -62,7 +70,7 @@ export default function Modal({
                 onClick={onClose}
                 className="px-4 py-2 rounded text-white hover:bg-primary/80 transition"
               >
-                확인
+                {closeText}
               </Button>
             )}
           </div>

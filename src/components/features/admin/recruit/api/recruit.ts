@@ -188,6 +188,7 @@ export const patchAdminRecruitWrite = async (
     });
 
     if (res.data.success) {
+      
       return res.data;
     }
   } catch (error) {
@@ -209,4 +210,23 @@ export const deleteAdminRecruit = async (recruitId: number) => {
   }
 };
 
+//모집글&캘린더 연동
+export const linkCalendar = async (recruitId: string) => {
+const accessToken = getAccessToken();
+const currentDomain = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_BASE_URL || '';
+const recruitUrl = `${currentDomain}/admin/recruitContent?recruitId=${recruitId}`;
 
+console.log('캘린더 연동 시도:', { recruitId: recruitId, recruitUrl });
+
+const calendarRes = await apiClient.post(`/v1/admins/calendars/link`, {
+  recruitId: recruitId,
+  recruitUrl: recruitUrl
+}, {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+    'Content-Type': 'application/json',
+  },
+});
+return calendarRes.data;
+
+}
