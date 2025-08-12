@@ -1,7 +1,5 @@
 'use client';
 
-import styles from './bookmark.module.css';
-
 interface FavoriteClubsProps {
   id: number;
   type: string;
@@ -10,9 +8,11 @@ interface FavoriteClubsProps {
 
 export default function FavoriteClubs({ id, type, name }: FavoriteClubsProps) {
   return (
-    <div className={styles['favorite-clubs-div']}>
-      <p className={styles['club-name']}>{name}</p>
-      <p className={styles['club-type']}>{type}</p>
+    <div className="ml-[15px] md:ml-5 flex flex-row">
+      <div className="flex flex-col">
+        <p className="font-['Noto_Sans_KR'] text-sm md:text-lg font-medium md:font-semibold m-0 mb-[5px] md:leading-[26.06px]">{name}</p>
+        <p className="font-['Noto_Sans_KR'] text-[13px] font-medium m-0 text-[#666]">{type}</p>
+      </div>
     </div>
   );
 }
