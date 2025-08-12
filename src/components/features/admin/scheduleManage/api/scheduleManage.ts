@@ -125,3 +125,14 @@ export const getCalendar = async(id:number)=>{
   }
 }
 
+//특정 캘린더 연동 해제
+export const deletedCalendarLink= async(id:number)=>{
+  const accessToken = getAccessToken();
+  const res = await apiClient.patch(`/v1/admins/calendars/link/${id}/unlink`,{
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  })
+  return res.data;
+}
