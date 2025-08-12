@@ -34,6 +34,7 @@ export default function RecruitList() {
   const [openToggleId, setOpenToggleId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mdoalmessage, setModalMessage] = useState('');
+  
   const fetchData = async () => {
     const res = await getAdminRecruit(currentPage, pageSize);
     console.log(res.content);
