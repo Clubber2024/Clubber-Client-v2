@@ -33,12 +33,16 @@ export interface ClubProps {
   clubInfo: Club;
 }
 
-export default function ClubInfo() {
+interface ClubInfoProps {
+  clubId?: string; 
+}
+
+export default function ClubInfo({clubId}:ClubInfoProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [club, setClub] = useState<ClubProps | null>(null);
   const [clubInfo, setClubInfo] = useState<Club | null>(null);
-  const [clubId, setClubId] = useState<number | null>(null);
+  // const [clubId, setClubId] = useState<number | null>(null);
   const [isCenter, setIsCenter] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -58,10 +62,10 @@ export default function ClubInfo() {
   }, []);
 
   useEffect(() => {
-    const clubId = searchParams.get('clubId');
+    // const clubId = searchParams.get('clubId');
     if (clubId) {
       fetchClubInfoData(parseInt(clubId));
-      setClubId(parseInt(clubId));
+      console.log("clubId", clubId);
       if (accessToken && !isAdmin) {
         fetchFavoriteStatus(parseInt(clubId));
       }
@@ -69,7 +73,7 @@ export default function ClubInfo() {
       setError('동아리 ID가 필요합니다.');
       setIsLoading(false);
     }
-  }, [searchParams, accessToken, isAdmin]);
+  }, [searchParams, accessToken, isAdmin, clubId]);
 
   const fetchClubInfoData = async (clubId: number) => {
     try {
@@ -121,9 +125,6 @@ export default function ClubInfo() {
       const isFavoriteClub = clubIds.includes(clubId);
       const favorite = userFavorites.find((item: FavoriteItem) => item.favoriteClub.clubId === clubId);
       
-      console.log('clubIds:', clubIds);
-      console.log('isFavoriteClub:', isFavoriteClub);
-      console.log('favorite:', favorite);
       
       setIsStarred(isFavoriteClub);
       if (favorite) {
@@ -144,8 +145,6 @@ export default function ClubInfo() {
       router.push('/login');
       return;
     }
-
-    const clubId = searchParams.get('clubId');
     if (!clubId) return;
 
     try {
@@ -206,7 +205,7 @@ export default function ClubInfo() {
 
   const onClickGoToRecruit = () =>{
 if(clubId){
-  router.push(`/recruitList/${clubId}`);
+  router.push(`/recruitList?clubId=${clubId}`);
 } else{
   return;
 }
