@@ -438,10 +438,10 @@ const closeLinkedModal = () => {
       <table className="w-full border-collapse text-left">
         <thead className="bg-[#dddddd4d]">
           <tr className="border-b border-gray-300" style={{ borderTop: '1px solid var(--gray-font, #707070)' }}>
-            <th className="py-3 px-4 text-gray-600">유형</th>
+            <th className="py-3 px-4 text-gray-600 text-center">유형</th>
             <th className="py-3 px-4 text-gray-600">제목</th>
-            <th className="py-3 px-4 text-gray-600">모집기간</th>
-            <th className="py-3 px-4 text-gray-600">상태</th>
+            <th className="py-3 px-4 text-gray-600 text-center">모집기간</th>
+            <th className="py-3 px-4 text-gray-600 text-center">상태</th>
             <th className="py-3 px-4 text-gray-600"> </th>
           </tr>
         </thead>

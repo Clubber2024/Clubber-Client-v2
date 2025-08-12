@@ -1,7 +1,8 @@
 import { apiClient } from '@/lib/apiClient';
-import { FavoriteClub, FavoriteResponse } from '@/types/bookmark/bookmarkData';
+import { FavoriteClub, FavoriteResponse, UserFavoritesResponse } from '@/types/bookmark/bookmarkData';
 
-export const getFavorites = async (page: number, size: number = 2): Promise<FavoriteResponse> => {
+//즐겨찾기 페이지 조회
+export const getFavoritePage = async (page: number, size: number = 2): Promise<FavoriteResponse> => {
   const accessToken = localStorage.getItem('accessToken');
   
   const response = await apiClient.get('/v1/users/favorite/page', {
@@ -14,6 +15,19 @@ export const getFavorites = async (page: number, size: number = 2): Promise<Favo
   return response.data.data;
 };
 
+//즐겨찾기 추가
+export const addFavorite = async (clubId: number): Promise<void> => {
+  const accessToken = localStorage.getItem('accessToken');
+  
+  await apiClient.post(`/v1/clubs/${clubId}/favorites`, {}, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+//즐겨찾기 삭제
 export const deleteFavorite = async (clubId: number, favoriteId: number): Promise<void> => {
   const accessToken = localStorage.getItem('accessToken');
   
@@ -23,4 +37,32 @@ export const deleteFavorite = async (clubId: number, favoriteId: number): Promis
       Authorization: `Bearer ${accessToken}`,
     },
   });
+};
+
+
+//즐겨찾기 전체 조회
+export const getFavorites = async (): Promise<UserFavoritesResponse> => {
+  const accessToken = localStorage.getItem('accessToken');
+  
+  const response = await apiClient.get('/v1/users/favorite', {
+  
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  
+  return response.data.data;
+};
+
+//회원 동아리 즐겨찾기 여부
+export const getFavoriteStatus = async (clubId:number)=> {
+  const accessToken = localStorage.getItem('accessToken');
+  
+  const response = await apiClient.get(`/v1/users/favorite/${clubId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  
+  return response.data.data;
 };

@@ -355,13 +355,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
           },
           recruitId
         );
-        console.log("모집글 수정 응답:", res);
-        console.log("응답 구조:", {
-          success: res.success,
-          data: res.data,
-          shouldCreateCalendar: res.data?.shouldCreateCalendar
-        });
-        
+     
         if (res.success) {
           if(res.data && res.data.shouldCreateCalendar){
             console.log("캘린더 연동 시도 중...");
@@ -403,10 +397,35 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
           isCalendarLinked: isCalendarLink,
         });
         if (res.success) {
-          setIsModalOpen(true);
-          setModalMessage('모집글 작성이 완료되었습니다.');
+          if(res.data && res.data.isCalendarLinked&&res.data.recruitId){
+            console.log("캘린더 연동 시도 중...");
+            try {
+              const recruitId = res.data.recruitId;
+              const resLinkCalendar= await linkCalendar(recruitId);
+              console.log("캘린더 연동 결과:", resLinkCalendar);
+
+              if(resLinkCalendar.success){
+               
+                setIsModalOpen(true);
+                setModalMessage('모집글 수정이 완료되었습니다.');
+              } else {
+                console.error("캘린더 연동 실패:", resLinkCalendar);
+                setIsModalOpen(true);
+                setModalMessage('모집글 수정이 완료되었습니다.');
+              }
+            } catch (error) {
+              // console.error("캘린더 연동 중 에러:", error);
+              // setIsModalOpen(true);
+              // setModalMessage('모집글 수정이 완료되었습니다. (캘린더 연동 에러)');
+            }
+          } 
+          else{
+            console.log("캘린더 연동 조건 불충족:", res.data?.shouldCreateCalendar);
+            setIsModalOpen(true);
+            setModalMessage('모집글 수정이 완료되었습니다.');
+          }
+          
         }
-        console.log(res);
       }
     } catch {}
   };
