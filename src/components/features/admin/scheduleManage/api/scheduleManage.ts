@@ -100,9 +100,9 @@ export const postCalendar = async ({title,recruitType,startAt,endAt,applyLink}:P
   }
 };
 
-interface PostCalendarDuplicateProps{
+export interface PostCalendarDuplicateProps{
   recruitType: string;
-  startAt: string;
+  startAt: string | null;
 }
 
 //캘린더 중복 여부 확인

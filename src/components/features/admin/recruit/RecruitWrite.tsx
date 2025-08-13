@@ -15,6 +15,7 @@ import {
 import Modal from '@/app/modal/Modal';
 import { AdminRecruitContentProps } from './RecruitContent';
 import { Square, SquareCheck } from 'lucide-react';
+import { postCalendarDuplicate } from '../scheduleManage/api/scheduleManage';
 
 interface RecruitWriteProps {
   recruitId?: string;
@@ -31,6 +32,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenModal2, setIsOpenModal2] = useState(false);
   const [isErrorTitle, setIsErrorTitle] = useState(false);
   const [ErrorTitleMessage, setErrorTitleMessage] = useState<string>('');
   const [isErrorType, setIsErrorType] = useState(false);
@@ -42,6 +44,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   const [titleCount, setTitleCount] = useState(0);
   const [contentCount, setContentCount] = useState(0);
   const [applyLink, setApplyLink] = useState('');
+  const [isDuplicate, setIsDuplicate] = useState(false);
 
   //모집글 수정인 경우로 넘어올 때 recruitId 존재
   //그냥 모집글 작성인 경우는 recruitId 존재x
@@ -369,30 +372,66 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
           if(res.data && res.data.shouldCreateCalendar){
             console.log("캘린더 연동 시도 중...");
             try {
-              const resLinkCalendar= await linkCalendar(recruitId);
-              console.log("캘린더 연동 결과:", resLinkCalendar);
+              // 중복 검사
+              if(isDuplicate){
+//중복 검사 완료했으므로 중복 안함
+// 캘린더 연동 진행
+const resLinkCalendar = await linkCalendar(recruitId);
+console.log("캘린더 연동 결과:", resLinkCalendar);
 
-              if(resLinkCalendar.success){
-               
-                setIsModalOpen(true);
-                setModalMessage('모집글 수정이 완료되었습니다.');
-              } else {
-                console.error("캘린더 연동 실패:", resLinkCalendar);
-                setIsModalOpen(true);
-                setModalMessage('모집글 수정이 완료되었습니다.');
+if(resLinkCalendar.success){
+  setIsModalOpen(true);
+  setModalMessage('모집글 수정이 완료되었습니다.');
+} else {
+  console.error("캘린더 연동 실패:", resLinkCalendar);
+  setIsModalOpen(true);
+  setModalMessage('모집글 수정이 완료되었습니다.');
+}
+
+              } else{
+                const resDuplicate = await postCalendarDuplicate({recruitType: recruitType, startAt:formattedStart});
+
+                if(resDuplicate.success){
+                  if(resDuplicate.data.isExist){
+                    const duplicateRecruitType = resDuplicate.data.recruitType;
+                    const recruitTypeText = duplicateRecruitType === 'REGULAR' ? '정규모집' : 
+                                            duplicateRecruitType === 'ALWAYS' ? '상시모집' : 
+                                            duplicateRecruitType === 'ADDITIONAL' ? '추가모집' : '모집';
+                    
+                    setIsOpenModal2(true);
+                    setModalMessage(`해당 월에는 이미 ${recruitTypeText} 일정이 등록되어 있습니다. \n중복 등록 시 사용자에게 혼란을 줄 수 있으니 확인 후 진행해 주세요.`);
+                    return;
+                  } else {
+                    // 중복이 없으면 캘린더 연동 진행
+                    const resLinkCalendar = await linkCalendar(recruitId);
+                    console.log("캘린더 연동 결과:", resLinkCalendar);
+  
+                    if(resLinkCalendar.success){
+                      setIsModalOpen(true);
+                      setModalMessage('모집글 수정이 완료되었습니다.');
+                    } else {
+                      console.error("캘린더 연동 실패:", resLinkCalendar);
+                      setIsModalOpen(true);
+                      setModalMessage('모집글 수정이 완료되었습니다.');
+                    }
+                  }             
+                } else {
+                  console.error("중복 검사 실패:", resDuplicate);
+                  setIsModalOpen(true);
+                  setModalMessage('모집글 수정이 완료되었습니다.');
+                }     
               }
+               
             } catch (error) {
-              // console.error("캘린더 연동 중 에러:", error);
-              // setIsModalOpen(true);
-              // setModalMessage('모집글 수정이 완료되었습니다. (캘린더 연동 에러)');
+              console.error("캘린더 연동 중 에러:", error);
+              setIsModalOpen(true);
+              setModalMessage('모집글 수정이 완료되었습니다.');
             }
-          } 
-          else{
+          } else {
             console.log("캘린더 연동 조건 불충족:", res.data?.shouldCreateCalendar);
             setIsModalOpen(true);
             setModalMessage('모집글 수정이 완료되었습니다.');
           }
-          
         }
       } else {
         const res = await handleSubmitRecruit({
@@ -406,34 +445,72 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
           isCalendarLinked: isCalendarLink,
         });
         if (res.success) {
-          if(res.data && res.data.isCalendarLinked&&res.data.recruitId){
+          if(res.data && res.data.isCalendarLinked && res.data.recruitId){
             console.log("캘린더 연동 시도 중...");
             try {
               const recruitId = res.data.recruitId;
-              const resLinkCalendar= await linkCalendar(recruitId);
-              console.log("캘린더 연동 결과:", resLinkCalendar);
 
-              if(resLinkCalendar.success){
-               
-                setIsModalOpen(true);
-                setModalMessage('모집글 수정이 완료되었습니다.');
-              } else {
-                console.error("캘린더 연동 실패:", resLinkCalendar);
-                setIsModalOpen(true);
-                setModalMessage('모집글 수정이 완료되었습니다.');
+              if(isDuplicate){
+//중복 검사 없이 바로 캘린더 연동
+ // 중복이 없으면 캘린더 연동 진행
+ const resLinkCalendar = await linkCalendar(recruitId);
+ console.log("캘린더 연동 결과:", resLinkCalendar);
+
+ if(resLinkCalendar.success){
+   setIsModalOpen(true);
+   setModalMessage('모집글 작성이 완료되었습니다.');
+ } else {
+   console.error("캘린더 연동 실패:", resLinkCalendar);
+   setIsModalOpen(true);
+   setModalMessage('모집글 작성이 완료되었습니다.');
+ }
+                
+              } else{
+ // 중복 검사
+ const resDuplicate = await postCalendarDuplicate({recruitType: recruitType, startAt:formattedStart});
+
+ if(resDuplicate.success){
+   if(resDuplicate.data.isExist){
+     const duplicateRecruitType = resDuplicate.data.recruitType;
+     const recruitTypeText = duplicateRecruitType === 'REGULAR' ? '정규모집' : 
+                             duplicateRecruitType === 'ALWAYS' ? '상시모집' : 
+                             duplicateRecruitType === 'ADDITIONAL' ? '추가모집' : '모집';
+     
+     setIsOpenModal2(true);
+     setModalMessage(`해당 월에는 이미 ${recruitTypeText} 일정이 등록되어 있습니다. \n중복 등록 시 사용자에게 혼란을 줄 수 있으니 확인 후 진행해 주세요.`);
+     return;
+   } else {
+     // 중복이 없으면 캘린더 연동 진행
+     const resLinkCalendar = await linkCalendar(recruitId);
+     console.log("캘린더 연동 결과:", resLinkCalendar);
+
+     if(resLinkCalendar.success){
+       setIsModalOpen(true);
+       setModalMessage('모집글 작성이 완료되었습니다.');
+     } else {
+       console.error("캘린더 연동 실패:", resLinkCalendar);
+       setIsModalOpen(true);
+       setModalMessage('모집글 작성이 완료되었습니다.');
+     }
+   }             
+ } else {
+   console.error("중복 검사 실패:", resDuplicate);
+   setIsModalOpen(true);
+   setModalMessage('모집글 작성이 완료되었습니다.');
+ }
+
               }
+             
             } catch (error) {
-              // console.error("캘린더 연동 중 에러:", error);
-              // setIsModalOpen(true);
-              // setModalMessage('모집글 수정이 완료되었습니다. (캘린더 연동 에러)');
+              console.error("캘린더 연동 중 에러:", error);
+              setIsModalOpen(true);
+              setModalMessage('모집글 작성이 완료되었습니다.');
             }
-          } 
-          else{
+          } else {
             console.log("캘린더 연동 조건 불충족:", res.data?.shouldCreateCalendar);
             setIsModalOpen(true);
-            setModalMessage('모집글 수정이 완료되었습니다.');
+            setModalMessage('모집글 작성이 완료되었습니다.');
           }
-          
         }
       }
     } catch {}
@@ -442,6 +519,15 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   const closeModal = () => {
     setIsModalOpen(false);
     router.back();
+  };
+
+  const closeDuplicateModal = () => {
+    setIsOpenModal2(false);
+  };
+
+  const confirmModal2 = () => {
+    setIsOpenModal2(false);
+    setIsDuplicate(true);
   };
 
 
@@ -677,7 +763,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
           )}
 
           <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
-            사진 <p>(선택 / 최대 10장)</p>
+            사진 (선택 / 최대 10장)
           </p>
           <div className="flex bg-white mr-[10%]">
             <div className="flex flex-wrap mt-2.5 bg-white">
@@ -743,6 +829,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
             작성 완료
           </Button>
         {isModalOpen && <Modal isOpen={isModalOpen} message={modalMessage} onClose={closeModal} />}
+        {isOpenModal2 && <Modal isOpen={isOpenModal2} message={modalMessage} confirmText='계속등록' cancelText='취소' onConfirm={confirmModal2} onCancel={closeDuplicateModal} showConfirmButton={true}/>}
       </div>
     </>
   );
