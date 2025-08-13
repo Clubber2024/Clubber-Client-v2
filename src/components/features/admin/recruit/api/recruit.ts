@@ -89,8 +89,8 @@ interface HandleSubmitRecruitProps {
   content: string;
   imageKey: string;
   recruitType: string;
-  startAt: string;
-  endAt: string;
+  startAt: string | null;
+  endAt: string | null;
   applyLink: string;
   isCalendarLinked: boolean;
 }

@@ -57,6 +57,10 @@ export default function EditMyInfo() {
     router.push("/admin/editMyInfo/email");
   };
 
+  const handleChangePassword = () => {
+    router.push("/admin/editMyInfo/pw");
+  };
+
   const onChangeInsta = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInsta(e.target.value);
   };
@@ -102,6 +106,32 @@ export default function EditMyInfo() {
             readOnly
           />
           </div>
+
+          <div className="mt-[35px] w-full">
+            <p className="font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] text-[#202123]">
+              비밀번호
+            </p>
+         
+          <div className="flex flex-row  justify-between mt-[13px] mb-[20px] mr-[5px]">
+            <Input
+              id="password"
+              name="password"
+              value={"*********"}
+              className="border border-[#9c9c9c80] rounded-[5px] w-[70%] h-[50px] text-[#202123] flex items-center bg-[#a7a7a74d] pl-[11px] text-[14px] font-normal"
+              placeholder="이메일 입력"
+              autoComplete="off"
+              readOnly
+            />
+            <Button
+              onClick={handleChangePassword}
+              className={`${
+                email ? "bg-primary" : "bg-[#d6d6d6]"
+              } w-[25%] h-[50px] rounded-[5px] border-none font-['Noto_Sans_KR'] font-light text-[15px] text-white cursor-pointer`}
+            >
+              설정
+            </Button>
+            </div>
+          </div>
           
 
             <div className="mt-[35px] w-full">
@@ -114,7 +144,7 @@ export default function EditMyInfo() {
               id="email"
               name="email"
               value={email}
-              className="border border-[#9c9c9c80] rounded-[5px] w-[70%] h-[50px] text-[#202123] flex items-center pl-[11px] text-[14px] font-normal"
+              className="border border-[#9c9c9c80] rounded-[5px] w-[70%] h-[50px] text-[#202123] bg-[#a7a7a74d] flex items-center pl-[11px] text-[14px] font-normal"
               placeholder="이메일 입력"
               autoComplete="off"
               readOnly

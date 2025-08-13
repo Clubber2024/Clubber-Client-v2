@@ -30,8 +30,8 @@ const recruitTypeMap: { [key: string]: string } = {
 
 const optionsData = {
   정렬: ['최신순', '오래된순'],
-  상태: ['전체', '진행중', '마감됨'],
-  유형: ['상시', '정규', '추가'],
+  상태: ['전체', '진행중', '마감됨', '모집전'],
+  유형: ['전체','상시', '정규', '추가'],
 } as const;
 
   //모집글 내용 불러올 때 모집글 타입이 한글값으로 들어와서
@@ -49,14 +49,15 @@ export default function ScheduleManage(){
   const [selected, setSelected] = useState<Record<Category, string>>({
     정렬: '최신순',
     상태: '전체',
-    유형: '상시',
+    유형: '전체',
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(10); // 한 페이지에 표시할 항목 수
-  const [sort, setSort] = useState('desc'); // 정렬 기준
+  const [sort, setSort] = useState(''); // 정렬 기준
   const [calendarList, setCalendarList] = useState<CalendarGetProps[]>([]);
-  const [calendarFilterType, setCalendarFilterType] = useState('ALL');
+  const [calendarFilterType, setCalendarFilterType] = useState('');
+  const[recruitTypeFilter, setRecruitTypeFilter] = useState('');
 const [isOpenToggle, setIsOpenToggle] = useState(false);
 const [isOpenOption, setIsOpenOption] = useState<number | null>(null);
 const [isOpenModal, setIsOpenModal] = useState(false);
@@ -90,39 +91,43 @@ const [startDate, setStartDate] = useState<Date>(new Date());
     // 옵션 변경 시 필터링 적용
     if (category === '정렬') {
       // 정렬 옵션 처리
-      const sortOrder = option === '최신순' ? 'desc' : 'asc';
+      const sortOrder = option === '최신순' ? '' : 'ASC';
       setSort(sortOrder);
     } else if (category === '상태') {
       // 상태 옵션 처리
       const statusMap: { [key: string]: string } = {
-        '전체': 'ALL',
+        '전체': "",
         '진행중': 'RECRUITING',
-        '마감됨': 'CLOSED'
+        '마감됨': 'CLOSED',
+        '모집전': 'NOT_STARTED'
       };
-      setCalendarFilterType(statusMap[option] || 'ALL');
+      setCalendarFilterType(statusMap[option] || '');
     } else if (category === '유형') {
       // 유형 옵션 처리
       const typeMap: { [key: string]: string } = {
+        '전체': '',
         '상시': 'ALWAYS',
         '정규': 'REGULAR',
         '추가': 'ADDITIONAL'
       };
-      setCalendarFilterType(typeMap[option] || 'ALL');
+     setRecruitTypeFilter(typeMap[option] || '');
+    //  setRecruitType(typeMap[option] || '');
     }
-    
+   
     // 페이지를 1페이지로 리셋
     setCurrentPage(1);
   };
+  console.log(calendarFilterType);
 
   const fetchCalendarList = useCallback(async() => {
-    const res = await getCalendarList(currentPage, pageSize, calendarFilterType, sort);
+    const res = await getCalendarList(currentPage, pageSize, sort, calendarFilterType, recruitTypeFilter);
     if(res.success){
       setCalendarList(res.data.content);
       setTotalPages(res.data.totalPages)
     } else{
       return;
     }
-  }, [currentPage, pageSize, calendarFilterType, sort]);
+  }, [currentPage, pageSize, calendarFilterType, sort, recruitTypeFilter]);
 
   const deleteCalendarData = async(id:number) => {
     
@@ -158,8 +163,6 @@ setIsOpenModal(false);
     //캘린더 삭제시
     if(selectedId!==undefined){
    await deleteCalendarData(selectedId);
-   
-   
     }
 
   }

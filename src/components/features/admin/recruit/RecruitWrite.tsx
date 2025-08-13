@@ -333,8 +333,17 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
     try {
       const imageUrls = await uploadImages({ selectedFiles });
       console.log('imageUrls');
-      const formattedStart = formatDateTime(startDate, startTime);
-      const formattedEnd = formatDateTime(endDate, endTime);
+      let formattedStart: string | null = null;
+      let formattedEnd: string | null = null;
+      
+      if(recruitType==='ALWAYS'){
+         formattedStart = null;
+        formattedEnd = null;
+      } else{
+        formattedStart = formatDateTime(startDate, startTime);
+        formattedEnd = formatDateTime(endDate, endTime);
+      }
+     
 
       if (recruitId) {
         const combinedImages = [...remainedImages, ...imageUrls];

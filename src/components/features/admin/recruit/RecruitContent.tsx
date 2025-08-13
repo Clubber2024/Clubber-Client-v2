@@ -12,8 +12,8 @@ export interface AdminRecruitContentProps {
   recruitId: number;
   title: string;
   recruitType: string;
-  startAt: Array<number>;
-  endAt: Array<number>;
+  startAt: Array<number> | null;
+  endAt: Array<number> | null;
   content: string;
   applyLink: string;
   imageUrls: string[];
@@ -29,8 +29,8 @@ interface RecruitContentProps {
 export default function RecruitContent({ recruitId }: RecruitContentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [content, setContent] = useState<AdminRecruitContentProps>();
-  const [formattedStartAt, setFormattedStartAt] = useState();
-  const [formattedEndAt, setFormattedEndAt] = useState();
+  const [formattedStartAt, setFormattedStartAt] = useState<string | null>(null);
+  const [formattedEndAt, setFormattedEndAt] = useState<string | null>(null);
 
   const fetchData = async () => {
     if (recruitId) {
@@ -81,20 +81,20 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
             </p>
             <Divider className="w-full" />
             <div className="flex flex-row justify-between w-full mt-2.5 mb-2.5">
-              <div className="flex flex-row justify-center items-start gap-2">
-                <span className="font-semibold text-[16px] leading-[100%] tracking-[0%] font-pretendard">
+              <div className="flex flex-row justify-center items-start gap-2 h-6">
+                <span className="font-semibold text-[16px] leading-[150%] tracking-[0%] font-pretendard h-full">
                   • 모집기간{' '}
                 </span>
                 <span className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard">
-                  {formatDateArray(content.startAt)} ~ <br />
-                  {formatDateArray(content.endAt)}
+                  {content.startAt ? formatDateArray(content.startAt) : content.createdAt} ~ <br />
+                  {content.endAt ? formatDateArray(content.endAt) : ''}
                 </span>
               </div>
               <div className="flex flex-row justify-center items-start gap-2 ">
-                <span className="font-semibold text-[16px] leading-[100%] tracking-[0%] font-pretendard">
+                <span className="font-semibold text-[16px] leading-[150%] tracking-[0%] font-pretendard">
                   • 모집유형{' '}
                 </span>
-                <span className="font-normal text-[16px] leading-[100%] tracking-[0%] font-pretendard">
+                <span className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard">
                   {content.recruitType}
                 </span>
               </div>
