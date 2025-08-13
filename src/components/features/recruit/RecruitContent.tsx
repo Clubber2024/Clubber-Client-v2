@@ -21,8 +21,8 @@ export interface RecruitContentProps {
   recruitId: number;
   title: string;
   recruitType: string;
-  startAt: Array<number>;
-  endAt: Array<number>;
+  startAt: Array<number> | null;
+  endAt: Array<number> | null;
   content: string;
   applyLink: string;
   imageUrls: string[];
@@ -54,8 +54,8 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
   const [isStarred, setIsStarred] = useState(false);
   const [isAdmin, setIsAdminState] = useState(false);
   const [isCenter, setIsCenter] = useState(false);
-  const [formattedStartAt, setFormattedStartAt] = useState();
-  const [formattedEndAt, setFormattedEndAt] = useState();
+  const [formattedStartAt, setFormattedStartAt] = useState<string | null>(null);
+  const [formattedEndAt, setFormattedEndAt] = useState<string | null>(null);
 
   const fetchData = async () => {
     if (recruitId) {
@@ -208,8 +208,8 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
                   • 모집기간{' '}
                 </span>
                 <span className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard">
-                  {formatDateArray(content.startAt)} ~ <br />
-                  {formatDateArray(content.endAt)}
+                  {content.startAt ? formatDateArray(content.startAt) : content.createdAt} ~ <br />
+                  {content.endAt ? formatDateArray(content.endAt) : ''}
                 </span>
               </div>
               <div className="flex flex-row justify-center items-start gap-2 ">

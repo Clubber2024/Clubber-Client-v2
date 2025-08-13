@@ -3,18 +3,29 @@ import { apiClient } from "@/lib/apiClient"
 import { start } from "repl";
 
 //캘린더 목록 조회
-export const getCalendarList = async(page: Number, pageSize: Number, calendarFilterType:string, sort?: string)=>{
+export const getCalendarList = async(page: Number, pageSize: Number, orderStatus?: string, calendarStatus?: string, recruitType?: string)=>{
   const accessToken = getAccessToken();
   const query = new URLSearchParams({
     page: page.toString(),
     size: pageSize.toString(),
-    calendarFilterType: calendarFilterType //대문자 All ,recruiting, closed, allways
   });
-  
-  // 정렬 파라미터 추가
-  if (sort) {
-    query.append('sort', sort);
+
+    // 정렬 파라미터 추가
+    if (orderStatus) {
+      query.append('sort', 'string');
+      query.append('orderStatus', orderStatus);
+    }
+
+  // 필터 파라미터 추가
+  if (calendarStatus) {
+    query.append('calendarStatus', calendarStatus);
   }
+
+  if (recruitType) {
+    query.append('recruitType', recruitType);
+  }
+  
+
   
   const res = await apiClient.get(`/v1/admins/calendars?${query.toString()}`,{
     headers: {
