@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 interface ModalProps {
   isOpen: boolean;
   message: string;
-  onClose: () => void;
+  onClose?: () => void;
   onConfirm?: () => void;
   onCancel?: () => void;
   showConfirmButton?: boolean;

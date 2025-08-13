@@ -53,8 +53,8 @@ export interface CalendarPros{
   id: number;
   title:string;
   recruitType: string;
-  startAt: string;
-  endAt: string;
+  startAt: string | null;
+  endAt: string | null;
   url: string;
 }
 //특정 캘린더 수정
@@ -65,8 +65,8 @@ export const patchCalendar = async({id, title, recruitType,startAt, endAt,url}:C
     {
       title:title,
       recruitType:recruitType,
-      startAt:startAt,
-      endAt:endAt,
+      startAt: recruitType==='ALWAYS'?null:startAt,
+      endAt: recruitType==='ALWAYS'?null:endAt,
       url:url
     },{
     headers: {
@@ -87,8 +87,8 @@ export const postCalendar = async ({title,recruitType,startAt,endAt,applyLink}:P
     const res = await apiClient.post(`/v1/admins/calendars`,{
       title: title,
       recruitType:recruitType,
-      startAt:startAt,
-      endAt:endAt,
+      startAt: recruitType==='ALWAYS'?null:startAt,
+      endAt:recruitType==='ALWAYS'?null:endAt,
       applyLink:applyLink
     });
 

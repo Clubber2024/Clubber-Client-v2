@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-
 import { useRouter } from 'next/navigation';
 import { adminLoginHandler } from './api/login';
 import Modal from '@/app/modal/Modal';
@@ -41,7 +40,6 @@ export default function AdminLogin() {
     const value = event.target.value;
     setAdminId(value);
     setIsId(true);
-    console.log(value);
 
     if (value === '') {
       setIsId(false);
@@ -62,17 +60,12 @@ export default function AdminLogin() {
   const handleLoginSubmit = async () => {
     try {
       const res = await adminLoginHandler({ adminId, adminPw });
-      console.log('res', res);
+
       if (res.success) {
         const { accessToken, refreshToken } = res.data;
 
-        console.log('AccessToken:', accessToken);
-        console.log('RefreshToken:', refreshToken);
-
         // AuthService의 saveTokens 함수 사용
         saveTokens(accessToken, refreshToken, true);
-
-        console.log('res', res.data);
 
         // 라우팅 또는 상태 업데이트 등 수행
 

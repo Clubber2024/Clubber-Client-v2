@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 interface CalendarGetProps extends CalendarPros{
 recruitStatus:string;
 isCalendarLinked:boolean;
+createdAt:string;
 }
 
 interface CalendarProps extends CalendarGetProps{
@@ -61,7 +62,10 @@ export default function ScheduleManage(){
 const [isOpenToggle, setIsOpenToggle] = useState(false);
 const [isOpenOption, setIsOpenOption] = useState<number | null>(null);
 const [isOpenModal, setIsOpenModal] = useState(false);
+//추가등록 여부 묻는 모달
 const [isOpenModal2, setIsOpenModal2] = useState(false);
+//등록 후 확인 모달달
+const [isOpenModal3, setIsOpenModal3] = useState(false);
 const [modalMessage, setModalMessage] = useState("")
 const [selectedId, setSelectedId] = useState<number>();
 const [isLinkedModal, setIsLinkedModal] = useState(false);
@@ -84,6 +88,8 @@ const [startDate, setStartDate] = useState<Date>(new Date());
   const [calendarData, setCalendarData]= useState<CalendarProps>();
   const [isEditMode, setIsEditMode] = useState(false);
   const [url,setUrl] = useState('');
+  //중복 확인 
+  const [isConfirmDuplicate, setIsConfirmDuplicate] = useState(false);
 
   const handleClick = (category: Category, option: string) => {
     setSelected((prev) => ({ ...prev, [category]: option }));
@@ -150,13 +156,13 @@ const [startDate, setStartDate] = useState<Date>(new Date());
 
   const openModal = (id:number) => {
     setSelectedId(id);
-      setIsOpenModal(true)
-      setModalMessage(`삭제한 글을 복구할 수 없습니다. \n삭제하시겠습니까?`)
+    setIsOpenModal(true)
+    setModalMessage(`삭제한 글을 복구할 수 없습니다. \n삭제하시겠습니까?`)
    
   }
 
   const closeModal = () => {
-setIsOpenModal(false);
+    setIsOpenModal(false);
   }
 
   const confrimModal = async() => {
@@ -171,7 +177,7 @@ setIsOpenModal(false);
   const modifyCalendar=async(id:number) => {
     // 해당 아이템의 isCalendarLinked 확인
     const targetItem = calendarList.find(item => item.id === id);
-setSelectedId(id);
+    setSelectedId(id);
     if (targetItem?.isCalendarLinked) {
       // isCalendarLinked가 true인 경우 모달 띄우기
       setModalMessage("해당 일정은 모집글과 연동되어 있습니다.");
@@ -358,8 +364,8 @@ const handleSubmitButton = async () => {
           id: selectedId,
           title: title,
           recruitType: recruitType,
-          startAt: formattedStart,
-          endAt: formattedEnd,
+          startAt: recruitType==='ALWAYS'?null:formattedStart,
+          endAt: recruitType==='ALWAYS'?null:formattedEnd,
           url: applyLink
         });
         if(res.success){
@@ -369,19 +375,33 @@ const handleSubmitButton = async () => {
         }
       }
     } else {
+      if(isConfirmDuplicate){
+        const res = await postCalendar({title:title,recruitType:recruitType,startAt:formattedStart,endAt: formattedEnd,applyLink:applyLink})
+          if(res.success){
+            setIsOpenWriteContent(false);
+            setModalMessage("모집일정이 캘린더에 등록되었습니다.")
+            setIsOpenModal3(true);
+          }
+          return;
+      } else{
       // 새 등록 모드일 때는 중복 확인 후 postCalendar 호출
       const duplicateConfirm = await postCalendarDuplicate({recruitType:recruitType, startAt:formattedStart});
       if(duplicateConfirm.success){
         if(duplicateConfirm.data.isExist){
+          const duplicateRecruitType = duplicateConfirm.data.recruitType;
+          const recruitTypeText = duplicateRecruitType === 'REGULAR' ? '정규모집' : 
+                                  duplicateRecruitType === 'ALWAYS' ? '상시모집' : 
+                                  duplicateRecruitType === 'ADDITIONAL' ? '추가모집' : '모집';
           setIsOpenWriteContent(false);
           setIsOpenModal2(true);
-          setModalMessage("해당 월에는 이미 모집 일정이 등록되어 있습니다. \n 중복 등록 시 사용자에게 혼란을 줄 수 있으니 확인 후 진행해 주세요.")
+          setModalMessage(`해당 월에는 이미 ${recruitTypeText} 일정이 등록되어 있습니다. \n 중복 등록 시 사용자에게 혼란을 줄 수 있으니 확인 후 진행해 주세요.`)
+        }
         } else{
           const res = await postCalendar({title:title,recruitType:recruitType,startAt:formattedStart,endAt: formattedEnd,applyLink:applyLink})
           if(res.success){
             setIsOpenWriteContent(false);
             setModalMessage("모집일정이 캘린더에 등록되었습니다.")
-            setIsOpenModal2(true);
+            setIsOpenModal3(true);
           }
         }
       }
@@ -390,23 +410,40 @@ const handleSubmitButton = async () => {
 }
 
 
-const closeModal2 = () =>{
 
-    //캘린더 등록 후 확인 모달
-    setIsOpenModal2(false);
-    fetchCalendarList();
-    setApplyLink("");
-    setTitle("");
-    setStartDate(new Date());
-    setEndDate( new Date());
-    setStartTime("00:00")
-    setEndTime("00:00")
+//중복 확인 후 추가 등록 시
+const confirmModal2 = () => {
+  setIsOpenModal2(false);
+  setIsOpenWriteContent(true);
+  setIsEditMode(false);
+  setIsConfirmDuplicate(true);
+}
+
+const cancelModal2 = () => {
+  setIsOpenModal2(false);
+  setIsOpenWriteContent(false);
+  setIsEditMode(false);
+  setIsConfirmDuplicate(false);
+}
+
+ //캘린더 등록 후 확인 모달
+ const closeModal3 = () =>{
+  setIsOpenModal3(false);
+  fetchCalendarList();
+  setApplyLink("");
+  setTitle("");
+  setStartDate(new Date());
+  setEndDate(new Date());
+  setStartTime("00:00")
+  setEndTime("00:00")
 
 }
+
 
 const closeLinkedModal = () => {
   setIsLinkedModal(false);
 }
+
 
 
 
@@ -449,11 +486,11 @@ const closeLinkedModal = () => {
           </tr>
         </thead>
         <tbody>
-          {calendarList.map(({ id, recruitType, title, startAt, endAt, recruitStatus }) => (
+          {calendarList.map(({ id, recruitType, title, startAt, endAt, recruitStatus, createdAt }) => (
             <tr key={id} className="border-b border-gray-200 hover:bg-gray-50">
               <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]"> {recruitTypeMap[recruitType] || recruitType}</td>
               <td className="py-4 px-4 text-gray-900">{title}</td>
-              <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]">{startAt} ~ {endAt}</td>
+              <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]">{recruitType==='ALWAYS'?createdAt:startAt} ~ {recruitType==='ALWAYS'?'':endAt}</td>
               <td className={`py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]`}>
                 {recruitStatus}
               </td>
@@ -509,11 +546,12 @@ const closeLinkedModal = () => {
         />
       </div>
              {isOpenModal&&(<Modal isOpen={isOpenModal} message={modalMessage} onConfirm={confrimModal} onClose={closeModal} showConfirmButton={true}/>)}
-       {isOpenModal2&&(<Modal isOpen={isOpenModal2} message={modalMessage} onClose={closeModal2} closeText="확인" />)}
+       {isOpenModal2&&(<Modal isOpen={isOpenModal2} message={modalMessage} confirmText='계속등록' cancelText="취소" onConfirm={confirmModal2} onCancel={cancelModal2} showConfirmButton={true}/>)}
+       {isOpenModal3&&(<Modal isOpen={isOpenModal3} message={modalMessage} onClose={closeModal3}/>)}
        {isLinkedModal&&(
          <Modal 
            isOpen={isLinkedModal} 
-           message={modalMessage} 
+           message={modalMessage}
            onConfirm={handleViewRecruitPost} 
            onCancel={handleUnlinkCalendar}
            onClose={closeLinkedModal} 
