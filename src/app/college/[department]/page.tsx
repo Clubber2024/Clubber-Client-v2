@@ -16,10 +16,20 @@ export default function DepartmentPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchClubCardData = async () => {
-    const clubs = await getClubCard(departmentCode);
-    setClubs(clubs.clubs);
-    setDepartmentTitle(clubs.department);
-    setLoading(false);
+    try {
+      // 학과 코드로 제목 설정
+
+      // 동아리 목록 가져오기
+      const clubsData = await getClubCard(departmentCode, false);
+      setClubs(clubsData.clubs);
+      setDepartmentTitle(clubsData.department);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setClubs([]);
+      setDepartmentTitle(`학과 코드: ${departmentCode}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

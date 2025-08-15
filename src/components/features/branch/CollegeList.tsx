@@ -1,16 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { College, Department } from '@/types/college/collegeData';
 import { getColleges, getDepartments } from './api/college';
 import { Card } from '@/components/ui/card';
 import Loading from '@/components/common/Loading';
+import Link from 'next/link';
 
 export default function CollegeList() {
-  const router = useRouter();
   const [colleges, setColleges] = useState<College[]>([]);
-  const [departmentsMap, setDepartmentsMap] = useState<Record<string, Department[]>>({});
+  const [departmentsList, setDepartmentsList] = useState<Record<string, Department[]>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,7 +35,7 @@ export default function CollegeList() {
               deptMap[college.code] = [];
             }
           }
-          setDepartmentsMap(deptMap);
+          setDepartmentsList(deptMap);
         }
       } catch (error) {
         console.error('Error fetching college data:', error);
@@ -47,10 +46,6 @@ export default function CollegeList() {
 
     fetchData();
   }, []);
-
-  const handleCollegeClick = (college: College) => {
-    router.push(`/college/${college.code}`);
-  };
 
   if (loading) {
     return <Loading />;
@@ -70,8 +65,7 @@ export default function CollegeList() {
             <CollegeCard
               key={college.code}
               college={college}
-              departments={departmentsMap[college.code] || []}
-              onClick={() => handleCollegeClick(college)}
+              departments={departmentsList[college.code] || []}
             />
           ))}
         </div>
@@ -83,8 +77,7 @@ export default function CollegeList() {
               <CollegeCard
                 key={college.code}
                 college={college}
-                departments={departmentsMap[college.code] || []}
-                onClick={() => handleCollegeClick(college)}
+                departments={departmentsList[college.code] || []}
               />
             ))}
           </div>
@@ -97,15 +90,11 @@ export default function CollegeList() {
 interface CollegeCardProps {
   college: College;
   departments: Department[];
-  onClick: () => void;
 }
 
-function CollegeCard({ college, departments, onClick }: CollegeCardProps) {
+function CollegeCard({ college, departments }: CollegeCardProps) {
   return (
-    <Card
-      className="overflow-hidden w-50 h-80 p-6 hover:scale-103 transition-all duration-300 cursor-pointer bg-white shadow-lg hover:shadow-xl border border-gray-200"
-      onClick={onClick}
-    >
+    <Card className="overflow-hidden w-50 h-80 p-6 hover:scale-103 transition-all duration-300 bg-white shadow-lg hover:shadow-xl border border-gray-200">
       <div className="flex flex-col h-full">
         {/* 단과대명 */}
         <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">{college.title}</h3>
@@ -114,12 +103,11 @@ function CollegeCard({ college, departments, onClick }: CollegeCardProps) {
         <div className="flex-1 space-y-2 overflow-y-auto pr-1">
           {departments.length > 0 ? (
             departments.map((dept) => (
-              <div
-                key={dept.code}
-                className="text-sm text-gray-600 p-2 bg-gray-50 rounded-md hover:bg-secondary transition-colors"
-              >
-                {dept.title}
-              </div>
+              <Link href={`/college/${dept.code}`} key={dept.code}>
+                <div className="text-sm text-gray-600 p-2 mb-1.5 bg-gray-50 rounded-md hover:bg-secondary transition-colors cursor-pointer">
+                  {dept.title}
+                </div>
+              </Link>
             ))
           ) : (
             <div className="text-sm text-gray-400 text-center py-8">학과 정보가 없습니다</div>
