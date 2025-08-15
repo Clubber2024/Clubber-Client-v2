@@ -165,12 +165,12 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
   const handleStartDateChange = (selectedData: Date) => {
     setStartDate(selectedData);
-    // setCalendarIsOpen(false);
+    setCalendarIsOpen(false);
   };
 
   const handleEndDateChange = (selectedData: Date) => {
     setEndDate(selectedData);
-    // setCalendarIsOpen(false);
+    setCalendarIsOpen(false);
   };
 
   const formatDateTime = (dateObjOrStr: Date, timeStr: string) => {
@@ -538,8 +538,8 @@ if(resLinkCalendar.success){
           모집글 작성
         </p>
       </TitleDiv>
-      <div className="flex items-center justify-center mt-[32px] mb-[32px] flex-col">
-        <div className="flex flex-col shadow-sm w-[80%] pl-8 pr-8 pb-[32px]">
+      <div className="flex items-center justify-center mt-[32px] mb-[32px] flex-col w-full">
+        <div className="flex flex-col shadow-sm w-full sm:w-[80%] pl-4 sm:pl-8 pr-4 sm:pr-8 pb-[32px]">
           <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
             제목
           </p>
@@ -617,7 +617,7 @@ if(resLinkCalendar.success){
             )}
 
             {recruitType !== 'ALWAYS' && (
-              <div className="flex items-center w-[100%] mt-4">
+              <div className="flex flex-col sm:flex-row items-center w-[100%] mt-4">
                 <div className="relative">
                   <div className="flex flex-row">
                     <div className="flex items-center relative">
@@ -823,9 +823,9 @@ if(resLinkCalendar.success){
               ))}
             </div>
           </div>
-         
+        
         </div>
-        <Button className="mt-10 h-[60px] rounded-[5px] w-[80%] text-[16px] font-semibold" onClick={handleSubmitButton}>
+        <Button className="mt-10 h-[50px] sm:h-[60px] rounded-[5px] w-[100%] sm:w-[80%] text-[16px] font-semibold" onClick={handleSubmitButton}>
             작성 완료
           </Button>
         {isModalOpen && <Modal isOpen={isModalOpen} message={modalMessage} onClose={closeModal} />}

@@ -14,7 +14,7 @@ export default function UserLogin() {
   const handleFormSubmit = (event: React.FormEvent) => event.preventDefault();
 
   return (
-    <div>
+    <div className="w-full max-w-[288px] xs:w-[288px] px-4 xs:px-0">
       <p className="text-center font-normal text-[14px] leading-[120%] tracking-normal mt-[25px] mb-[15px]">
         SNS로 간편하게 로그인하고
         <br /> 더 많은 서비스를 즐겨보세요!
@@ -22,11 +22,11 @@ export default function UserLogin() {
       <form onSubmit={handleFormSubmit}>
         <Button
           onClick={kakaoLoginHandler}
-          className="rounded-3xl w-72 h-11 flex justify-between items-center bg-[#FEE500] hover:bg-[#E6D100] font-medium leading-[150%] pl-5 transition-colors duration-200"
+          className="rounded-3xl w-full xs:w-72 h-11 flex justify-between items-center bg-[#FEE500] hover:bg-[#E6D100] font-medium leading-[150%] pl-5 transition-colors duration-200"
         >
           <Image src={'/images/login/kakao.png'} alt="kakao" width={20} height={20} />
           <div className="w-[1px] h-8 bg-black/50 ml-1.5"></div>
-          <span className="w-64 text-gray-900 text-center">카카오 간편 로그인</span>
+          <span className="flex-1 xs:w-64 text-gray-900 text-center">카카오 간편 로그인</span>
         </Button>
       </form>
     </div>

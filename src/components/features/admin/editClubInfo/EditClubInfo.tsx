@@ -65,18 +65,18 @@ export default function EditClubInfo() {
         </p>
       </TitleDiv>
 
-      <div className="ml-[10%] mr-[10%] mt-5 flex flex-col">
+      <div className="ml-0 sm:ml-[10%] mr-0 sm:mr-[10%] mt-5 flex flex-col">
         <Card className="mt-[60px] mb-9">
           <div className="flex flex-row items-center pl-5">
-            <img src={club?.imageUrl} className="w-[150px] h-[150px]" />
+            <img src={club?.imageUrl} className="w-[100px] sm:w-[150px] h-[100px] sm:h-[150px]" />
             <div className='ml-3'>
-              <p className="mb-2 font-bold">{club?.clubName}</p>
+              <p className="mb-2 font-bold text-[18px]">{club?.clubName}</p>
               {isCenter ? (
-                <Button>
+                <Button className='w-[150px] h-[33px] sm:w-fit sm:h-fit'>
                   {club?.clubType} | {club?.division}{' '}
                 </Button>
               ) : (
-                <Button>
+                <Button className='w-[150px] h-[33px] sm:w-fit sm:h-fit'>
                   {club?.college} | {club?.department}{' '}
                 </Button>
               )}
@@ -84,18 +84,18 @@ export default function EditClubInfo() {
           </div>
         </Card>
         <Card className="rounded-[5px]">
-          <div className="pl-20 pr-20 mt-10 mb-10">
+          <div className="pl-5 sm:pl-20 pr-5 sm:pr-20 mt-10 mb-10">
             <div>
               <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mb-2.5">
                 소속분과
               </p>
               {isCenter ? (
-                <p className="font-pretendard font-normal text-[18px] leading-[18px] tracking-[0] ">
+                <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] ">
                   {' '}
                   • {club?.clubType} | {club?.division}
                 </p>
               ) : (
-                <p className="font-pretendard font-normal text-[18px] leading-[18px] tracking-[0]">
+                <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0]">
                   {' '}
                   • {club?.college} | {club?.department}
                 </p>
@@ -107,7 +107,7 @@ export default function EditClubInfo() {
               </p>
               <div className="flex floex-row">
                 •
-                <p className="ml-1 font-pretendard font-normal text-[18px] leading-[18px] tracking-[0] whitespace-pre-line">
+                <p className="ml-1 font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
                   {club?.introduction}
                 </p>
               </div>
@@ -123,7 +123,7 @@ export default function EditClubInfo() {
               <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 대표 활동
               </p>
-              <p className="font-pretendard font-normal text-[18px] leading-[18px] tracking-[0] whitespace-pre-line">
+              <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
                 • {clubInfo?.activity}
               </p>
             </div>
@@ -131,12 +131,12 @@ export default function EditClubInfo() {
               <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 동아리장
               </p>
-              <p className="font-pretendard font-normal text-[18px] leading-[18px] tracking-[0] whitespace-pre-line">
+              <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
                 • {clubInfo?.leader}
               </p>
             </div>
             <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+              <p className="font-pretendard font-semibold text-[16px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 동아리실
               </p>
               <p className="font-pretendard font-normal text-[18px] leading-[18px] tracking-[0] whitespace-pre-line">
@@ -148,7 +148,7 @@ export default function EditClubInfo() {
 
         <Button
           onClick={() => router.push('/admin/writeClubInfo')}
-          className="w-[145px] h-[45px] rouned-[5px] m-auto mt-15 cursor-pointer font-pretendard font-medium text-[17px] leading-[120%] tracking-[0]"
+          className="w-[120px] sm:w-[145px] h-[40px] sm:h-[45px] rouned-[5px] m-auto mt-10 sm:mt-15 cursor-pointer font-pretendard font-medium text-[16px] sm:text-[17px] leading-[120%] tracking-[0]"
         >
           수정하기
         </Button>

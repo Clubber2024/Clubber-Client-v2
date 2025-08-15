@@ -215,51 +215,54 @@ if(clubId){
     <>
    
 
-      <div className="ml-[10%] mr-[10%] mt-5 flex flex-col">
+      <div className="ml-0 sm:ml-[10%] mr-0 sm:mr-[10%] mt-5 flex flex-col">
         <Card className="mt-[60px] mb-9">
-          <div className="flex flex-row items-center pl-5">
+          <div className="flex flex-row items-center pl-5 pr-5">
             <img 
               src={club?.imageUrl || 'https://image.ssuclubber.com/common/logo/soongsil_default.png'} 
-              className="w-[150px] h-[150px]"
+              className="w-[100px] sm:w-[150px] h-[100px] sm:h-[150px]"
               onError={(e) => {
                 e.currentTarget.src = 'https://image.ssuclubber.com/common/logo/soongsil_default.png';
               }}
             />
           
             <div className='ml-3'>
-              <div className='flex flex-row items-center'>
-                <p className="mb-2 font-bold">{club?.clubName}</p>
-                
+              <div className='flex flex-row items-center mb-2 sm:mb-0'>
+                <p className="mb-2 font-bold text-[18px] w-fit">{club?.clubName}
+                </p>
                 {!isAdmin && (
                   isStarred ? (
                     <Star 
-                      className='w-4 h-4 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
+                      className='w-6 h-6 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
                       onClick={handleStarClick}
                     />
                   ) : (
                     <StarIcon 
-                      className='w-4 h-4 ml-2 mb-2 cursor-pointer text-yellow-500' 
+                      className='w-6 h-6 ml-2 mb-2 cursor-pointer text-yellow-500' 
                       onClick={handleStarClick}
                     />
                   )
                 )}
+               
               </div>
+              
               {isCenter ? (
-                <Button>
+                <Button className='mr-2 h-[33px] sm:h-[38px]'>
                   {club?.clubType} | {club?.division}
                 </Button>
               ) : (
-                <Button>
+                <Button className='mr-2 h-[33px] sm:h-[38px]'>
                   {club?.college} | {club?.department}
                 </Button>
               )}
-              <Button className='ml-2' onClick={onClickGoToRecruit}>모집글 보러가기 {'>'}</Button>
+              <Button className='mt-2 sm:mt-0 h-[33px] sm:h-[38px]' onClick={onClickGoToRecruit}>모집글 보러가기 {'>'}</Button>
             </div>
-          </div>
+            </div>
+          
         </Card>
         
         <Card className="rounded-[5px]">
-          <div className="pl-20 pr-20 mt-10 mb-10">
+          <div className="pl-4 sm:pl-20 pr-4 sm:pr-20 mt-10 mb-10">
             <div>
               <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mb-2.5">
                 소속분과
@@ -281,7 +284,7 @@ if(clubId){
               </p>
               <div className="flex flex-row">
                 •
-                <p className="ml-1 font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                <p className="ml-1 font-pretendard font-normal text-[16px] leading-[22px] tracking-[0] whitespace-pre-line ">
                   {club?.introduction || ''}
                 </p>
               </div>
@@ -357,6 +360,7 @@ if(clubId){
     </>
   );
 }
+
 
 
 

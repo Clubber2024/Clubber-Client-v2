@@ -414,13 +414,13 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <h1 className="font-pretendard font-semibold text-[34px] leading-[100%] tracking-[0] text-center mt-22 mb-14 h-[41px]">
+    <div className="flex flex-col items-center justify-center px-4">
+      <h1 className="font-pretendard font-semibold text-[28px] xs:text-[34px] leading-[100%] tracking-[0] text-center mt-16 xs:mt-22 mb-10 xs:mb-14 h-[34px] xs:h-[41px]">
         회원가입
       </h1>
-      <div className="w-[370px]">
+      <div className="w-full max-w-[370px]">
         <p
-          className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px]
+          className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px]
 mb-[9px]"
         >
           아이디
@@ -429,7 +429,7 @@ mb-[9px]"
           <Input
             type="text"
             placeholder="아이디를 입력하세요."
-            className="h-[40px] mr-[7px] rounded-[5px]"
+            className="h-[40px] mr-[7px] rounded-[5px] text-xs sm:text-sm"
             value={id}
             onChange={onChangeId}
           />{' '}
@@ -460,7 +460,7 @@ mb-[9px]"
         )}
 
         <p
-          className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+          className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 mb-[9px]"
         >
           비밀번호
@@ -475,12 +475,12 @@ mb-[9px]"
             ref={passwordRef}
             placeholder="비밀번호를 입력하세요."
             autoComplete="off"
-            className="h-[40px] rounded-[5px]"
+            className="h-[40px] rounded-[5px] text-xs sm:text-sm"
           />
           <img
             src={isShowPwChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
             onClick={handleShowPwChecked}
-            className="w-[20px] absolute top-2.5 left-[335px]"
+            className="w-[20px] absolute top-2.5 right-3 xs:left-[335px] xs:right-auto"
           />
         </div>
         <p
@@ -494,7 +494,7 @@ mb-[9px]"
           연속 4자 이상은 동일한 문자/숫자 제외
         </p>
         <p
-          className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+          className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 mb-[9px]"
         >
           비밀번호 확인
@@ -509,12 +509,12 @@ mb-[9px]"
             ref={passwordConfirmRef}
             autoComplete="off"
             placeholder="비밀번호를 입력하세요."
-            className="h-[40px] rounded-[5px]"
+            className="h-[40px] rounded-[5px] text-xs sm:text-sm"
           />
           <img
             src={isShowPwConfirmChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
             onClick={handleShowPwConfirmChecked}
-            className="w-[20px] absolute top-2.5 left-[335px]"
+            className="w-[20px] absolute top-2.5 right-3 xs:left-[335px] xs:right-auto"
           />
         </div>
         <p
@@ -523,7 +523,7 @@ mb-[9px]"
           비밀번호와 일치합니다.
         </p>
         <p
-          className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px]
+          className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px]
 mb-[9px] mt-4 rounded-[5px]"
         >
           동아리명
@@ -542,7 +542,7 @@ mb-[9px] mt-4 rounded-[5px]"
           setDepartment={setDepartment}
         />
         <p
-          className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+          className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 mb-[9px]"
         >
           이메일 주소
@@ -557,11 +557,11 @@ mb-[9px]"
             type="text"
             value={email}
             placeholder="이메일을 입력하세요."
-            className="h-[40px] rounded-[5px] mr-2"
+            className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
             onChange={onChangeEmail}
             autoComplete="off"
           />{' '}
-          <Button className="h-[40px] rounded-[5px]" onClick={handleEmailVerificationButton}>
+          <Button className="h-[40px] w-[90px] sm:w-[100px] rounded-[5px]" onClick={handleEmailVerificationButton}>
             인증번호 전송
           </Button>
         </div>
@@ -602,7 +602,7 @@ mb-[9px]"
           ''
         )}
         <p
-          className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-8
+          className="font-[Pretendard] font-semibold text-[18px] leading-[120%] tracking-[0px] mt-8
 mb-[9px]"
         >
           연락 수단
@@ -611,7 +611,7 @@ mb-[9px]"
           클러버와 공식적으로 소통할 수 있는 동아리 연락 수단을 작성해주세요.
         </p>
         <p
-          className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+          className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 mb-[9px]"
         >
           1. 인스타그램
@@ -619,12 +619,12 @@ mb-[9px]"
         <Input
           type="text"
           placeholder="동아리 공식 인스타그램 아이디"
-          className="h-[40px] mr-[7px] rounded-[5px]"
+          className="h-[40px] mr-[7px] rounded-[5px] text-xs sm:text-sm"
           value={instagram}
           onChange={onChangeInsta}
         />
         <p
-          className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+          className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 mb-[9px]"
         >
           2. 기타
@@ -632,13 +632,13 @@ mb-[9px]"
         <Input
           type="text"
           placeholder="ex) 전화번호, 카카오톡 아이디 등"
-          className="h-[40px] mr-[7px] rounded-[5px]"
+          className="h-[40px] mr-[7px] rounded-[5px] text-xs sm:text-sm"
           value={etc}
           onChange={onChangeEtc}
         />
         <div>
           <p
-            className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+            className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 mb-[9px]"
           >
             (선택) 동아리 증빙서류
@@ -650,7 +650,7 @@ mb-[9px]"
 
             <label
               htmlFor="file-upload"
-              className="flex items-center pl-8 h-[40px] w-full rounded-[5px] border border-input bg-transparent text-gray-400 text-sm shadow-xs cursor-pointer"
+              className="flex items-center pl-8 h-[40px] w-full rounded-[5px] border border-input bg-transparent text-gray-400 text-xs sm:text-sm shadow-xs cursor-pointer"
             >
               {fileName ? (
                 <span className="text-gray-800">{fileName}</span>
@@ -673,7 +673,7 @@ mb-[9px]"
             에브리타임 모집글, 동아리 활동 사진 등 동아리를 증빙할 수 있는 최소한의 정보
           </p>
 
-          <Button className="w-[370px] h-[40px] mt-8 " onClick={onClickSignUp}>
+          <Button className="w-full max-w-[370px] h-[40px] mt-8 " onClick={onClickSignUp}>
             회원가입
           </Button>
         </div>

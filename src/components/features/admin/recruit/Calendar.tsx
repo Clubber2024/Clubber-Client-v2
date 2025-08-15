@@ -7,7 +7,7 @@ interface MyCalendarProps {
 }
 
 const MyCalendar = ({ date, onChange }: MyCalendarProps) => {
-  return <DayPicker mode="single" selected={date} onSelect={onChange} required={true} />;
+  return <DayPicker mode="single" selected={date} onSelect={onChange} required={true} className='bg-white z-10 border px-1'/>;
 };
 
 export default MyCalendar;

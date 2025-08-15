@@ -83,7 +83,9 @@ export default function SearchClub({
         setClubTypes(res.data.data);
         setIsType(true);
       }
-    } catch {}
+    } catch (error) {
+      console.error('Error fetching club types:', error);
+    }
   };
 
   //소모임 단과대 목록 조회
@@ -182,7 +184,6 @@ export default function SearchClub({
   };
 
   const onClickDepartment = (e: any) => {
-    console.log(e.target.value);
     const collegeCode = e.target.value;
     setCollege(e.target.value);
     getDepartmentsList(collegeCode);
@@ -224,7 +225,7 @@ export default function SearchClub({
 */
   return (
     <>
-      <div className="relative w-[370px]">
+      <div className="relative w-full max-w-[370px]">
         <img src="/images/login/search.png" className="absolute w-4 top-2.5 left-2" />
         <Input
           id="name"
@@ -233,12 +234,12 @@ export default function SearchClub({
           onChange={onChangeName}
           autoComplete="off"
           placeholder="동아리명 입력"
-          className="pl-7 h-[40px] rounded-[5px] text-sm"
+          className="pl-7 h-[40px] rounded-[5px] text-xs sm:text-sm"
         />
       </div>
       {showSuggestions && (
         <ul
-          className="list-none p-0 m-0
+          className="list-none p-0 m-0 w-full max-w-[370px]
 
     w-[370px]
     bg-[#f9f9f9] border border-gray-300 rounded-[5px]
@@ -276,15 +277,15 @@ export default function SearchClub({
       {type === 'signup' && (
         <>
           <p
-            className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px]
+            className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px]
 mb-[9px] mt-4 rounded-[5px]"
           >
             동아리 소속 분야
           </p>
-          <div className="flex flex-row w-[370px] justify-between align-middle">
+          <div className="flex flex-col w-full max-w-[370px] sm:flex-row sm:gap-2 justify-between sm:justify-start align-middle">
             {' '}
             {clubTypes?.map(({ code, title }, idx) => (
-              <label key={idx} htmlFor={code} className="flex items-center cursor-pointer">
+              <label key={idx} htmlFor={code} className="flex items-center cursor-pointer mb-1 sm:mb-0">
                 <input
                   type="radio"
                   name="clubType"
@@ -310,7 +311,7 @@ mb-[9px] mt-4 rounded-[5px]"
           {clubType === 'SMALL' ? (
             <div>
               <p
-                className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px]
+                className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px]
 mb-[9px] mt-4 rounded-[5px]"
               >
                 단과대 선택
@@ -323,7 +324,7 @@ mb-[9px] mt-4 rounded-[5px]"
                     onChange={onClickDepartment}
                   >
                     {colleges.map((colleges: College) => (
-                      <option key={colleges.code} value={colleges.code}>
+                      <option key={colleges.code} value={colleges.code} className="h-[40px] text-xs sm:text-sm cursor-pointer">
                         {colleges.title}
                       </option>
                     ))}
@@ -333,7 +334,7 @@ mb-[9px] mt-4 rounded-[5px]"
                     onChange={(e) => setDepartment(e.target.value)}
                   >
                     {departments?.map((departments) => (
-                      <option key={departments.code} value={departments.code}>
+                      <option key={departments.code} value={departments.code} className="h-[40px] text-xs sm:text-sm cursor-pointer">
                         {departments.title}
                       </option>
                     ))}

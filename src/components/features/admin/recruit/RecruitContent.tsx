@@ -67,11 +67,11 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
   };
 
   return (
-    <>
+    <div className='w-full'>
       <Container>
-        <Divider className="shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] border-black mt-[46px]" />
+        <Divider className="shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] border-black mt-[20px] sm:mt-[46px]" />
         {content ? (
-          <div className="flex flex-col justify-center items-center mt-[30px]">
+          <div className="flex flex-col justify-center items-center mt-[30px] w-full">
             <RecruitStatusLabel status={content.recruitStatus} />
             <p className="font-semibold text-[24px] leading-[100%] tracking-[0%] font-pretendard mt-[13px] mb-[14px]">
               {content.title}
@@ -80,9 +80,9 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
               {content.createdAt} | 조회수 {content.totalView}
             </p>
             <Divider className="w-full" />
-            <div className="flex flex-row justify-between w-full mt-2.5 mb-2.5">
-              <div className="flex flex-row justify-center items-start gap-2 h-6">
-                <span className="font-semibold text-[16px] leading-[150%] tracking-[0%] font-pretendard h-full">
+            <div className="flex flex-col sm:flex-row justify-between w-full mt-2.5 mb-2.5">
+              <div className="flex flex-row justify-start sm:justify-center items-start gap-2">
+                <span className="font-semibold text-[16px] leading-[150%] tracking-[0%] font-pretendard w-fit">
                   • 모집기간{' '}
                 </span>
                 <span className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard">
@@ -90,7 +90,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
                   {content.endAt ? formatDateArray(content.endAt) : ''}
                 </span>
               </div>
-              <div className="flex flex-row justify-center items-start gap-2 ">
+              <div className="flex flex-row justify-start sm:justify-center items-start gap-2 ">
                 <span className="font-semibold text-[16px] leading-[150%] tracking-[0%] font-pretendard">
                   • 모집유형{' '}
                 </span>
@@ -100,7 +100,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
               </div>
             </div>
             <Divider className="w-full" />
-            <div className="flex flex-row justify-start items-start gap-2 w-full mt-2.5 mb-2.5 ">
+            <div className="flex flex-col sm:flex-row justify-start items-start gap-2 w-full mt-2.5 mb-2.5 ">
               <span className="font-semibold text-[16px] leading-[100%] tracking-[0%] font-pretendard">
                 • 지원링크{' '}
               </span>
@@ -108,7 +108,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 href={content.applyLink}
-                className="font-normal text-[16px] leading-[100%] tracking-[0%] font-pretendard"
+                className="font-normal text-[16px] leading-[100%] tracking-[0%] font-pretendard break-all"
               >
                 {content.applyLink}
               </a>
@@ -136,6 +136,6 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
           ''
         )}
       </Container>
-    </>
+    </div>
   );
 }
