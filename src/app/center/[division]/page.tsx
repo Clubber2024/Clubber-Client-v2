@@ -61,7 +61,7 @@ export default function DivisionPage() {
           />
           <ChevronRight size={15} className="absolute top-20 left-43 text-white" />
           <p className="absolute top-19 left-48 text-white text-[13px] mt-0.5">중앙동아리</p>
-          <ChevronRight size={15} className="absolute top-20 left-56 text-white" />
+          <ChevronRight size={15} className="absolute top-20 left-66 text-white" />
           <h1 className="absolute top-27 left-36 text-3xl text-white font-semibold">
             {divisionTitle}
           </h1>

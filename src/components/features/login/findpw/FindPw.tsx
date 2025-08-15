@@ -178,15 +178,17 @@ export default function FindPw() {
   };
 
   return (
+  
     <div className="mt-25 flex flex-col justify-center items-center">
-      <p className="font-semibold text-[34px] leading-[100%] tracking-[0%] text-center mb-[70px]">
+      <p className="font-semibold text-[28px] sm:text-[34px] leading-[100%] tracking-[0%] text-center mb-10 sm:mb-[70px]">
         비밀번호 찾기
       </p>
       {step === '1' && (
         <>
+          <div className="w-full max-w-[370px]">
           <div>
             <p
-              className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+              className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 						mb-[9px] "
             >
               아이디
@@ -196,19 +198,19 @@ export default function FindPw() {
               name="id"
               value={id}
               onChange={onChangeId}
-              className="h-[40px] rounded-[5px] mr-2"
+              className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
               placeholder="아이디 입력"
               autoComplete="off"
             />
 
             <div>
               <p
-                className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+                className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 						mb-[9px]"
               >
                 이메일 주소
               </p>
-              <div className="w-[370px]">
+              <div className="w-full max-w-[370px]">
                 <div className="flex">
                   <Input
                     id="email"
@@ -216,12 +218,12 @@ export default function FindPw() {
                     type="text"
                     value={email}
                     placeholder="이메일을 입력하세요."
-                    className="h-[40px] rounded-[5px] mr-2"
+                    className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
                     onChange={onChangeEmail}
                     autoComplete="off"
                   />{' '}
                   <Button
-                    className="h-[40px] rounded-[5px]"
+                    className="h-[40px] rounded-[5px] w-[90px] sm:w-[100px]"
                     onClick={handleEmailVerificationButton}
                   >
                     인증번호 전송
@@ -236,7 +238,7 @@ export default function FindPw() {
 
               <div>
                 <p
-                  className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+                  className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 						mb-[9px]"
                 >
                   인증번호 입력
@@ -249,10 +251,10 @@ export default function FindPw() {
                     onChange={onChangeCode}
                     placeholder="인증코드 입력"
                     autoComplete="off"
-                    className="h-[40px] rounded-[5px] mr-2"
+                    className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
                   />
                   {/* <div className={styles.timer_container}>{showTimer ? <Timer key={start} /> : ''}</div> */}
-                  <Button onClick={handleVerifyCode} className="h-[40px] rounded-[5px]">
+                  <Button onClick={handleVerifyCode} className="h-[40px]  rounded-[5px] w-[90px] sm:w-[100px]">
                     인증번호 확인
                   </Button>
                 </div>
@@ -263,15 +265,16 @@ export default function FindPw() {
               </div>
             </div>
           </div>
-          <Button onClick={handleNextbutton} className="w-[370px] h-10 mt-[35px] rounded-[5px]">
+          <Button onClick={handleNextbutton} className="w-full max-w-[370px] h-10 mt-[35px] rounded-[5px]">
             다음
           </Button>
+          </div>
         </>
       )}
       {step === '2' && (
-        <div className="w-[370px]">
+        <div className="w-full max-w-[370px]">
           <p
-            className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+            className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 mb-[9px]"
           >
             비밀번호
@@ -286,12 +289,12 @@ mb-[9px]"
               ref={newPasswordRef}
               placeholder="비밀번호를 입력하세요."
               autoComplete="off"
-              className="h-[40px] rounded-[5px]"
+              className="h-[40px] rounded-[5px] text-xs sm:text-sm"
             />
             <img
               src={isShowPwChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
               onClick={handleShowPwChecked}
-              className="w-[20px] absolute top-2.5 left-[335px]"
+              className="w-[20px] absolute top-1/2 right-3 -translate-y-1/2"
             />
           </div>
           <p
@@ -305,7 +308,7 @@ mb-[9px]"
             연속 4자 이상은 동일한 문자/숫자 제외
           </p>
           <p
-            className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+            className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 mb-[9px]"
           >
             비밀번호 확인
@@ -320,12 +323,12 @@ mb-[9px]"
               ref={newPasswordConfirmRef}
               autoComplete="off"
               placeholder="비밀번호를 입력하세요."
-              className="h-[40px] rounded-[5px]"
+              className="h-[40px] rounded-[5px] text-xs sm:text-sm"
             />
             <img
               src={isShowPwConfirmChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
               onClick={handleShowPwConfirmChecked}
-              className="w-[20px] absolute top-2.5 left-[335px]"
+              className="w-[20px] absolute top-1/2 right-3 -translate-y-1/2"
             />
           </div>
           <p
@@ -334,7 +337,7 @@ mb-[9px]"
             비밀번호와 일치합니다.
           </p>
 
-          <Button onClick={handleSubmitResetPw} className="w-[370px] h-10 mt-[35px] rounded-[5px]">
+          <Button onClick={handleSubmitResetPw} className="w-full max-w-[370px] h-10 mt-[35px] rounded-[5px]">
             확인
           </Button>
         </div>

@@ -83,7 +83,7 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="w-[300px] mt-[30px]">
+    <div className="w-full max-w-[300px] xs:w-[300px] mt-[30px] px-4 xs:px-0">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -102,7 +102,7 @@ mb-[9px]"
           autoComplete="current-id"
           value={adminId}
           onChange={saveAdminId}
-          className="mb-[19px] h-[40px]"
+          className="mb-[19px] h-[40px] w-full"
         />
         <p
           className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px]
@@ -116,7 +116,7 @@ mb-[9px]"
           autoComplete="current-password"
           value={adminPw}
           onChange={saveAdminPw}
-          className="h-[40px]"
+          className="h-[40px] w-full"
         />
         <label className="flex items-center space-x-2 cursor-pointer mt-1.5">
           <input
@@ -134,11 +134,11 @@ mb-[9px]"
             아이디 저장
           </span>
         </label>
-        <Button type="submit" onClick={handleLoginSubmit} className="w-[300px] h-[40px] mt-2">
+        <Button type="submit" onClick={handleLoginSubmit} className="w-full xs:w-[300px] h-[40px] mt-2">
           관리자 로그인
         </Button>
       </form>
-      <div className="text-center">
+      <div className="text-center mt-4">
         <Link
           href="/findId"
           className="font-pretendard font-normal text-[10px] leading-[100%] cursor-pointer hover:text-primary"

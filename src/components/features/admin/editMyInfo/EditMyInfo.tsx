@@ -70,7 +70,7 @@ export default function EditMyInfo() {
   };
 
   const onClickCancelButton = () => {
-    router.push("/admin");
+    router.push("/admin/mypage");
   };
 
   const onClickSaveContact = () => {
@@ -87,12 +87,12 @@ export default function EditMyInfo() {
     <>
       {/* Title Section */}
       <TitleDiv>
-        <p className="font-bold font-sans text-[22px] leading-[100%] text-[#202123] ">
+        <p className="font-bold font-sans text-[20px] leading-[100%] text-[#202123] ">
           회원정보 수정
         </p>
         </TitleDiv>
       {/* Content Section */}
-      <div className="w-[463px] m-auto mt-[62px] flex flex-col items-center justify-center">
+      <div className="w-full sm:w-[463px] m-auto mt-[62px] flex flex-col items-center justify-center">
         <div className="w-full">
           <p className="w-full font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] mb-[11px] text-[#202123] text-left">
             아이디
@@ -101,7 +101,7 @@ export default function EditMyInfo() {
             id="id"
             name="id"
             value={profile.username || ""}
-            className="border border-[#9c9c9c80] rounded-[5px] w-full h-[50px] text-[#202123] pl-[11px] text-[16px] bg-[#a7a7a74d] cursor-pointer"
+            className="border border-[#9c9c9c80] rounded-[5px] w-full h-[48px] sm:h-[50px] text-[#202123] pl-[11px] text-[16px] bg-[#a7a7a74d] cursor-pointer"
             placeholder="아이디 입력"
             readOnly
           />
@@ -112,13 +112,13 @@ export default function EditMyInfo() {
               비밀번호
             </p>
          
-          <div className="flex flex-row  justify-between mt-[13px] mb-[20px] mr-[5px]">
+          <div className="flex flex-row  justify-between mt-[13px] mr-[5px]">
             <Input
               id="password"
               name="password"
               value={"*********"}
-              className="border border-[#9c9c9c80] rounded-[5px] w-[70%] h-[50px] text-[#202123] flex items-center bg-[#a7a7a74d] pl-[11px] text-[14px] font-normal"
-              placeholder="이메일 입력"
+              className="border border-[#9c9c9c80] rounded-[5px] w-[70%] h-[48px] sm:h-[50px] text-[#202123] flex items-center bg-[#a7a7a74d] pl-[11px] text-[14px] font-normal"
+              placeholder="비밀번호 입력"
               autoComplete="off"
               readOnly
             />
@@ -126,7 +126,7 @@ export default function EditMyInfo() {
               onClick={handleChangePassword}
               className={`${
                 email ? "bg-primary" : "bg-[#d6d6d6]"
-              } w-[25%] h-[50px] rounded-[5px] border-none font-['Noto_Sans_KR'] font-light text-[15px] text-white cursor-pointer`}
+              } w-[25%] h-[50px] rounded-[5px] border-none font-light text-[15px] text-white cursor-pointer`}
             >
               설정
             </Button>
@@ -144,7 +144,7 @@ export default function EditMyInfo() {
               id="email"
               name="email"
               value={email}
-              className="border border-[#9c9c9c80] rounded-[5px] w-[70%] h-[50px] text-[#202123] bg-[#a7a7a74d] flex items-center pl-[11px] text-[14px] font-normal"
+              className="border border-[#9c9c9c80] rounded-[5px] w-[70%] h-[48px] sm:h-[50px] text-[#202123] bg-[#a7a7a74d] flex items-center pl-[11px] text-[14px] font-normal"
               placeholder="이메일 입력"
               autoComplete="off"
               readOnly
@@ -153,7 +153,7 @@ export default function EditMyInfo() {
               onClick={handleChangeEmail}
               className={`${
                 email ? "bg-primary" : "bg-[#d6d6d6]"
-              } w-[25%] h-[50px] rounded-[5px] border-none font-['Noto_Sans_KR'] font-light text-[15px] text-white cursor-pointer`}
+              } w-[25%] h-[48px] sm:h-[50px] rounded-[5px] border-none font-light text-[15px] text-white cursor-pointer`}
             >
               설정
             </Button>
@@ -172,7 +172,7 @@ export default function EditMyInfo() {
             name="insta"
             value={insta}
             onChange={onChangeInsta}
-            className="border border-[#9c9c9c80] rounded-[5px] w-full h-[50px] text-[#202123] flex items-center pl-[11px] mt-[13px] mb-[26px] text-[16px]"
+            className="border border-[#9c9c9c80] rounded-[5px] w-full h-[48px] sm:h-[50px] text-[#202123] flex items-center pl-[11px] mt-[13px] mb-[26px] text-[16px]"
             placeholder="인스타그램 아이디 입력"
           />
           <p className="mt-[35px] font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] text-[#202123]">
@@ -183,19 +183,19 @@ export default function EditMyInfo() {
             name="contact"
             value={etc}
             onChange={onChangeEtc}
-            className="border border-[#9c9c9c80] rounded-[5px] w-full h-[50px] text-[#202123] flex items-center pl-[11px] mt-[13px] mb-[26px] md:mb-[36px] text-[16px]"
+            className="border border-[#9c9c9c80] rounded-[5px] w-full h-[48px] sm:ch-[50px] text-[#202123] flex items-center pl-[11px] mt-[13px] mb-[26px] md:mb-[36px] text-[16px]"
             placeholder="기타 연락수단 입력"
           />
           </div>
           <div className="flex flex-row justify-between mb-[50%] mt-[35px] w-full">
             <Button
-              className=" w-[220px] h-[50px] bg-primary border-none rounded-[5px] text-white font-regular text-[18px] text-center"
+              className=" flex-1 h-[48px] sm:h-[50px] bg-primary border-none rounded-[5px] text-white font-regular text-[16px] sm:text-[18px] text-center mr-2"
               onClick={onClickSaveContact}
             >
               수정
               </Button>
             <Button
-              className="w-[220px] h-[50px] bg-[#9c9c9c] border-none rounded-[5px] text-white font-regular text-[18px] text-center"
+              className="flex-1 h-[48px] sm:h-[50px] bg-[#9c9c9c] border-none rounded-[5px] text-white font-regular text-[16px] sm:text-[18px] text-center"
               onClick={onClickCancelButton}
             >
               취소

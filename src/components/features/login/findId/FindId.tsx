@@ -112,14 +112,15 @@ export default function FindId() {
 
   return (
     <div className="mt-25 flex flex-col justify-center items-center">
-      <p className="font-semibold text-[34px] leading-[100%] tracking-[0%] text-center mb-[70px]">
+      <p className="font-semibold text-[28px] sm:text-[34px] leading-[100%] tracking-[0%] text-center mb-10 sm:mb-[70px]">
         아이디 찾기
       </p>
       {step === '1' && (
         <>
+        <div className="w-full max-w-[370px]">
           <div>
             <p
-              className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+              className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 				mb-[9px] "
             >
               동아리명
@@ -141,12 +142,12 @@ export default function FindId() {
 
           <div>
             <p
-              className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+              className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 				mb-[9px]"
             >
               이메일 주소
             </p>
-            <div className="w-[370px]">
+            <div className="w-full max-w-[370px]">
               <div className="flex">
                 <Input
                   id="email"
@@ -154,11 +155,11 @@ export default function FindId() {
                   type="text"
                   value={email}
                   placeholder="이메일을 입력하세요."
-                  className="h-[40px] rounded-[5px] mr-2"
+                  className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
                   onChange={onChangeEmail}
                   autoComplete="off"
                 />{' '}
-                <Button className="h-[40px] rounded-[5px]" onClick={handleEmailVerificationButton}>
+                <Button className="h-[40px] rounded-[5px] w-[90px] sm:w-[100px]" onClick={handleEmailVerificationButton}>
                   인증번호 전송
                 </Button>
               </div>
@@ -171,7 +172,7 @@ export default function FindId() {
 
             <div>
               <p
-                className="font-[Pretendard] font-semibold text-[14px] leading-[120%] tracking-[0px] mt-4
+                className="font-[Pretendard] font-semibold text-[16px] leading-[120%] tracking-[0px] mt-4
 				mb-[9px]"
               >
                 인증번호 입력
@@ -184,10 +185,10 @@ export default function FindId() {
                   onChange={onChangeCode}
                   placeholder="인증코드 입력"
                   autoComplete="off"
-                  className="h-[40px] rounded-[5px] mr-2"
+                  className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
                 />
                 {/* <div className={styles.timer_container}>{showTimer ? <Timer key={start} /> : ''}</div> */}
-                <Button onClick={handleVerifyCode} className="h-[40px] rounded-[5px]">
+                <Button onClick={handleVerifyCode} className="h-[40px] rounded-[5px] w-[90px] sm:w-[100px]">
                   인증번호 확인
                 </Button>
               </div>
@@ -197,15 +198,17 @@ export default function FindId() {
               </p>
             </div>
           </div>
-          <Button onClick={handleNextFindId} className="w-[370px] mt-[35px] h-[40px] rounded-[5px]">
+          <Button onClick={handleNextFindId} className="w-full max-w-[370px] mt-[35px] h-[40px] rounded-[5px]">
             다음
           </Button>
+          </div>
         </>
       )}
 
       {step === '2' && (
         <>
-          <div className="w-[370px] h-[146px] bg-[#f4f6f8] flex justify-center items-center">
+        <div className="w-full max-w-[370px]">
+          <div className="h-[146px] bg-[#f4f6f8] flex justify-center items-center">
             <p className="font-medium text-[18px] leading-[100%] tracking-[0%]">
               아이디는{' '}
               <span className="font-medium text-[18px] leading-[100%] tracking-[0%] text-primary">
@@ -214,23 +217,28 @@ export default function FindId() {
               입니다.{' '}
             </p>
           </div>
-          <div className="flex flex-row mt-[40px] justify-between w-[370px]">
-            <Button
-              variant={'outline'}
-              className="bg-[#a7a7a7] text-white w-[182px] h-[40px] rounded-[5px]"
-              onClick={() => router.push('/login')}
-            >
-              로그인
-            </Button>
-            <Button
-              className=" w-[182px] h-[40px] rounded-[5px]"
-              onClick={() => router.push('/findPw')}
-            >
-              비밀번호 찾기
-            </Button>
+                     <div className="flex flex-row mt-[40px] gap-3 w-full max-w-[370px]">
+             <Button
+               variant={'outline'}
+               className="bg-[#a7a7a7] text-white flex-1 h-[40px] rounded-[5px]"
+               onClick={() => router.push('/login')}
+             >
+               로그인
+             </Button>
+             <Button
+               className="flex-1 h-[40px] rounded-[5px]"
+               onClick={() => router.push('/findPw')}
+             >
+               비밀번호 찾기
+             </Button>
+           </div>
           </div>
         </>
       )}
     </div>
   );
 }
+
+/*flex-1을 사용하면 gap을 제외한 나머지 공간을 두 버튼이 동일하게 나누어 가져서서 
+전체 너비가 370px을 초과하지 않으면서도 적절한 간격을 유지됨됨
+*/

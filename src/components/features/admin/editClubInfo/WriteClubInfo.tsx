@@ -13,7 +13,7 @@ import Modal from '@/app/modal/Modal';
 export default function WriteClubInfo() {
   const router = useRouter();
   const [club, setClub] = useState<ClubProps>({
-    clubId: 0,
+    clubId: undefined,
     clubName: '',
     clubType: '',
     hashTag: '',
@@ -43,6 +43,7 @@ export default function WriteClubInfo() {
   const [imgType, setImageType] = useState('0');
   const [introCount, setIntroCount] = useState(0);
   const [actiCount, setActiCount] = useState(0);
+  const { NEXT_PUBLIC_BASE_LOGO_URL } = process.env;
   //->이미지 파일 선택 시 imaType=1, 로고 삭제 시, imgType=2, 미변경시 imgType=0
 
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function WriteClubInfo() {
   const fetchClubInfoData = async () => {
     const res = await getClubInfo();
     if (res.success) {
+     
       setClub(res.data);
       setClubInfo(res.data.clubInfo);
       {
@@ -60,8 +62,8 @@ export default function WriteClubInfo() {
           : setActiCount(0);
       }
       // 이미지 URL을 올바른 형식으로 설정
-      const imageUrl = res.imageUrl ? `https://image.ssuclubber.com/${res.imageUrl}` : 'https://image.ssuclubber.com/common/logo/soongsil_default.png';
-      setImageUrl(res.imageUrl);
+      const imageUrl = res.data.imageUrl ? res.data.imageUrl : `https://image.ssuclubber.com/${NEXT_PUBLIC_BASE_LOGO_URL}`;
+      setImageUrl(imageUrl);
       setImagePreview(imageUrl);
       
       const clubID = res.clubId;
@@ -105,7 +107,7 @@ export default function WriteClubInfo() {
         imageUrl: defaultImagePreview
       }));
       
-      console.log('Image deleted, using default image');
+     
     } catch (error) {
       console.error('Image deletion failed:', error);
       alert('이미지 삭제에 실패했습니다.');
@@ -192,7 +194,7 @@ export default function WriteClubInfo() {
                 youtube: clubInfo.youtube ?? '',
                 activity: clubInfo.activity ?? '',
                 leader: clubInfo.leader ?? '',
-                room: Number(clubInfo.room) ?? null,
+                room: clubInfo.room ? Number(clubInfo.room) : null,
               });
 
               if (data.success) {
@@ -219,7 +221,7 @@ export default function WriteClubInfo() {
           youtube: clubInfo.youtube ?? '',
           activity: clubInfo.activity ?? '',
           leader: clubInfo.leader ?? '',
-          room: Number(clubInfo.room) ?? null,
+          room: clubInfo.room ? Number(clubInfo.room) : null,
         });
 
         if (data.success) {
@@ -242,21 +244,21 @@ export default function WriteClubInfo() {
         </p>
       </TitleDiv>
 
-      <div className="ml-[10%] mr-[10%] mt-5 flex flex-col">
+      <div className="ml-0 sm:ml-[10%] mr-0 sm:mr-[10%] mt-5 flex flex-col">
         <Card className="mt-[60px] mb-9">
           <div className="flex flex-row items-center pl-5 relative">
             <img
               src={imagePreview ? imagePreview : club?.imageUrl || 'https://image.ssuclubber.com/common/logo/soongsil_default.png'}
               alt="logo"
-              className="w-[150px] h-[150px]"
+              className="w-[100px] sm:w-[150px] h-[100px] sm:h-[150px]"
               onError={(e) => {
                 console.log('Image failed to load, using default image');
                 e.currentTarget.src = 'https://image.ssuclubber.com/common/logo/soongsil_default.png';
               }}
             />
-            <Button onClick={deleteImage}>로고 삭제</Button>
+            
             <label className="cursor-pointer">
-              <div className="w-9 h-9 border-white bg-[#dddddd] flex items-center justify-center rounded-4xl absolute bottom-2 left-30">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 border-white bg-[#dddddd] flex items-center justify-center rounded-4xl absolute bottom-2 left-23 sm:left-30">
                 <Camera fill="#585656" color="white" strokeWidth={'1'} />
                 <input
                   type="file"
@@ -266,9 +268,11 @@ export default function WriteClubInfo() {
                 />
               </div>
             </label>
+           
 
-            <div>
+            <div className='flex flex-col'>
               <p className="mb-2 font-bold">{club?.clubName}</p>
+              
               {isCenter ? (
                 <Button>
                   {club?.clubType} | {club?.division}{' '}
@@ -278,11 +282,13 @@ export default function WriteClubInfo() {
                   {club?.college} | {club?.department}{' '}
                 </Button>
               )}
+                <Button onClick={deleteImage} variant={"outline"} className='mt-2'>로고 삭제</Button>
             </div>
+          
           </div>
         </Card>
         <Card className="rounded-[5px]">
-          <div className="pl-20 pr-20 mt-10 mb-10">
+          <div className="pl-4 sm:pl-20 pr-4 sm:pr-20 mt-10 mb-10">
             <div>
               <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mb-2.5">
                 소속분과
@@ -361,7 +367,7 @@ export default function WriteClubInfo() {
                 onKeyPress={handleKeyPress}
                 rows={2}
                 cols={10}
-                placeholder=" 동아리 대표활동을 입력하세요."
+                placeholder=" 동아리실을 입력하세요."
                 className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full"
               />
             </div>
@@ -377,6 +383,7 @@ export default function WriteClubInfo() {
           <Button
             className="w-[145px] h-[45px] rouned-[5px] m-auto mt-15 cursor-pointer font-pretendard font-semibold text-[16px] leading-[120%] tracking-[0]"
             variant="outline"
+            onClick={()=>router.back()}
           >
             취소
           </Button>

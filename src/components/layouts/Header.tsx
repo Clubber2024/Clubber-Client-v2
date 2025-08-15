@@ -103,6 +103,7 @@ export default function Header() {
 
       setModalMessage('로그아웃 되었습니다.');
       setIsOpenModal(true);
+   
 
       window.dispatchEvent(new Event('storage'));
     } catch (error) {
@@ -117,6 +118,7 @@ export default function Header() {
 
   const closeModal = () => {
     setIsOpenModal(false);
+    router.push('/');
     router.refresh();
   };
 

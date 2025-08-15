@@ -122,11 +122,11 @@ const closeModal = () => {
   return (
     <div>
       <TitleDiv>
-        <p className="font-bold font-sans text-[18px] md:text-[22px] leading-[100%] text-[#202123]">
+        <p className="font-bold font-sans text-[20px] leading-[100%] text-[#202123]">
           비밀번호 변경
         </p>
       </TitleDiv>
-<div className="w-[463px] m-auto mt-[62px] flex flex-col items-center justify-center">
+<div className="w-full sm:w-[463px] m-auto mt-[62px] flex flex-col items-center justify-center">
 <p className="w-full font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] mb-[11px] text-[#202123] text-left">
           현재 비밀번호
         </p>
@@ -140,12 +140,12 @@ const closeModal = () => {
             ref={oldPasswordRef}
             placeholder="현재 비밀번호를 입력하세요."
             autoComplete="off"
-            className="h-[50px] w-full rounded-[5px]"
+            className="h-[48px] sm:h-[50px] w-full rounded-[5px]"
           />
           <img
             src={isShowOldPwChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
             onClick={handleShowOldPwChecked}
-            className="w-[30px] absolute top-2.5 right-[20px]"
+            className="w-[30px] absolute top-1/2 -translate-y-1/2 right-[20px]"
           />
         </div>
 
@@ -162,7 +162,7 @@ const closeModal = () => {
             ref={passwordRef}
             placeholder="새 비밀번호를 입력하세요."
             autoComplete="off"
-            className="h-[50px] w-full rounded-[5px]"
+            className="h-[48px] sm:h-[50px] w-full rounded-[5px]"
           />
           <img
             src={isShowPwChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
@@ -193,7 +193,7 @@ const closeModal = () => {
             ref={passwordConfirmRef}
             autoComplete="off"
             placeholder="새 비밀번호를 입력하세요."
-            className="h-[50px] rounded-[5px]"
+            className="h-[48px] sm:h-[50px] rounded-[5px]"
           />
           <img
             src={isShowPwConfirmChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
@@ -208,7 +208,7 @@ const closeModal = () => {
         </p>
         <Button
           onClick={handleSubmitChangePw}
-          className="cursor-pointer w-full h-[50px] rounded-[5px] bg-primary text-white font-semibold text-[18px] leading-[120%] tracking-[0%] mt-10"
+          className="cursor-pointer w-full h-[48px] sm:h-[50px] rounded-[5px] bg-primary text-white font-semibold text-[18px] leading-[120%] tracking-[0%] mt-10"
         >
           비밀번호 변경
         </Button>
