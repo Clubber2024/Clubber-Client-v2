@@ -103,7 +103,6 @@ export default function Header() {
 
       setModalMessage('로그아웃 되었습니다.');
       setIsOpenModal(true);
-   
 
       window.dispatchEvent(new Event('storage'));
     } catch (error) {
@@ -158,18 +157,18 @@ export default function Header() {
   return (
     <header className="w-full bg-white">
       {/* 로그인/공지사항 */}
-
       <div className="py-1 mb-5 flex w-screen relative left-1/2 right-1/2 -mx-[50vw] text-xs font-medium bg-[#F6F6F6]">
-        <div className="flex items-center justify-end gap-1 w-5xl mx-auto">
+        <div className="flex items-center justify-end gap-1 w-6xl mx-auto px-4">
           {accessToken ? (
             <span className="relative">
               <div
-                className="flex flex-row items-center cursor-pointer"
+                className="flex flex-row items-center cursor-pointer font-normal"
                 onClick={() => setIsOpenToggle((prev) => !prev)}
               >
                 {isAdmin ? (
                   <div className="flex flex-row justify-center items-center">
-                    {adminMe?.username}님 <ChevronDown size={12} />
+                    <span className="hidden sm:inline">{adminMe?.username}님</span>
+                    <ChevronDown size={12} />
                   </div>
                 ) : (
                   <div className="flex flex-row items-center cursor-pointer">
@@ -178,11 +177,11 @@ export default function Header() {
                 )}
               </div>
               {isOpenToggle ? (
-                <div className="w-[276px] h-[138px] border border-[#E3E3E3] rounded-[10px] shadow-[0px_0px_5px_0px_#0000001A] bg-white  absolute right-1 z-1000 pl-7 pr-7 flex items-center flex-col">
+                <div className="w-[276px] h-[138px] border border-[#E3E3E3] rounded-[10px] shadow-[0px_0px_5px_0px_#0000001A] bg-white absolute right-1 z-1000 pl-7 pr-7 flex items-center flex-col">
                   {' '}
                   <div className="flex flex-row items-center justify-between h-[100px] w-full">
                     <UserRound size={50} strokeWidth={1} />
-                    <div className="flex flex-col font-[Pretendard] font-normal text-[14px] leading-[100%] tracking-[0%] items-end mt-2">
+                    <div className="flex flex-col font-normal text-[14px] leading-[100%] tracking-[0%] items-end mt-2">
                       {adminMe ? <div>{adminMe.email}</div> : <div>{user?.email}</div>}
                       <Button
                         variant="outline"
@@ -232,14 +231,48 @@ export default function Header() {
               </Link>
             </div>
           )}
-          <span className="mb-0.5">|</span>
+          <span className="md:mb-0.5">|</span>
           <Link href="#" className="hover:underline">
             공지사항
           </Link>
         </div>
       </div>
-      <div className="flex items-center justify-between h-20 px-6">
-        <div className="flex flex-row items-center gap-10">
+
+      {/* 메인 헤더 */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between h-auto md:h-20 px-4 md:px-0 pb-4 md:py-0 w-full md:max-w-6xl md:mx-auto">
+        {/* 모바일: 로고와 검색바를 가로로 배치 */}
+        <div className="md:hidden flex flex-row items-center w-full gap-4">
+          {/* 로고 */}
+          <div className="flex-shrink-0">
+            <Link href="/">
+              <Image
+                src="/images/clubber-logo.png"
+                alt="clubber-logo"
+                width={120}
+                height={60}
+                priority
+              />
+            </Link>
+          </div>
+
+          {/* 검색바 */}
+          <div className="flex-1 min-w-0">
+            <div className="relative">
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary w-5 h-5"
+                strokeWidth={2}
+              />
+              <input
+                type="text"
+                placeholder="원하는 동아리를 검색해보세요!"
+                className="w-full text-sm pl-10 pr-4 py-2 border-2 border-primary rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 데스크톱: 기존 레이아웃 유지 */}
+        <div className="hidden md:flex flex-row items-center gap-10">
           {/* 좌측: 로고 */}
           <div className="flex items-center">
             <Link href="/">
@@ -252,21 +285,43 @@ export default function Header() {
               />
             </Link>
           </div>
+
           {/* 중앙: 네비게이션 */}
-          <nav className="flex-1 flex justify-center gap-8 text-[19px] font-bold">
+          <nav className="flex-1 flex justify-center gap-8 text-xl font-bold">
             <Link href="/summary">한눈에 보기</Link>
             <Link href={'/center'}>중앙 동아리</Link>
             <Link href="/">자치 기구</Link>
             <Link href="/college">단과대</Link>
           </nav>
         </div>
-        {/* 우측: 검색 버튼 */}
-        <button
-          onClick={isSearchOpen ? handleSearchClose : handleSearchClick}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-        >
-          {!isSearchOpen && <Search size={25} strokeWidth={2} color="var(--primary)" />}
-        </button>
+
+        {/* 우측: 검색 버튼 (데스크톱만) */}
+        <div className="hidden md:block">
+          <button
+            onClick={isSearchOpen ? handleSearchClose : handleSearchClick}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            {!isSearchOpen && <Search size={25} strokeWidth={2} color="var(--primary)" />}
+          </button>
+        </div>
+      </div>
+
+      {/* 모바일 네비게이션 */}
+      <div className="md:hidden border-t border-gray-200 bg-white">
+        <nav className="flex justify-center items-center py-4 px-4 space-x-4 text-md font-semibold">
+          <Link href="/summary" className="text-gray-800 hover:text-primary transition-colors">
+            한눈에 보기
+          </Link>
+          <Link href="/center" className="text-gray-800 hover:text-primary transition-colors">
+            중앙동아리
+          </Link>
+          <Link href="/" className="text-gray-800 hover:text-primary transition-colors">
+            자치기구
+          </Link>
+          <Link href="/college" className="text-gray-800 hover:text-primary transition-colors">
+            단과대
+          </Link>
+        </nav>
       </div>
       {/* 해시태그 바 - 메인페이지와 로그인페이지가 아닐 때만 표시 */}
       {!isMainPage && !isLoginPage && <HashTagBar />}
@@ -283,26 +338,25 @@ export default function Header() {
           />
 
           {/* 검색 드롭다운 */}
-          <div
-            className={`absolute top-29 right-6 bg-white rounded-2xl shadow-lg w-96 pt-4 pb-40 transition-all duration-300 ${
-              isAnimating ? 'search-dropdown-enter' : 'search-dropdown-exit'
-            }`}
-            style={{
-              right: `calc(50% - min(32rem, 50vw - 1.5rem))`,
-            }}
-          >
-            {/* 닫기 버튼 */}
-            <div className="absolute top-[-40px] right-1">
-              <button
-                onClick={handleSearchClose}
-                className="text-white hover:text-gray-700 transition-colors"
-              >
-                <X size={35} strokeWidth={1} />
-              </button>
-            </div>
+          <div className="flex max-w-6xl mx-auto justify-end md:pr-17 xl:pr-0">
+            <div
+              className={`absolute top-29 bg-white rounded-2xl shadow-lg w-96 pt-4 pb-40 transition-all duration-300 ${
+                isAnimating ? 'search-dropdown-enter' : 'search-dropdown-exit'
+              }`}
+            >
+              {/* 닫기 버튼 */}
+              <div className="absolute top-[-40px] right-1">
+                <button
+                  onClick={handleSearchClose}
+                  className="text-white hover:text-gray-700 transition-colors"
+                >
+                  <X size={35} strokeWidth={1} />
+                </button>
+              </div>
 
-            {/* 검색 컴포넌트 */}
-            <SearchBar onClose={handleSearchClose} />
+              {/* 검색 컴포넌트 */}
+              <SearchBar onClose={handleSearchClose} />
+            </div>
           </div>
         </div>
       )}

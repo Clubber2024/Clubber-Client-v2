@@ -20,10 +20,10 @@ export default function HashTag() {
 
   return (
     <>
-      <Card className="px-10 pt-7 my-4 gap-0">
+      <Card className="px-6 md:px-10 py-4 md:py-7 my-2 md:my-4 gap-0">
         <div className="mb-3">
-          <span className="text-primary font-bold text-lg mr-2">바로가기</span>
-          <span>어떤 동아리를 찾으시나요?</span>
+          <span className="text-primary text-md font-bold md:text-lg mr-2">바로가기</span>
+          <span className="text-[13px] md:text-md">어떤 동아리를 찾으시나요?</span>
         </div>
         <Divider className="mb-0" />
         <HashTagItems hashtags={hashtags} />
