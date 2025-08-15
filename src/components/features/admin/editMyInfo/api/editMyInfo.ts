@@ -4,11 +4,9 @@ import { apiClient } from "@/lib/apiClient";
   // adminPrfrofil 불러오기기
   export const getAdminProfile = async () => {
     try {
-      const accessToken = getAccessToken();
+      // const accessToken = getAccessToken();
       const res = await apiClient.get(`/v1/admins/me`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+       
       });
      
      return res.data;
@@ -25,7 +23,7 @@ import { apiClient } from "@/lib/apiClient";
   // Update contact info
   export const patchAdminContact = async ({instagram, etc}:PatchAdminContactProps) => {
     try {
-      const accessToken = getAccessToken();
+      // const accessToken = getAccessToken();
       const res = await apiClient.patch(
         `/v1/admins/me/contact`,
         {
@@ -34,11 +32,7 @@ import { apiClient } from "@/lib/apiClient";
             etc: etc,
           },
         },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        
       );
     return res.data;
     } catch (e) {

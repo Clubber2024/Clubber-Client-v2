@@ -25,7 +25,7 @@ export const getAdminRecruit = async (
   page: Number,
   pageSize: Number
 ): Promise<RecruitListProps> => {
-  const accessToken = getAccessToken();
+  // const accessToken = getAccessToken(); // 제거
 
   const query = new URLSearchParams({
     page: page.toString(),
@@ -33,7 +33,6 @@ export const getAdminRecruit = async (
   });
   const res = await apiClient.get(`/v1/admins/recruits?${query.toString()}`, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
   });
@@ -49,9 +48,7 @@ interface UploadImagesProps {
 
 //모집글 작성 이미지 업로드
 export const uploadImages = async ({ selectedFiles }: UploadImagesProps) => {
-  //선택된 파일 배열 확정
-  // const filesToUpload = recruitId ? newAddedFiles.flat() : selectedFiles.flat();
-  const accessToken = getAccessToken();
+  // const accessToken = getAccessToken(); // 제거
 
   const filesToUpload = selectedFiles.flat();
 
@@ -63,7 +60,7 @@ export const uploadImages = async ({ selectedFiles }: UploadImagesProps) => {
       '/v1/images/club/recruit',
       { recruitImageExtensions: extensions },
       {
-        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
 
@@ -106,14 +103,13 @@ export const handleSubmitRecruit = async ({
   applyLink,
   isCalendarLinked,
 }: HandleSubmitRecruitProps) => {
-  const accessToken = getAccessToken();
+  // const accessToken = getAccessToken(); // 제거
 
   const res = await apiClient.post(
     `/v1/admins/recruits`,
     {
       title: title,
       content: content,
-
       imageKey: imageKey,
       recruitType: recruitType,
       startAt: startAt,
@@ -122,9 +118,7 @@ export const handleSubmitRecruit = async ({
       isCalendarLinked: isCalendarLinked,
     },
     {
-      headers: {
-        Authorization: ` Bearer ${accessToken}`,
-      },
+      // Authorization 헤더 제거
     }
   );
 
@@ -133,12 +127,8 @@ export const handleSubmitRecruit = async ({
 
 export const getAdminRecruitContent = async (recruitId: string) => {
   try {
-    const accessToken = getAccessToken();
-    const res = await apiClient.get(`/v1/admins/recruits/${recruitId}`, {
-      headers: {
-        Authorization: ` Bearer ${accessToken}`,
-      },
-    });
+    // const accessToken = getAccessToken(); // 제거
+    const res = await apiClient.get(`/v1/admins/recruits/${recruitId}`);
 
     if (res.data.success) {
       return res.data.data;
@@ -212,21 +202,20 @@ export const deleteAdminRecruit = async (recruitId: number) => {
 
 //모집글&캘린더 연동
 export const linkCalendar = async (recruitId: string) => {
-const accessToken = getAccessToken();
-const currentDomain = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_BASE_URL || '';
-const recruitUrl = `${currentDomain}/admin/recruitContent?recruitId=${recruitId}`;
+  // const accessToken = getAccessToken(); // 제거
+  const currentDomain = typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_BASE_URL || '';
+  const recruitUrl = `${currentDomain}/admin/recruitContent?recruitId=${recruitId}`;
 
-console.log('캘린더 연동 시도:', { recruitId: recruitId, recruitUrl });
+  console.log('캘린더 연동 시도:', { recruitId: recruitId, recruitUrl });
 
-const calendarRes = await apiClient.post(`/v1/admins/calendars/link`, {
-  recruitId: recruitId,
-  recruitUrl: recruitUrl
-}, {
-  headers: {
-    Authorization: `Bearer ${accessToken}`,
-    'Content-Type': 'application/json',
-  },
-});
-return calendarRes.data;
+  const calendarRes = await apiClient.post(`/v1/admins/calendars/link`, {
+    recruitId: recruitId,
+    recruitUrl: recruitUrl
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return calendarRes.data;
 
 }
