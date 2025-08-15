@@ -46,12 +46,12 @@ export default function Modal({
         {/* Modal Content */}
         <div
           className={`fixed z-100  bg-white rounded-lg shadow-lg p-5 flex flex-col justify-center items-center text-center font-[Noto Sans KR] ${
-            isMobile ? 'w-[250px] h-[110px] text-sm' : 'w-[410px] h-[150px] text-base'
+            isMobile ? 'w-[310px] h-[150px] text-sm' : 'w-[410px] h-[150px] text-base'
           }`}
           role="dialog"
           aria-modal="true"
         >
-          <p className="mb-6 font-medium">{message}</p>
+          <p className="mb-7 font-medium">{message}</p>
           <div className="flex gap-3">
             {showConfirmButton ? (
               <>

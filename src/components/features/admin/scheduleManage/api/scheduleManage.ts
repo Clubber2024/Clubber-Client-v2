@@ -4,7 +4,6 @@ import { start } from "repl";
 
 //캘린더 목록 조회
 export const getCalendarList = async(page: Number, pageSize: Number, orderStatus?: string, calendarStatus?: string, recruitType?: string)=>{
-  const accessToken = getAccessToken();
   const query = new URLSearchParams({
     page: page.toString(),
     size: pageSize.toString(),
@@ -27,25 +26,13 @@ export const getCalendarList = async(page: Number, pageSize: Number, orderStatus
   
 
   
-  const res = await apiClient.get(`/v1/admins/calendars?${query.toString()}`,{
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  }) 
+  const res = await apiClient.get(`/v1/admins/calendars?${query.toString()}`) 
   return res.data;
 }
 
 //특정 캘린더 삭제
-export const deleteCalendar = async(id: Number)=>{
-  const accessToken = getAccessToken();
- 
-  const res = await apiClient.delete(`/v1/admins/calendars/${id}`,{
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  }) 
+export const deleteCalendar = async(id: Number)=>{ 
+  const res = await apiClient.delete(`/v1/admins/calendars/${id}`) 
   return res.data;
 }
 
@@ -58,9 +45,7 @@ export interface CalendarPros{
   url: string;
 }
 //특정 캘린더 수정
-export const patchCalendar = async({id, title, recruitType,startAt, endAt,url}:CalendarPros)=>{
-  const accessToken = getAccessToken();
- 
+export const patchCalendar = async({id, title, recruitType,startAt, endAt,url}:CalendarPros)=>{ 
   const res = await apiClient.patch(`/v1/admins/calendars/${id}`,
     {
       title:title,
@@ -68,11 +53,7 @@ export const patchCalendar = async({id, title, recruitType,startAt, endAt,url}:C
       startAt: recruitType==='ALWAYS'?null:startAt,
       endAt: recruitType==='ALWAYS'?null:endAt,
       url:url
-    },{
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },}
+    }
   ) 
   return res.data;
 }
@@ -108,11 +89,9 @@ export interface PostCalendarDuplicateProps{
 //캘린더 중복 여부 확인
 export const postCalendarDuplicate = async ({recruitType,startAt}:PostCalendarDuplicateProps) => {
   try {
-    const res = await apiClient.post(`/v1/admins/calendars/duplicate`,{
-    
+    const res = await apiClient.post(`/v1/admins/calendars/duplicate`,{ 
       recruitType:recruitType,
-      startAt:startAt,
-      
+      startAt:startAt,   
     });
 
     if (res.data.success) {
@@ -138,12 +117,7 @@ export const getCalendar = async(id:number)=>{
 
 //특정 캘린더 연동 해제
 export const deletedCalendarLink= async(id:number)=>{
-  const accessToken = getAccessToken();
-  const res = await apiClient.patch(`/v1/admins/calendars/link/${id}/unlink`,{
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  })
+  
+  const res = await apiClient.patch(`/v1/admins/calendars/link/${id}/unlink`)
   return res.data;
 }
