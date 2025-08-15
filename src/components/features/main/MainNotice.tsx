@@ -10,7 +10,7 @@ export default function MainNotice() {
 
   return (
     <div className="bg-white rounded-2xl px-4 h-full">
-      <h3 className="text-lg font-bold text-gray-900 mb-6">공지사항</h3>
+      <h3 className="text-[16px] md:text-lg font-bold text-gray-900 mb-6">공지사항</h3>
 
       <div className="space-y-4">
         {notices.map((notice, index) => (
@@ -19,13 +19,15 @@ export default function MainNotice() {
               <div className="p-2 bg-[#F4F4F4] rounded-sm flex items-center justify-center flex-shrink-0">
                 <Image src="/images/main-notice.png" alt="main-notice" width={15} height={15} />
               </div>
-              <span className="text-sm text-gray-700 flex-1">{notice}</span>
+              <span className="text-[13px] md:text-sm text-gray-700 flex-1 hover:text-primary transition-colors">
+                {notice}
+              </span>
             </div>
           </div>
         ))}
       </div>
 
-      <button className="mt-6 py-3 w-full border border-[#808080] rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+      <button className="mt-6 py-2.5 md:py-3 w-full border border-[#808080] rounded-lg text-[13px] md:text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
         공지사항 더보기
       </button>
     </div>

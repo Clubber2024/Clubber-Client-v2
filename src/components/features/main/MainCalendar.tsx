@@ -22,8 +22,8 @@ export default function MainCalendar() {
   const todayDate = getDate(today);
 
   return (
-    <Card className="p-6 h-full">
-      <h3 className="text-lg font-bold">오늘, 모집 마감 🔥</h3>
+    <Card className="p-6 h-full gap-4 md:gap-6">
+      <h3 className="text-md md:text-lg font-bold">오늘, 모집 마감 🔥</h3>
 
       {/* 캘린더 섹션 */}
       <div>
@@ -34,7 +34,7 @@ export default function MainCalendar() {
             return (
               <div key={day} className="text-center">
                 <div
-                  className={`pt-1 w-8 h-8 mx-auto flex items-center justify-center text-sm font-medium rounded-t-full transition-colors ${
+                  className={`pt-1 size-8 mx-auto flex items-center justify-center text-sm font-medium rounded-t-full transition-colors ${
                     isTodayDay ? 'bg-primary text-white' : 'text-[#808080]'
                   }`}
                 >
@@ -57,7 +57,7 @@ export default function MainCalendar() {
             return (
               <div key={date.getTime()} className="text-center">
                 <div
-                  className={`pb-1 w-8 h-8 mx-auto flex items-center justify-center text-sm font-medium rounded-b-full transition-colors ${
+                  className={`pb-1 size-8 mx-auto flex items-center justify-center text-sm font-medium rounded-b-full transition-colors ${
                     isToday ? 'bg-primary text-white' : 'text-gray-700'
                   }`}
                 >
@@ -70,21 +70,21 @@ export default function MainCalendar() {
       </div>
 
       {/* 구분선 */}
-      <div className="border-t border-gray-200 m-0"></div>
+      <div className="border-t border-gray-300 m-0 pb-1 md:pb-0"></div>
 
       {/* 이벤트 리스트 */}
-      <div className="space-y-2">
+      <div className="space-y-1">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-          <span className="text-sm text-gray-700">클러버</span>
+          <div className="size-1.5 md:size-2 bg-gray-800 rounded-full"></div>
+          <span className="text-sm text-gray-900">클러버</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-          <span className="text-sm text-gray-700">프로그래밍 동아리</span>
+          <div className="size-1.5 md:size-2 bg-gray-800 rounded-full"></div>
+          <span className="text-sm text-gray-900">프로그래밍 동아리</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-          <span className="text-sm text-gray-700">댄스 동아리</span>
+          <div className="size-1.5 md:size-2 bg-gray-800 rounded-full"></div>
+          <span className="text-sm text-gray-900">댄스 동아리</span>
         </div>
       </div>
     </Card>

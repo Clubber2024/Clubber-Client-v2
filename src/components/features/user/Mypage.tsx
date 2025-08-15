@@ -2,11 +2,16 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import Divider from '@/components/ui/divider';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Mypage() {
   const router = useRouter();
+
+  useEffect(() => {
+    // 비회원이 /mypage 진입하는 경우, 로그인이 필요한 서비스임을 알리는 모달창 띄워주기
+  }, []);
+
   return (
     <>
       <div className="flex flex-col items-center relative h-[800px] pb-32 pt-0">
@@ -16,7 +21,7 @@ export default function Mypage() {
           className="w-screen h-[400px] object-cover max-w-none -mx-4"
         />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white font-[Pretendard] font-semibold text-[40px] leading-[100%] tracking-[0]  flex justify-center items-center flex-col">
-          <p className='mb-[20px]'>마이페이지</p>
+          <p className="mb-[20px]">마이페이지</p>
           <div className="flex flex-col justify-center items-center mt-[70px]">
             <img
               src={'/images/admin/admin-profile-img.png'}
@@ -39,7 +44,6 @@ export default function Mypage() {
               >
                 나의 즐겨찾기
               </Button>
-             
             </Card>
           </div>
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { getIsAdmin, clearTokens, getAccessToken } from '@/auth/AuthService';
+import { getIsAdmin, getAccessToken } from '@/auth/AuthService';
 import { deleteWithdrawal, deleteUserWithdrawal } from '@/components/features/login/api/login';
 import { useState, useEffect } from 'react';
 import Modal from '@/app/modal/Modal';
@@ -25,7 +25,14 @@ export default function Footer() {
     const updateUserState = () => {
       const adminStatus = getIsAdmin();
       const token = getAccessToken();
-      console.log('Footer useEffect - adminStatus:', adminStatus, 'token:', token, 'token exists:', !!token);
+      console.log(
+        'Footer useEffect - adminStatus:',
+        adminStatus,
+        'token:',
+        token,
+        'token exists:',
+        !!token
+      );
       console.log('LocalStorage - accessToken:', localStorage.getItem('accessToken'));
       console.log('LocalStorage - isAdmin:', localStorage.getItem('isAdmin'));
       setIsAdmin(adminStatus);
@@ -52,7 +59,7 @@ export default function Footer() {
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('storage', handleCustomStorageChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('storage', handleCustomStorageChange);
@@ -74,7 +81,7 @@ export default function Footer() {
   const handleConfirmWithdrawal = async () => {
     setShowConfirmModal(false);
     setIsLoading(true);
-    
+
     try {
       if (isAdmin) {
         // 관리자 회원탈퇴
@@ -83,7 +90,7 @@ export default function Footer() {
         // 일반 사용자 회원탈퇴
         await deleteUserWithdrawal();
       }
-      
+
       setModalMessage('회원탈퇴가 완료되었습니다.');
       setIsModalOpen(true);
 
@@ -98,7 +105,7 @@ export default function Footer() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -110,24 +117,37 @@ export default function Footer() {
 
   // 회원탈퇴 버튼이 클릭 가능한지 확인
   const canWithdraw = isAdmin || isUser;
-console.log(isAdmin,isUser);
+  console.log(isAdmin, isUser);
   return (
     <>
-      <footer className="w-screen h-[52px] bg-white border-t text-sm font-normal border-[#808080] mt-30 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-        <div className="flex flex-row justify-center items-center h-full">
-          <span className="text-[#646464] pr-2">
-            Copyrightⓒ2025-2025 Clubber Inc. All rights reserved.
-          </span>
+      <footer className="w-screen h-[90px] md:h-[52px] bg-white border-t text-sm font-normal border-[#808080] mt-10 md:mt-30 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+        <div className="flex flex-col md:flex-row justify-center items-center h-full">
+          <div className="flex flex-col md:flex-row justify-center items-center mb-2 md:mb-0">
+            <span className="text-[#646464] pr-2">Copyrightⓒ2025-2025 Clubber Inc.</span>
+            <span className="text-[#646464]">All rights reserved.</span>
+          </div>
           <div className="text-[#646464]">
-            <a href="https://polymorphismj.notion.site/clubber-19cfbba2687280089490c05f188083f8?pvs=4" className="cursor-pointer hover:text-primary">이용약관 </a> |
-            <a href="https://polymorphismj.notion.site/clubber-198fbba26872804ba430c3801b4e7b54?pvs=4" className="cursor-pointer hover:text-primary"> 개인정보처리방침 </a> |
+            <a
+              href="https://polymorphismj.notion.site/clubber-19cfbba2687280089490c05f188083f8?pvs=4"
+              className="cursor-pointer hover:text-primary"
+            >
+              이용약관{' '}
+            </a>{' '}
+            |
+            <a
+              href="https://polymorphismj.notion.site/clubber-198fbba26872804ba430c3801b4e7b54?pvs=4"
+              className="cursor-pointer hover:text-primary"
+            >
+              {' '}
+              개인정보처리방침{' '}
+            </a>{' '}
+            |
             <span
               className={`cursor-pointer ${canWithdraw ? 'hover:text-red-500' : 'text-[#646464]'}`}
               onClick={canWithdraw ? handleWithdrawal : undefined}
             >
               {isLoading ? '처리중...' : ' 회원탈퇴'}
-            </span>{' '}
-            |<span className="cursor-pointer"> FAQ</span>
+            </span>
           </div>
         </div>
       </footer>

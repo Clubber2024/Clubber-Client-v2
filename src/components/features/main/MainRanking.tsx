@@ -27,14 +27,14 @@ export default function MainRanking() {
 
   return (
     <>
-      <h2 className="font-bold text-lg py-3 mt-2 pr-8">조회수</h2>
+      <h2 className="font-bold text-[16px] md:text-lg py-3 mt-2 pr-8">조회수</h2>
       <Card>
-        <div className="grid grid-cols-2 px-7 font-medium text-sm pb-1 cursor-pointer">
+        <div className="grid grid-cols-2 px-7 font-medium text-sm pb-1 cursor-pointer gap-6">
           <div className="space-y-3">
             {rank.slice(0, 5).map((club, idx) => (
               <p
                 key={idx}
-                className="hover:text-primary overflow-hidden text-ellipsis whitespace-nowrap"
+                className="hover:text-primary transition-colors overflow-hidden text-ellipsis whitespace-nowrap"
                 onClick={() => router.push(`/clubInfo?clubId=${club.clubId}`)}
               >
                 {idx + 1}. {club.clubName}
@@ -45,7 +45,7 @@ export default function MainRanking() {
             {rank.slice(5, 10).map((club, idx) => (
               <p
                 key={idx}
-                className="hover:text-primary overflow-hidden text-ellipsis whitespace-nowrap"
+                className="hover:text-primary transition-colors overflow-hidden text-ellipsis whitespace-nowrap"
                 onClick={() => router.push(`/clubInfo?clubId=${club.clubId}`)}
               >
                 {idx + 6}. {club.clubName}

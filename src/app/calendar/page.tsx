@@ -51,7 +51,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="flex flex-row gap-4 max-w-6xl mx-auto">
+    <div className="flex md:flex-row flex-col md:gap-4 md:max-w-6xl mx-auto">
       <div className="flex-1 flex flex-col">
         <AlwaysCalendar alwaysCalendars={calendarData?.alwaysCalendars || []} />
       </div>
