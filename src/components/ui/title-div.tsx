@@ -11,8 +11,7 @@ export default function TitleDiv({ children, className }: DivProps) {
   return (
     <div className="bg-primary w-screen h-[100px] flex flex-row items-center relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
       <div
-        className='w-full max-w-7xl mx-auto flex flex-row items-center'
-        style={{ paddingInline: 'calc(var(--spacing) * 32)' }} 
+        className='w-full max-w-7xl mx-auto flex flex-row items-center sm:px-32 px-4'
       >
       <img
         src={'/images/admin/arrow-narrow-left.png'}

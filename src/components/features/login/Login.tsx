@@ -27,27 +27,29 @@ export default function Login() {
         <Divider />
       </div>
       <div className="flex flex-col justify-center items-center">
-        <div className="shadow-sm w-[460px] h-[418px] rounded-[25px] flex flex-col justify-center items-center mt-20">
-          <h1 className="font-bold text-[34px] leading-[100%] tracking-normal text-center font-pretendard">
+        <div className="shadow-sm w-full max-w-[460px] xs:w-[460px] h-auto min-h-[418px] xs:h-[418px] rounded-[25px] flex flex-col justify-center items-center mt-30 xs:mt-20 mx-4 xs:mx-0">
+          <h1 className="font-bold text-[28px] xs:text-[34px] leading-[100%] tracking-normal text-center font-pretendard px-4 xs:px-0">
             로그인
           </h1>
-          <div className="mt-5">
+          <div className="mt-5 flex gap-1">
             <Button
-              className="w-[150px] mr-0.5"
+              className="w-[150px]"
               variant={isUser ? 'default' : 'outline'}
               onClick={() => setIsUser(true)}
             >
               회원
             </Button>
             <Button
-              className="w-[150px] ml-0.5"
+              className="w-[150px]"
               variant={isUser ? 'outline' : 'default'}
               onClick={() => setIsUser(false)}
             >
               관리자
             </Button>
           </div>
-          {isUser ? <UserLogin /> : <AdminLogin />}
+          <div className="w-full flex justify-center">
+            {isUser ? <UserLogin /> : <AdminLogin />}
+          </div>
         </div>
       </div>
     </div>

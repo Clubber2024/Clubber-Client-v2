@@ -72,29 +72,28 @@ export default function RecruitList() {
           나의 모집글
         </p>
       </TitleDiv>
-      <div className="ml-[10%] mr-[10%] mt-10 mb-10">
+      <div className="ml-0 sm:ml-[10%] mr-0 sm:mr-[10%] mt-10 mb-10">
         {recruitList?.map((item) => (
           <Card
             key={item.recruitId}
-            className="mb-6 h-[200px] pl-[20px] pr-[20px] flex flex-row justify-between cursor-pointer"
+            className="mb-6 h-[150px] sm:h-[200px] pl-4 sm:pl-[20px] pr-4 sm:pr-[20px] pt-4 sm:pt-5 pb-4 sm:pb-5 flex flex-row justify-between cursor-pointer"
           >
             <div
               onClick={() => router.push(`/admin/recruitContent?recruitId=${item.recruitId}`)}
-              className=" flex flex-row justify-between cursor-pointer"
+              className="flex flex-row justify-between cursor-pointer w-full"
             >
               {item.imageUrl && (
-                <img src={item.imageUrl} className=" w-fit min-w-[178px] aspect-square mr-2" />
+                <img src={item.imageUrl} className="w-[130px] sm:w-fit sm:min-w-[170px] aspect-square mr-2" />
               )}
-              <div className="w-full">
-                <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate cursor-pointer">
+              <div className="flex-1 min-w-0 flex flex-col">
+                <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate cursor-pointer w-full max-w-full overflow-hidden whitespace-nowrap">
                   {item.title}
                 </p>
-                <p className="cursor-pointer font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-4">
+                <p className="cursor-pointer font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-2 break-all w-full max-w-full overflow-hidden">
                   {item.content}
                 </p>
               </div>
-            </div>
-            <div className="relative w-fit h-fit">
+              <div className="relative w-fit h-fit">
               <EllipsisVertical
                 size={18}
                 onClick={(e) => {
@@ -103,7 +102,7 @@ export default function RecruitList() {
                 }}
               />
               {openToggleId === item.recruitId && (
-                <div className="border-[1px] border-[#D6D6D6] shadow-[0_2px_4px_0_rgba(0,0,0,0.15)] w-[117px] h-[75px] absolute top-5 left-0 m-0  rounded-xs bg-white cursor-pointer">
+                <div className="border-[1px] border-[#D6D6D6] shadow-[0_2px_4px_0_rgba(0,0,0,0.15)] w-[117px] h-[75px] absolute top-5 right-0 sm:left-0 m-0  rounded-xs bg-white cursor-pointer">
                   <p
                     className="flex items-center text-[#a7a7a7] justify-between font-pretendard text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
                     onClick={() => router.push(`/admin/recruitWrite?recruitId=${item.recruitId}`)}
@@ -120,12 +119,14 @@ export default function RecruitList() {
                 </div>
               )}
             </div>
+            </div>
+          
           </Card>
         ))}
 
         <div className="flex justify-end">
           <Button
-            className="rounded-[3px] h-[41px]"
+            className="rounded-[3px] h-[38px] sm:h-[41px] w-[100px] sm:w-fit"
             onClick={() => router.push(`/admin/recruitWrite`)}
           >
             <img src={'/images/admin/edit-2.png'} className="w-[19px] h-[19px]" />
@@ -138,7 +139,7 @@ export default function RecruitList() {
           nextLabel=">"
           pageCount={totalPages}
           onPageChange={handlePageChange}
-          containerClassName="flex justify-center mt-5 list-none gap-[3px]"
+          containerClassName="flex justify-center mt-6 list-none gap-[3px] sm:gap-0"
           pageLinkClassName="px-3 py-2 border border-gray-200  text-gray-600 rounded cursor-pointer hover:bg-[#d3e2e6] hover:text-gray-800"
           activeLinkClassName="px-3 py-2 bg-primary text-white border border-primary rounded hover:bg-primary hover:text-white"
           previousLinkClassName="px-3 py-2 border border-gray-200 bg-white text-gray-600 rounded cursor-pointer hover:bg-[#d3e2e6] hover:text-gray-800"

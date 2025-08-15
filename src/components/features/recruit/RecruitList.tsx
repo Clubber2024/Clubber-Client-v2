@@ -65,24 +65,24 @@ export default function RecruitList({clubId}:{clubId:string}) {
       <div className="mt-10 mb-10">
         {recruitList && recruitList.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 gap-6 mb-20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-20">
               {recruitList.map((item) => (
                 <Card
                   key={item.recruitId}
-                  className="h-[200px] pl-[20px] pr-[20px] flex flex-row justify-between cursor-pointer"
+                  className="mb-6 h-[150px] sm:h-[200px] pl-4 sm:pl-[20px] pr-4 sm:pr-[20px] pt-4 sm:pt-5 pb-4 sm:pb-5 flex flex-row justify-between cursor-pointer"
                 >
                   <div
                     onClick={() => router.push(`/recruitContent?recruitId=${item.recruitId}`)}
-                    className="flex flex-row justify-between cursor-pointer"
+                    className="flex flex-row justify-between cursor-pointer w-full"
                   >
                     {item.imageUrl && (
-                      <img src={item.imageUrl} className="w-fit min-w-[178px] aspect-square mr-2" />
+                      <img src={item.imageUrl} className="w-[130px] sm:w-fit sm:min-w-[170px] aspect-square mr-2" />
                     )}
-                    <div className="w-full">
-                      <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate cursor-pointer">
+                    <div className="flex-1 min-w-0 flex flex-col">
+                      <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate whitespace-nowrap overflow-hidden w-full max-w-full cursor-pointer">
                         {item.title}
                       </p>
-                      <p className="cursor-pointer font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-4">
+                      <p className="cursor-pointer font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-2 break-all w-full max-w-full overflow-hidden">
                         {item.content}
                       </p>
                     </div>

@@ -29,7 +29,7 @@ export default function MainRanking() {
     <>
       <h2 className="font-bold text-lg py-3 mt-2">조회수</h2>
       <Card>
-        <div className="grid grid-cols-2 pl-5 gap-x-8 font-medium text-sm pb-1 cursor-pointer">
+        <div className="grid grid-cols-2 pl-5 pr-5 gap-x-8 font-medium text-sm pb-1 cursor-pointer">
           <div className="space-y-3">
             {rank.slice(0, 5).map((club, idx) => (
               <p key={idx} className='hover:text-primary' onClick={()=>router.push(`/clubInfo?clubId=${club.clubId}`)}>
