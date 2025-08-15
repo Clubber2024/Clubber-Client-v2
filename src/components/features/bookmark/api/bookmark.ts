@@ -3,13 +3,8 @@ import { FavoriteClub, FavoriteResponse, UserFavoritesResponse } from '@/types/b
 
 //즐겨찾기 페이지 조회
 export const getFavoritePage = async (page: number, size: number = 2): Promise<FavoriteResponse> => {
-  const accessToken = localStorage.getItem('accessToken');
-  
   const response = await apiClient.get('/v1/users/favorite/page', {
-    params: { page, size },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    params: { page, size }
   });
   
   return response.data.data;
@@ -17,40 +12,20 @@ export const getFavoritePage = async (page: number, size: number = 2): Promise<F
 
 //즐겨찾기 추가
 export const addFavorite = async (clubId: number): Promise<void> => {
-  const accessToken = localStorage.getItem('accessToken');
+ 
   
-  await apiClient.post(`/v1/clubs/${clubId}/favorites`, {}, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  await apiClient.post(`/v1/clubs/${clubId}/favorites`);
 };
 
 //즐겨찾기 삭제
-export const deleteFavorite = async (clubId: number, favoriteId: number): Promise<void> => {
-  const accessToken = localStorage.getItem('accessToken');
-  
-  await apiClient.delete(`/v1/clubs/${clubId}/favorites/${favoriteId}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+export const deleteFavorite = async (clubId: number, favoriteId: number): Promise<void> => {   
+  await apiClient.delete(`/v1/clubs/${clubId}/favorites/${favoriteId}`);
 };
 
 
 //즐겨찾기 전체 조회
 export const getFavorites = async (): Promise<UserFavoritesResponse> => {
-  const accessToken = localStorage.getItem('accessToken');
-  
-  const response = await apiClient.get('/v1/users/favorite', {
-  
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  
+  const response = await apiClient.get('/v1/users/favorite');
   return response.data.data;
 };
 

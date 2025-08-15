@@ -449,7 +449,7 @@ const closeLinkedModal = () => {
 
   return(
     <>
-    <TitleDiv><p className="font-pretendard font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">모집일정 관리</p></TitleDiv>
+    <TitleDiv><p className="font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">모집일정 관리</p></TitleDiv>
     <div className="w-full mt-15">
       <span className="flex items-center text-[#707070] font-medium text-base leading-[100%] tracking-normal cursor-pointer mb-1" onClick={()=>setIsOpenToggle((prev)=>!prev)}>옵션 <ChevronDown size={12} /></span>
     {isOpenToggle?(   <div className="flex space-x-8 text-sm text-gray-600 font-normal select-none flex-col w-full mt-1">
@@ -478,19 +478,20 @@ const closeLinkedModal = () => {
       <table className="w-full border-collapse text-left">
         <thead className="bg-[#dddddd4d]">
           <tr className="border-b border-gray-300" style={{ borderTop: '1px solid var(--gray-font, #707070)' }}>
-            <th className="py-3 px-4 text-gray-600 text-center">유형</th>
+            <th className="py-3 px-4 text-gray-600 text-left md:text-center">유형</th>
             <th className="py-3 px-4 text-gray-600">제목</th>
-            <th className="py-3 px-4 text-gray-600 text-center">모집기간</th>
+            <th className="py-3 px-4 text-gray-600 text-center hidden md:table-cell">모집기간</th>
             <th className="py-3 px-4 text-gray-600 text-center">상태</th>
             <th className="py-3 px-4 text-gray-600"> </th>
           </tr>
         </thead>
         <tbody>
           {calendarList.map(({ id, recruitType, title, startAt, endAt, recruitStatus, createdAt }) => (
-            <tr key={id} className="border-b border-gray-200 hover:bg-gray-50">
+            <>
+            <tr key={id} className="border-none md:border-b md:border-gray-200 hover:bg-gray-50">
               <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]"> {recruitTypeMap[recruitType] || recruitType}</td>
               <td className="py-4 px-4 text-gray-900">{title}</td>
-              <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]">{recruitType==='ALWAYS'?createdAt:startAt} ~ {recruitType==='ALWAYS'?'':endAt}</td>
+              <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c] hidden md:table-cell">{recruitType==='ALWAYS'?createdAt:startAt} ~ {recruitType==='ALWAYS'?'':endAt}</td>
               <td className={`py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]`}>
                 {recruitStatus}
               </td>
@@ -510,12 +511,19 @@ const closeLinkedModal = () => {
                   >
                     삭제하기 <Trash2 size={15} color="#fd3c56" className="ml-1" />
                   </p>
-                
                 </div>)}
                 ⋮
               </td>
             </tr>
+            <tr className="md:hidden border-b border-gray-200 md:border-none">
+              <td className="px-4 py-4 pt-0 font-normal text-[16px] leading-[100%] tracking-[0] text-left text-[#9c9c9c]">
+              기간 
+              </td>
+               <td className="px-4 py-4 pt-0 font-normal text-[16px] leading-[100%] tracking-[0] text-left">{recruitType==='ALWAYS'?createdAt:startAt} ~ {recruitType==='ALWAYS'?'':endAt}</td>
+            </tr>
+            </>
           ))}
+
         </tbody>
       </table>
       <div className="w-full flex justify-end mt-4">
@@ -567,14 +575,14 @@ const closeLinkedModal = () => {
  >
   <div
           className={`fixed z-100  bg-white rounded-lg shadow-lg p-5 flex flex-col justify-center items-center text-left font-[Noto Sans KR] ${
-        'w-[80%] max-w-[852px] h-[620px] text-sm' 
+        'w-[100%] md:w-[80%] max-w-[852px] h-[650px] text-sm' 
           }`}
           role="dialog"
           aria-modal="true"
         >
           {isEditMode&&calendarData?.isCalendarLinked?<div className="mb-10 font-pretendard font-semibold text-[24px] leading-[125%] tracking-[0]"
             >연동된 모집글</div>:""}
-          <div className="w-[80%]">
+          <div className="w-[90%] md:w-[80%]">
          <h2 className="text-lg font-semibold mb-2 mt-[20px] w-full">제목</h2>
      {isEditMode && calendarData?.isCalendarLinked ? (
        <div className="flex items-center bg-gray-50 font-pretendard font-normal text-[16px] leading-[100%] tracking-[0%]">
@@ -596,15 +604,15 @@ const closeLinkedModal = () => {
     <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
             모집유형
           </p>
-                                           <div className="bg-white mt-2 ">
+                                           <div className="bg-white mt-2">
               {isEditMode && calendarData?.isCalendarLinked ? (
-                <div className="flex items-center bg-gray-50 mt-3 font-pretendard font-normal text-[16px] leading-[100%] tracking-[0%]">
+                <div className="flex items-centerbg-gray-50 mt-3 font-pretendard font-normal text-[16px] leading-[100%] tracking-[0%]">
                   {recruitType === 'REGULAR' ? '정규모집' : 
                    recruitType === 'ADDITIONAL' ? '추가모집' : 
                    recruitType === 'ALWAYS' ? '상시모집' : ''}
                 </div>
               ) : (
-               <div className="flex flex-row">
+               <div className="flex flex-row w-full justify-between md:justify-start">
                {[
                  { label: '정규모집', value: 'REGULAR' },
                  { label: '추가모집', value: 'ADDITIONAL' },
@@ -651,7 +659,7 @@ const closeLinkedModal = () => {
             ) : (
               ''
             )}
-    <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
+    <p className="font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
             모집기간
           </p>
 
@@ -740,10 +748,10 @@ const closeLinkedModal = () => {
           </div>
 
              <div className="mt-10 flex justify-center space-x-2">
-       <Button onClick={handleSubmitButton} className="h-[55px] w-[40%] text-[16px]">
+       <Button onClick={handleSubmitButton} className="h-[45px] md:h-[55px] w-[40%] text-[16px] rounded-[5px]">
          {isEditMode ? '수정' : '등록'}
        </Button>
-         <Button variant="outline" onClick={cancelWriteButton} className="text-[16px] h-[55px] w-[40%]">
+         <Button variant="outline" onClick={cancelWriteButton} className="h-[45px] md:h-[55px] text-[16px] w-[40%] rounded-[5px]">
            {isEditMode ? '취소' : '취소'}
          </Button>
        
