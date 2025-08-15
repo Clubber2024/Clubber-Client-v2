@@ -89,7 +89,7 @@ export default function Header() {
     setAdminMe(undefined);
     removeTokens();
     setModalMessage('로그아웃 되었습니다.');
-    
+
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -166,7 +166,7 @@ export default function Header() {
                 onClick={() => setIsOpenToggle((prev) => !prev)}
               >
                 {isAdmin ? (
-                  <div className='flex flex-row justify-center items-center'>
+                  <div className="flex flex-row justify-center items-center">
                     {adminMe?.username}님 <ChevronDown size={12} />
                   </div>
                 ) : (
@@ -252,7 +252,7 @@ export default function Header() {
           </div>
           {/* 중앙: 네비게이션 */}
           <nav className="flex-1 flex justify-center gap-8 text-[19px] font-bold">
-            <Link href="/">한눈에 보기</Link>
+            <Link href="/summary">한눈에 보기</Link>
             <Link href={'/center'}>중앙 동아리</Link>
             <Link href="/">자치 기구</Link>
             <Link href="/college">단과대</Link>

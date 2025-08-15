@@ -18,7 +18,7 @@ export default function DivisionPage() {
   useEffect(() => {
     const fetchClubCardData = async () => {
       setLoading(true);
-      const clubs = await getClubCard(divisionCode);
+      const clubs = await getClubCard(divisionCode, true);
       setClubs(clubs.clubs);
       setDivisionTitle(clubs.division);
       setLoading(false);

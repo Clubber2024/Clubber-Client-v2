@@ -1,19 +1,21 @@
-'use client'
+'use client';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { ClubCardRes } from '@/types/club/clubCardData';
 import { useRouter } from 'next/navigation';
-import { getClubInfomation } from './api/clubCard';
 
 export default function ClubCard({ club }: { club: ClubCardRes }) {
- const router = useRouter();
- 
-  const onClickClubCard = (clubId: number)=>{
+  const router = useRouter();
+
+  const onClickClubCard = (clubId: number) => {
     router.push(`/clubInfo?clubId=${clubId}`);
-  }
+  };
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={()=>onClickClubCard(club.clubId)}>
+    <Card
+      className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      onClick={() => onClickClubCard(club.clubId)}
+    >
       <CardContent className="p-0">
         {/* 동아리 이미지 */}
         <div className="aspect-square bg-gray-200 relative">

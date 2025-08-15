@@ -1,8 +1,10 @@
 import { apiClient } from '@/lib/apiClient';
 
-export const getClubCard = async (divisionCode: string) => {
+export const getClubCard = async (clubCode: string, isCenter: boolean) => {
   try {
-    const res = await apiClient.get(`/v1/clubs?division=${divisionCode}`);
+    const res = await apiClient.get(
+      `/v1/clubs?${isCenter ? 'division' : 'department'}=${clubCode}`
+    );
     return res.data.data;
   } catch (error) {
     console.error('Error fetching club card:', error);
@@ -19,4 +21,4 @@ export const getClubInfomation = async (clubId: number) => {
     console.error('Error fetching club info:', error);
     return null;
   }
-}
+};
