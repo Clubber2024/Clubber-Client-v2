@@ -75,15 +75,15 @@ export default function MainCalendar() {
       {/* 이벤트 리스트 */}
       <div className="space-y-1">
         <div className="flex items-center gap-2">
-          <div className="size-1.5 md:size-2 bg-gray-800 rounded-full"></div>
+          <div className="size-1.5 bg-gray-800 rounded-full"></div>
           <span className="text-sm text-gray-900">클러버</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="size-1.5 md:size-2 bg-gray-800 rounded-full"></div>
+          <div className="size-1.5 bg-gray-800 rounded-full"></div>
           <span className="text-sm text-gray-900">프로그래밍 동아리</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="size-1.5 md:size-2 bg-gray-800 rounded-full"></div>
+          <div className="size-1.5 bg-gray-800 rounded-full"></div>
           <span className="text-sm text-gray-900">댄스 동아리</span>
         </div>
       </div>

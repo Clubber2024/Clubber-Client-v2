@@ -26,7 +26,7 @@ export default function QuickServices() {
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-full px-3 md:px-0">
       <h2 className="font-bold text-[16px] md:text-lg py-3 mt-2">자주 찾는 서비스</h2>
       {/* 모바일: 2x2 그리드, 데스크톱: 1x4 가로 배치 */}
       <div className="grid grid-cols-2 md:flex md:flex-row gap-3 md:gap-4">

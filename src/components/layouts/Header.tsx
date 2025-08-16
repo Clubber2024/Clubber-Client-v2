@@ -287,11 +287,28 @@ export default function Header() {
           </div>
 
           {/* 중앙: 네비게이션 */}
-          <nav className="flex-1 flex justify-center gap-8 text-xl font-bold">
-            <Link href="/summary">한눈에 보기</Link>
-            <Link href={'/center'}>중앙 동아리</Link>
-            <Link href="/">자치 기구</Link>
-            <Link href="/college">단과대</Link>
+          <nav className="flex-1 flex justify-center gap-8 text-xl font-bold cursor-pointer">
+            <Link href="/summary" className="hover:text-primary transition-colors hover:scale-105">
+              한눈에 보기
+            </Link>
+            <Link
+              href={'/center'}
+              className="hover:text-primary transition-all duration-300 hover:scale-105"
+            >
+              중앙 동아리
+            </Link>
+            <Link
+              href="/"
+              className="hover:text-primary transition-all duration-300 hover:scale-105"
+            >
+              자치 기구
+            </Link>
+            <Link
+              href="/college"
+              className="hover:text-primary transition-all duration-300 hover:scale-105"
+            >
+              단과대
+            </Link>
           </nav>
         </div>
 
@@ -309,16 +326,28 @@ export default function Header() {
       {/* 모바일 네비게이션 */}
       <div className="md:hidden border-t border-gray-200 bg-white">
         <nav className="flex justify-center items-center py-4 px-4 space-x-4 text-md font-semibold">
-          <Link href="/summary" className="text-gray-800 hover:text-primary transition-colors">
+          <Link
+            href="/summary"
+            className="text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105 "
+          >
             한눈에 보기
           </Link>
-          <Link href="/center" className="text-gray-800 hover:text-primary transition-colors">
+          <Link
+            href="/center"
+            className="text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105"
+          >
             중앙동아리
           </Link>
-          <Link href="/" className="text-gray-800 hover:text-primary transition-colors">
-            자치기구
+          <Link
+            href="/official"
+            className="text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105"
+          >
+            공식단체
           </Link>
-          <Link href="/college" className="text-gray-800 hover:text-primary transition-colors">
+          <Link
+            href="/college"
+            className="text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105"
+          >
             단과대
           </Link>
         </nav>
