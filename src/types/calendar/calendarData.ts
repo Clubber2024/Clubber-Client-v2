@@ -15,6 +15,7 @@ export interface CalendarData {
 }
 
 export interface NonAlwaysCalendar {
+  // calendarId: number;
   clubId: number;
   clubName: string;
   recruitType: string;
