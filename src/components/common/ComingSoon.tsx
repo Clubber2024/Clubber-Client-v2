@@ -7,7 +7,9 @@ export default function ComingSoon() {
         <Image src="/images/coming-soon.png" alt="Coming Soon" width={100} height={100} />
       </div>
 
-      <h1 className="text-4xl font-extrabold text-gray-600 mb-8">C O M I N G &nbsp; S O O N</h1>
+      <h1 className="text-2xl md:text-4xl font-extrabold text-gray-600 mb-8">
+        C O M I N G &nbsp; S O O N
+      </h1>
 
       <div className="text-center text-gray-700 space-y-1">
         <p>이용에 불편을 드려 죄송합니다.</p>

@@ -46,3 +46,8 @@ export interface CalendarClubData {
   recruitStatus: string;
   writerRole: string;
 }
+
+export interface MainCalendarData {
+  clubId: number;
+  clubName: string;
+}

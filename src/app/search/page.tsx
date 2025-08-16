@@ -2,14 +2,22 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import ClubList from '@/components/features/club/ClubList';
 import { ClubCardRes } from '@/types/club/clubCardData';
 import { searchClub } from '@/components/features/search/api/searchClub';
 import { CircleAlert } from 'lucide-react';
+import ClubCard from '@/components/features/club/ClubCard';
+
+interface ClubTypes {
+  clubs: {
+    중앙동아리: ClubCardRes[];
+    소모임: ClubCardRes[];
+    공식단체: ClubCardRes[];
+  };
+}
 
 function SearchContent() {
   const searchParams = useSearchParams();
-  const [clubs, setClubs] = useState<ClubCardRes[]>([]);
+  const [clubData, setClubData] = useState<ClubTypes | null>(null);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -41,15 +49,21 @@ function SearchContent() {
       };
 
       const result = await searchClub(searchData);
-      // searchClub -> 동아리 목록 배열로 반환
-      setClubs(Array.isArray(result) ? result : []);
+      // searchClub -> 동아리 목록 객체로 반환
+      setClubData(result);
     } catch (error) {
       console.error('검색 중 오류 발생:', error);
-      setClubs([]);
+      setClubData(null);
     } finally {
       setLoading(false);
     }
   };
+
+  const hasResults =
+    clubData &&
+    (clubData.clubs.중앙동아리.length > 0 ||
+      clubData.clubs.소모임.length > 0 ||
+      clubData.clubs.공식단체.length > 0);
 
   return (
     <div className="min-h-screen">
@@ -59,13 +73,69 @@ function SearchContent() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
             <p className="mt-4 text-gray-600">검색 중...</p>
           </div>
-        ) : clubs.length > 0 ? (
-          <ClubList clubs={clubs} />
+        ) : hasResults ? (
+          <div className="space-y-8">
+            {/* 검색 결과 헤더 */}
+            <div className="text-left mb-8">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+                &apos;<span className="text-primary">{searchTerm}</span>&apos; 검색 결과
+              </h1>
+              <p className="text-gray-600">
+                총{' '}
+                {clubData.clubs.중앙동아리.length +
+                  clubData.clubs.소모임.length +
+                  clubData.clubs.공식단체.length}
+                개의 동아리를 찾았습니다.
+              </p>
+            </div>
+
+            {/* 중앙동아리 */}
+            {clubData.clubs.중앙동아리.length > 0 && (
+              <div>
+                <h2 className="text-md font-semibold text-gray-900 mb-4 w-fit px-5 py-1.5 rounded-full bg-primary/30">
+                  중앙동아리
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {clubData.clubs.중앙동아리.map((club) => (
+                    <ClubCard key={club.clubId} club={club} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 소모임 */}
+            {clubData.clubs.소모임.length > 0 && (
+              <div>
+                <h2 className="text-md font-semibold text-gray-900 mb-4 w-fit px-5 py-1.5 rounded-full bg-primary/30">
+                  소모임
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {clubData.clubs.소모임.map((club) => (
+                    <ClubCard key={club.clubId} club={club} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 공식단체 */}
+            {clubData.clubs.공식단체.length > 0 && (
+              <div>
+                <h2 className="text-md font-semibold text-gray-900 mb-4 w-fit px-5 py-1.5 rounded-full bg-primary/30">
+                  공식단체
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {clubData.clubs.공식단체.map((club) => (
+                    <ClubCard key={club.clubId} club={club} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         ) : (
           searchTerm && (
             <div className="flex flex-col items-center justify-center py-10">
               {/* 메인 텍스트 */}
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              <h2 className="text-[22px] md:text-2xl font-bold text-gray-900 mb-4">
                 &apos;<span className="text-primary">{searchTerm}</span>&apos;에 대한
                 검색결과입니다.
               </h2>

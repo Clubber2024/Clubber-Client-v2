@@ -13,7 +13,7 @@ export default function ClubCard({ club }: { club: ClubCardRes }) {
 
   return (
     <Card
-      className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      className="overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer py-0 md:pb-3"
       onClick={() => onClickClubCard(club.clubId)}
     >
       <CardContent className="p-0">

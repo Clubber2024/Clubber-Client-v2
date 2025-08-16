@@ -22,16 +22,16 @@ export default function BranchHeader({
       />
       <div className="w-full md:max-w-7xl mx-auto absolute inset-0 px-4 md:px-8">
         <div className="flex flex-col items-start justify-center h-full pl-10">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-1.5 mb-2">
             <Image
               src={'/images/center/home.png'}
               alt="icon"
-              className="w-4 h-4 md:w-5 md:h-5"
+              className="size-3 md:size-4"
               width={15}
               height={15}
             />
-            <ChevronRight size={15} className="text-white w-4 h-4 md:w-5 md:h-5" />
-            <p className="text-white text-xs md:text-[13px]">{subTitle}</p>
+            <ChevronRight size={15} className="text-white size-3 md:size-4" />
+            <p className="text-white text-xs md:text-sm md:font-medium">{subTitle}</p>
           </div>
           <h1 className="text-2xl md:text-3xl text-white font-semibold">{mainTitle}</h1>
         </div>

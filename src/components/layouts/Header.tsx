@@ -27,10 +27,27 @@ interface AdminMeProps {
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState<
+    'summary' | 'center' | 'official' | 'college' | null
+  >(null);
   const pathname = usePathname();
   const isMainPage = pathname === '/';
   const isLoginPage = pathname === '/login';
   const isAdmin = getIsAdmin();
+
+  useEffect(() => {
+    if (pathname === '/summary') {
+      setSelectedMenu('summary');
+    } else if (pathname === '/center') {
+      setSelectedMenu('center');
+    } else if (pathname === '/official') {
+      setSelectedMenu('official');
+    } else if (pathname === '/college') {
+      setSelectedMenu('college');
+    } else {
+      setSelectedMenu(null); // 다른 페이지에서는 null
+    }
+  }, [pathname]);
 
   const handleSearchClick = () => {
     setIsSearchOpen(true);
@@ -266,6 +283,14 @@ export default function Header() {
                 type="text"
                 placeholder="원하는 동아리를 검색해보세요!"
                 className="w-full text-sm pl-10 pr-4 py-2 border-2 border-primary rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const searchTerm = e.currentTarget.value.trim();
+                    if (searchTerm) {
+                      router.push(`/search?clubName=${encodeURIComponent(searchTerm)}`);
+                    }
+                  }
+                }}
               />
             </div>
           </div>
@@ -288,24 +313,35 @@ export default function Header() {
 
           {/* 중앙: 네비게이션 */}
           <nav className="flex-1 flex justify-center gap-8 text-xl font-bold cursor-pointer">
-            <Link href="/summary" className="hover:text-primary transition-colors hover:scale-105">
+            <Link
+              href="/summary"
+              className={`hover:text-primary transition-all duration-300 hover:scale-105 ${
+                selectedMenu === 'summary' ? 'text-primary scale-105  ' : ''
+              }`}
+            >
               한눈에 보기
             </Link>
             <Link
               href={'/center'}
-              className="hover:text-primary transition-all duration-300 hover:scale-105"
+              className={`hover:text-primary transition-all duration-300 hover:scale-105 ${
+                selectedMenu === 'center' ? 'text-primary scale-105' : ''
+              }`}
             >
               중앙 동아리
             </Link>
             <Link
               href="/"
-              className="hover:text-primary transition-all duration-300 hover:scale-105"
+              className={`hover:text-primary transition-all duration-300 hover:scale-105 ${
+                selectedMenu === 'official' ? 'text-primary scale-105' : ''
+              }`}
             >
               자치 기구
             </Link>
             <Link
               href="/college"
-              className="hover:text-primary transition-all duration-300 hover:scale-105"
+              className={`hover:text-primary transition-all duration-300 hover:scale-105 ${
+                selectedMenu === 'college' ? 'text-primary scale-105' : ''
+              }`}
             >
               단과대
             </Link>
@@ -328,25 +364,33 @@ export default function Header() {
         <nav className="flex justify-center items-center py-4 px-4 space-x-4 text-md font-semibold">
           <Link
             href="/summary"
-            className="text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105 "
+            className={`text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105 ${
+              selectedMenu === 'summary' ? 'text-primary scale-105' : ''
+            }`}
           >
             한눈에 보기
           </Link>
           <Link
             href="/center"
-            className="text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105"
+            className={`text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105 ${
+              selectedMenu === 'center' ? 'text-primary scale-105' : ''
+            }`}
           >
             중앙동아리
           </Link>
           <Link
             href="/official"
-            className="text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105"
+            className={`text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105 ${
+              selectedMenu === 'official' ? 'text-primary scale-105' : ''
+            }`}
           >
             공식단체
           </Link>
           <Link
             href="/college"
-            className="text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105"
+            className={`text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105 ${
+              selectedMenu === 'college' ? 'text-primary scale-105' : ''
+            }`}
           >
             단과대
           </Link>

@@ -15,7 +15,7 @@ export default function QuickServices() {
       name: '자주 묻는 질문',
       bg: '#FFDBD4',
       src: '/images/main/EDIT.png',
-      url: 'faq',
+      url: 'community?tab=faq',
     },
     {
       name: '서비스 준비중',

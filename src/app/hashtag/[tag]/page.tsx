@@ -23,7 +23,7 @@ export default function HashtagPage() {
 
   return (
     <>
-      <BranchHeader mainTitle={tag} subTitle={tag} />
+      <BranchHeader mainTitle={tag} subTitle="해시태그" />
       <ClubList clubs={clubs} />
     </>
   );
