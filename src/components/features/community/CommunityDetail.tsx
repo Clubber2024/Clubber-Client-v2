@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { getNoticeDetailData } from './api/notice';
 import { Notice } from '@/types/community/noticeData';
 import Divider from '@/components/ui/divider';
+import Loading from '@/components/common/Loading';
 
 interface CommunityItem {
   id: number;
@@ -90,11 +91,7 @@ export default function CommunityDetail({
   }, [itemId, type]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen py-8 flex items-center justify-center">
-        상세 정보를 불러오는 중...
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -125,8 +122,8 @@ export default function CommunityDetail({
 
   return (
     <div className="min-h-screen py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="p-8">
+      <div className="md:max-w-4xl mx-auto md:px-4">
+        <div className="p-4 md:p-8">
           {/* 제목 */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">
