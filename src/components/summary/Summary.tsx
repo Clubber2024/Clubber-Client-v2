@@ -37,16 +37,19 @@ export default function Summary() {
         alt="summary"
         width={2000}
         height={2000}
-        className="w-full h-auto object-cover"
+        className="w-full h-40 md:h-auto object-cover"
       />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-7 divide-x divide-gray-300 rounded-2xl border border-gray-300">
+      <div className="container mx-auto px-4 py-4 md:py-8">
+        <div className="grid grid-cols-2 md:grid-cols-7 divide-y md:divide-x divide-gray-300 rounded-2xl border border-gray-300">
           {summaryData.map((summary, index) => (
-            <div key={index} className="flex flex-col px-4">
+            <div
+              key={index}
+              className={`flex flex-col px-5 ${index !== summaryData.length - 1 ? 'border-r border-gray-300' : ''}`}
+            >
               {/* 분과명 헤더 */}
               <h3
-                className="font-medium text-lg text-black mb-4 text-center font-taebaek mt-5"
+                className="font-medium text-lg text-black mb-4 text-left font-taebaek mt-5"
                 style={{ fontFamily: 'TAEBAEK, Arial, sans-serif' }}
               >
                 {summary.division}
@@ -58,7 +61,7 @@ export default function Summary() {
                   <Link href={`/clubInfo?clubId=${club.clubId}`} key={club.clubId}>
                     <div
                       key={club.clubId}
-                      className={`text-sm text-black text-center pb-2 hover:text-primary transition-colors ${
+                      className={`text-sm text-black text-left pb-2 hover:text-primary transition-colors ${
                         clubIndex === summary.clubs.length - 1 ? 'mb-3' : ''
                       }`}
                     >

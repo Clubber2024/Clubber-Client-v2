@@ -1,26 +1,15 @@
 import { apiClient } from '@/lib/apiClient';
-import { CollegeResponse, DepartmentResponse } from '@/types/college/collegeData';
+import { CollegeResponse, College } from '@/types/branch/collegeData';
 
 // 단과대 목록 조회
-export const getColleges = async (): Promise<CollegeResponse> => {
+export const getColleges = async (): Promise<College[]> => {
   try {
-    const response = await apiClient.get('/v1/clubs/category/colleges');
-    return response.data;
+    const response = await apiClient.get<CollegeResponse>(
+      '/v1/clubs/category/colleges/with-departments'
+    );
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching colleges:', error);
-    throw error;
-  }
-};
-
-// 단과대별 학과 목록 조회
-export const getDepartments = async (collegeCode: string): Promise<DepartmentResponse> => {
-  try {
-    const response = await apiClient.get('/v1/clubs/category/departments', {
-      params: { college: collegeCode },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching departments:', error);
     throw error;
   }
 };

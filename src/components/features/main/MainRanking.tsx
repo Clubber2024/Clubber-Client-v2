@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { getMainPopualrClubs } from './api/main';
+import { getMainPopularClubs } from './api/main';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -20,7 +20,7 @@ export default function MainRanking() {
   }, []);
 
   const fetchData = async () => {
-    const res = await getMainPopualrClubs();
+    const res = await getMainPopularClubs();
     setRank(res);
     console.log(res);
   };

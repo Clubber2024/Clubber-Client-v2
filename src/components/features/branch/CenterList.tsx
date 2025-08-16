@@ -38,9 +38,9 @@ export default function CenterList() {
     router.push(`/center/${division.code}`);
   };
   return (
-    <div className="container">
+    <div className="md:max-w-6xl mx-auto px-10 md:px-0">
       <div className="flex flex-col items-center justify-center gap-5">
-        <div className="flex flex-row items-center justify-center gap-5">
+        <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-5">
           {firstRow.map((division) => (
             <div
               key={division.code}
@@ -58,7 +58,7 @@ export default function CenterList() {
             </div>
           ))}
         </div>
-        <div className="flex flex-row items-center justify-center gap-5">
+        <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-5">
           {secondRow.map((division) => (
             <div
               key={division.code}
