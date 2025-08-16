@@ -64,11 +64,14 @@ const [isOpenOption, setIsOpenOption] = useState<number | null>(null);
 const [isOpenModal, setIsOpenModal] = useState(false);
 //추가등록 여부 묻는 모달
 const [isOpenModal2, setIsOpenModal2] = useState(false);
-//등록 후 확인 모달달
+//등록 후 확인 모달
 const [isOpenModal3, setIsOpenModal3] = useState(false);
 const [modalMessage, setModalMessage] = useState("")
 const [selectedId, setSelectedId] = useState<number>();
+//연동 끊기 모달
 const [isLinkedModal, setIsLinkedModal] = useState(false);
+//연동 끊은 후 확인 모달
+const [isLinkedConfirmModal, setIsLinkedConfirmModal] = useState(false);
   const [isOpenWriteContent,setIsOpenWriteContent] = useState(false);
 const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
@@ -170,6 +173,10 @@ const [startDate, setStartDate] = useState<Date>(new Date());
     if(selectedId!==undefined){
    await deleteCalendarData(selectedId);
     }
+  }
+
+  const closeLinkedConfirmModal = () => {
+    setIsLinkedConfirmModal(false);
 
   }
 
@@ -184,7 +191,7 @@ const [startDate, setStartDate] = useState<Date>(new Date());
       setIsLinkedModal(true);
       return;
     }
-    
+    //연동 안 되어있으면 바로 수정 가능
     setIsOpenWriteContent(true);
     setIsEditMode(true);
     // setSelectedId(id);
@@ -218,11 +225,17 @@ const [startDate, setStartDate] = useState<Date>(new Date());
   const handleUnlinkCalendar = async () => {
     if(selectedId!==undefined){
     const res = await deletedCalendarLink(selectedId);
-    console.log("연동 끊기:", res.data);
+    console.log("연동 끊기:", res);
     setIsLinkedModal(false);
     if(res.success){
-setIsOpenModal(true);
+setIsLinkedConfirmModal(true);
 setModalMessage("연동이 해제되었습니다.");   
+     // 1) 즉시 로컬 상태 반영
+     setCalendarList((prev) => prev.filter(item => item.id !== selectedId));
+
+     // 2) 서버에서 최신 데이터 재요청 (확인용)
+     await fetchCalendarList();
+
   }
   }
 }
@@ -440,13 +453,6 @@ const cancelModal2 = () => {
 }
 
 
-const closeLinkedModal = () => {
-  setIsLinkedModal(false);
-}
-
-
-
-
   return(
     <>
     <TitleDiv><p className="font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">모집일정 관리</p></TitleDiv>
@@ -562,12 +568,12 @@ const closeLinkedModal = () => {
            message={modalMessage}
            onConfirm={handleViewRecruitPost} 
            onCancel={handleUnlinkCalendar}
-           onClose={closeLinkedModal} 
            showConfirmButton={true}
            confirmText="모집글 보러가기"
            cancelText="연동 끊기"
          />
        )}
+       {isLinkedConfirmModal&&(<Modal isOpen={isLinkedConfirmModal} message={modalMessage} onClose={closeLinkedConfirmModal}/>)}
       {isOpenWriteContent && (
    <div
    className="fixed flex inset-0 bg-black/50 z-50 justify-center items-center"

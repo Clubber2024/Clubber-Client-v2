@@ -111,7 +111,8 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
         res.startAt[4]
       );
       const fullEndDate = new Date(endDate[0], endDate[1] - 1, endDate[2], endDate[3], endDate[4]);
-
+      console.log("fullDate", fullDate);
+      console.log("fullEndDate", fullEndDate);
       const formattedStartTime = `${String(fullDate.getHours()).padStart(2, '0')}:${String(fullDate.getMinutes()).padStart(2, '0')}`;
       const formattedEndTime = `${String(fullDate.getHours()).padStart(2, '0')}:${String(fullDate.getMinutes()).padStart(2, '0')}`;
 
@@ -176,7 +177,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   const formatDateTime = (dateObjOrStr: Date, timeStr: string) => {
     // 1. date가 문자열이면 그대로 사용, 아니면 YYYY-MM-DD 형식으로 변환
     const date =
-      typeof dateObjOrStr === 'string' ? dateObjOrStr : dateObjOrStr.toISOString().slice(0, 10);
+      typeof dateObjOrStr === 'string' ? dateObjOrStr : formatDate(dateObjOrStr); // formatDate 사용
 
     // 2. timeStr은 그대로 붙이기
     return `${date} ${timeStr}`;
@@ -345,6 +346,8 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
       } else{
         formattedStart = formatDateTime(startDate, startTime);
         formattedEnd = formatDateTime(endDate, endTime);
+        console.log("formattedStart", formattedStart);
+        console.log("formattedEnd", formattedEnd);
       }
      
 
@@ -385,7 +388,7 @@ if(resLinkCalendar.success){
 } else {
   console.error("캘린더 연동 실패:", resLinkCalendar);
   setIsModalOpen(true);
-  setModalMessage('모집글 수정이 완료되었습니다.');
+  setModalMessage('캘린더 연동을 실패했습니다. 다시 시도해주세요.');
 }
 
               } else{
