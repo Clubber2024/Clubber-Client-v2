@@ -457,7 +457,7 @@ const cancelModal2 = () => {
     <>
     <TitleDiv><p className="font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">모집일정 관리</p></TitleDiv>
     <div className="w-full mt-15">
-      <span className="flex items-center text-[#707070] font-medium text-base leading-[100%] tracking-normal cursor-pointer mb-1" onClick={()=>setIsOpenToggle((prev)=>!prev)}>옵션 <ChevronDown size={12} /></span>
+      <span className="flex items-center text-[#707070] font-medium text-base leading-[100%] tracking-normal cursor-pointer mb-2 ml-1" onClick={()=>setIsOpenToggle((prev)=>!prev)}>옵션 <ChevronDown size={12} /></span>
     {isOpenToggle?(   <div className="flex space-x-8 text-sm text-gray-600 font-normal select-none flex-col w-full mt-1">
     {(Object.entries(optionsData) as [Category, readonly string[]][]).map(([category, options]) => (
       <div key={category} className="flex items-center space-x-4 border-t m-0 pt-1 pb-1">
@@ -533,7 +533,7 @@ const cancelModal2 = () => {
         </tbody>
       </table>
       <div className="w-full flex justify-end mt-4">
-<Button className="rounded-[5px] text-[15px] cursor-pointer" onClick={()=>{
+<Button className="rounded-[5px] text-[15px] cursor-pointer mr-1" onClick={()=>{
   setIsOpenWriteContent(true);
   setIsEditMode(false);
   // 새 등록 시 폼 초기화
