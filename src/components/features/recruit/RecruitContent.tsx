@@ -155,11 +155,11 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
   return (
     <>
     <div className='flex justify-center mb-[-50px]'>
-     <Card className="mt-[60px] w-[80%] ">
+     <Card className="mt-[60px] w-[100%] sm:w-[80%] ">
           <div className="flex flex-row items-center pl-5">
             <img 
               src={content?.clubImage || 'https://image.ssuclubber.com/common/logo/soongsil_default.png'} 
-              className="w-[150px] h-[150px]"
+              className="w-[100px] sm:w-[150px] h-[100px] sm:h-[150px]"
               onError={(e) => {
                 e.currentTarget.src = 'https://image.ssuclubber.com/common/logo/soongsil_default.png';
               }}
@@ -167,17 +167,17 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
           
             <div className='ml-3'>
               <div className='flex flex-row items-center'>
-                <p className="mb-2 font-bold">{content?.clubName}</p>
+                <p className="mb-2 font-bold text-[18px]">{content?.clubName}</p>
                 
                 {!isAdmin && (
                   isStarred ? (
                     <Star 
-                      className='w-4 h-4 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
+                      className='w-5 h-5 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
                       onClick={handleStarClick}
                     />
                   ) : (
                     <Star 
-                      className='w-4 h-4 ml-2 mb-2 cursor-pointer text-yellow-500' 
+                      className='w-5 h-5 ml-2 mb-2 cursor-pointer text-yellow-500' 
                       onClick={handleStarClick}
                     />
                   )

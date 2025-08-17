@@ -132,6 +132,13 @@ export default function WriteClubInfo() {
     }));
   };
 
+  const handleYoutubeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setClubInfo((prevState) => ({
+      ...prevState,
+      youtube: e.target.value,
+    }));
+  };
+
   const handleLeaderChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setClubInfo((prevState) => ({
       ...prevState,
@@ -152,19 +159,17 @@ export default function WriteClubInfo() {
   };
 
   const handleRoomChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setClubInfo((prevState) => ({
-      ...prevState,
-      room: e.target.value,
-    }));
-  };
-  const handleKeyPress = (event: any) => {
-    // 숫자만 입력 가능하도록 키 이벤트 필터링
-    const charCode = event.charCode;
-    if (charCode < 48 || charCode > 57) {
-      event.preventDefault();
+    // 입력값에서 숫자만 남기기
+    const onlyNums = e.target.value.replace(/[^0-9]/g, '');
+    if (e.target.value !== onlyNums) {
       alert('동아리실은 숫자만 입력할 수 있습니다.');
     }
+    setClubInfo((prevState) => ({
+      ...prevState,
+      room: onlyNums,
+    }));
   };
+ 
 
   //수정 완료 후
   const handleSave = async () => {
@@ -250,7 +255,7 @@ export default function WriteClubInfo() {
             <img
               src={imagePreview ? imagePreview : club?.imageUrl || 'https://image.ssuclubber.com/common/logo/soongsil_default.png'}
               alt="logo"
-              className="w-[100px] sm:w-[150px] h-[100px] sm:h-[150px]"
+              className="w-[100px] sm:w-[150px] h-[100px] sm:h-[150px] mr-4"
               onError={(e) => {
                 console.log('Image failed to load, using default image');
                 e.currentTarget.src = 'https://image.ssuclubber.com/common/logo/soongsil_default.png';
@@ -271,7 +276,7 @@ export default function WriteClubInfo() {
            
 
             <div className='flex flex-col'>
-              <p className="mb-2 font-bold">{club?.clubName}</p>
+              <p className="mb-2 font-semibold text-xl mb-6">{club?.clubName}</p>
               
               {isCenter ? (
                 <Button>
@@ -315,7 +320,7 @@ export default function WriteClubInfo() {
                 rows={5}
                 cols={50}
                 placeholder=" 동아리 소개를 입력하세요."
-                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full min-h-[70px]"
+                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full min-h-[70px] px-1 py-1"
               />
             </div>
             <div className="mt-[30px]">
@@ -325,10 +330,18 @@ export default function WriteClubInfo() {
               <textarea
                 value={clubInfo?.instagram ?? ''}
                 onChange={handleInstagramChange}
-                rows={5}
+                rows={2}
                 cols={50}
                 placeholder=" 동아리 인스타 URL을 입력하세요."
-                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full min-h-[70px]"
+                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full px-1 py-1"
+              />
+              <textarea
+                value={clubInfo?.youtube ?? ''}
+                onChange={handleYoutubeChange}
+                rows={2}
+                cols={50}
+                placeholder=" 동아리 유튜브 URL을 입력하세요."
+                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full px-1 py-1"
               />
             </div>
             <div className="mt-[30px]">
@@ -341,7 +354,7 @@ export default function WriteClubInfo() {
                 rows={5}
                 cols={50}
                 placeholder=" 동아리 대표활동을 입력하세요."
-                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full min-h-[70px]"
+                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full min-h-[70px] px-1 py-1"
               />
             </div>
             <div className="mt-[30px]">
@@ -354,7 +367,7 @@ export default function WriteClubInfo() {
                 rows={2}
                 cols={50}
                 placeholder=" 동아리장 이름을 입력하세요."
-                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full"
+                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full px-1 py-1"
               />
             </div>
             <div className="mt-[30px]">
@@ -364,11 +377,10 @@ export default function WriteClubInfo() {
               <textarea
                 value={clubInfo?.room ?? ''}
                 onChange={handleRoomChange}
-                onKeyPress={handleKeyPress}
                 rows={2}
                 cols={10}
                 placeholder=" 동아리실을 입력하세요."
-                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full"
+                className="font-pretendard font-normal text-[14px] leading-[18px] tracking-[0] border border-[#9c9c980] w-full px-1 py-1"
               />
             </div>
           </div>
@@ -376,12 +388,12 @@ export default function WriteClubInfo() {
         <div className="m-auto">
           <Button
             onClick={handleSave}
-           className="w-[145px] h-[45px] rouned-[5px] m-auto mt-15 cursor-pointer font-pretendard font-semibold text-[16px] leading-[120%] tracking-[0]"
+           className="w-[120px] sm:w-[145px] h-[40px] sm:h-[45px] rouned-[5px] m-auto mt-15 cursor-pointer font-pretendard font-semibold text-[16px] leading-[120%] tracking-[0]"
           >
             완료
           </Button>{' '}
           <Button
-            className="w-[145px] h-[45px] rouned-[5px] m-auto mt-15 cursor-pointer font-pretendard font-semibold text-[16px] leading-[120%] tracking-[0]"
+            className="w-[120px] sm:w-[145px] h-[40px] sm:h-[45px] rouned-[5px] m-auto mt-15 cursor-pointer font-pretendard font-semibold text-[16px] leading-[120%] tracking-[0]"
             variant="outline"
             onClick={()=>router.back()}
           >

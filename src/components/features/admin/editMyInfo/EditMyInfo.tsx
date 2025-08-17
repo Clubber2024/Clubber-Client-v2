@@ -92,7 +92,7 @@ export default function EditMyInfo() {
         </p>
         </TitleDiv>
       {/* Content Section */}
-      <div className="w-full sm:w-[463px] m-auto mt-[62px] flex flex-col items-center justify-center">
+      <div className="w-[90%] sm:w-[463px] m-auto mt-[62px] flex flex-col items-center justify-center">
         <div className="w-full">
           <p className="w-full font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] mb-[11px] text-[#202123] text-left">
             아이디

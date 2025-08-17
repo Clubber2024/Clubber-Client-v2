@@ -40,7 +40,8 @@ export default function MainRecruitList() {
         {recruitData?.map((recruit, idx) => (
           <div
             key={idx}
-            className="p-0 flex flex-row items-center justify-between text-[13px] md:text-sm hover:text-primary transition-colors"
+            onClick={()=>router.push(`/recruitContent?recruitId=${recruit.recruitId}`)}
+            className="p-0 flex flex-row items-center justify-between text-[13px] md:text-sm hover:text-primary transition-colors cursor-pointer"
           >
             <div>
               <Badge

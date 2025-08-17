@@ -79,13 +79,13 @@ export default function RecruitList() {
             className="mb-6 h-[150px] sm:h-[200px] pl-4 sm:pl-[20px] pr-4 sm:pr-[20px] pt-4 sm:pt-5 pb-4 sm:pb-5 flex flex-row justify-between cursor-pointer"
           >
             <div
-              onClick={() => router.push(`/admin/recruitContent?recruitId=${item.recruitId}`)}
+             
               className="flex flex-row justify-between cursor-pointer w-full"
             >
               {item.imageUrl && (
                 <img src={item.imageUrl} className="w-[130px] sm:w-fit sm:min-w-[170px] aspect-square mr-2" />
               )}
-              <div className="flex-1 min-w-0 flex flex-col">
+              <div className="flex-1 min-w-0 flex flex-col h-full"  onClick={() => router.push(`/admin/recruitContent?recruitId=${item.recruitId}`)}>
                 <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate cursor-pointer w-full max-w-full overflow-hidden whitespace-nowrap">
                   {item.title}
                 </p>

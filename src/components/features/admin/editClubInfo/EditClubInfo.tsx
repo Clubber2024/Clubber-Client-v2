@@ -7,7 +7,7 @@ import { apiClient } from '@/lib/apiClient';
 import { useEffect, useState } from 'react';
 import { getClubInfo } from './api/editClubInfo';
 import { Button } from '@/components/ui/button';
-import { Car } from 'lucide-react';
+import { Car, Instagram, Youtube } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export type Club = {
@@ -95,51 +95,56 @@ export default function EditClubInfo() {
                   • {club?.clubType} | {club?.division}
                 </p>
               ) : (
-                <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0]">
+                <p className="font-normal text-[16px] leading-[18px] tracking-[0]">
                   {' '}
                   • {club?.college} | {club?.department}
                 </p>
               )}
             </div>
             <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+              <p className=" font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 소개
               </p>
-              <div className="flex floex-row">
+              <div className="flex flex-row items-center">
                 •
-                <p className="ml-1 font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
-                  {club?.introduction}
+                <p className="ml-1 font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                  {club?.introduction?club.introduction:"동아리 소개가 없습니다."}
                 </p>
               </div>
             </div>
             <div className="mt-[30px]">
               <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
-                인스타/유튜브
+                인스타 / 유튜브
               </p>
-              <a href={clubInfo?.instagram ? clubInfo.instagram : ''}>• {clubInfo?.instagram}</a>
-              <a href={clubInfo?.youtube ? clubInfo.youtube : ''}> {clubInfo?.youtube}</a>
+              <div className='flex flex-row items-center'>
+              <img src='/images/admin/insta.png' className='w-5 h-5 mr-1' />
+              <a className={clubInfo?.instagram ? "text-[16px]" : "text-gray-500 text-[16px]"} href={clubInfo?.instagram ? clubInfo.instagram : ''}> {clubInfo?.instagram?clubInfo.instagram:"동아리 인스타가 없습니다."}</a>
+              </div>
+              <div className='flex flex-row items-center mt-2'>
+              <img src='/images/admin/youtube.png' className='w-5 h-5 mr-1' /> <a className={clubInfo?.youtube ? "" : "text-gray-500"} href={clubInfo?.youtube ? clubInfo.youtube : ''}> {clubInfo?.youtube?clubInfo.youtube:"동아리 유튜브가 없습니다."}</a>
+              </div>
             </div>
             <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+              <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 대표 활동
               </p>
-              <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+              <p className="font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
                 • {clubInfo?.activity}
               </p>
             </div>
             <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+              <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 동아리장
               </p>
-              <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+              <p className="font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
                 • {clubInfo?.leader}
               </p>
             </div>
             <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[16px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+              <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 동아리실
               </p>
-              <p className="font-pretendard font-normal text-[18px] leading-[18px] tracking-[0] whitespace-pre-line">
+              <p className="font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
                 • {clubInfo?.room}
               </p>
             </div>
