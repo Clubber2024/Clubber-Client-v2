@@ -84,9 +84,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   // 모집글 내용 불러오기
   const getRecruitContent = async () => {
     if (recruitId) {
-      const res = await getAdminRecruitContent(recruitId);
-      
-      
+      const res = await getAdminRecruitContent(recruitId);  
 
       setRecruitData(res);
       setTitle(res.title);
@@ -100,8 +98,6 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
       setApplyLink(res.applyLink);
       setIsCalendarLink(res.isCalendarLinked);
       
-    
-      
       const endDate = res.endAt;
       const fullDate = new Date(
         res.startAt[0],
@@ -114,7 +110,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
       console.log("fullDate", fullDate);
       console.log("fullEndDate", fullEndDate);
       const formattedStartTime = `${String(fullDate.getHours()).padStart(2, '0')}:${String(fullDate.getMinutes()).padStart(2, '0')}`;
-      const formattedEndTime = `${String(fullDate.getHours()).padStart(2, '0')}:${String(fullDate.getMinutes()).padStart(2, '0')}`;
+      const formattedEndTime = `${String(fullEndDate.getHours()).padStart(2, '0')}:${String(fullEndDate.getMinutes()).padStart(2, '0')}`;
 
       setStartDate(fullDate);
       setEndDate(fullEndDate);
@@ -171,7 +167,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
   const handleEndDateChange = (selectedData: Date) => {
     setEndDate(selectedData);
-    setCalendarIsOpen(false);
+    setEndCalendarIsOpen(false);
   };
 
   const formatDateTime = (dateObjOrStr: Date, timeStr: string) => {
@@ -233,7 +229,6 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
     if (recruitId) {
       // 새로 추가된 파일과 이미지 URL 상태 업데이트
       setRemainedImages(selectedImages);
-
       setNewAddedFiles(newImageFiles);
       setNewAddedImages(newImageURLs);
     }
@@ -266,11 +261,19 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
     const sourceIndex = Number(e.dataTransfer.getData('imgIndex'));
     if (sourceIndex === index) return;
+    
+    // 이미지 순서 변경
     const updateImages = [...selectedImages];
     const [movedImage] = updateImages.splice(sourceIndex, 1);
-
     updateImages.splice(index, 0, movedImage);
+    
+    // 파일 순서도 동일하게 변경
+    const updateFiles = [...selectedFiles];
+    const [movedFile] = updateFiles.splice(sourceIndex, 1);
+    updateFiles.splice(index, 0, movedFile);
+
     setSelectedImages(updateImages);
+    setSelectedFiles(updateFiles);
     setRemainedImages(updateImages);
   };
 
@@ -280,26 +283,17 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
   const handleRemoveImage = (index: number) => {
     setSelectedImages((prevImages) => {
-      const imageToDelete = prevImages[index]; // 삭제될 이미지 찾음
-      //모집글 수정 시
+      const imageToDelete = prevImages[index];
+      const updatedImages = prevImages.filter((_, i) => i !== index);
       if (recruitId) {
-        // deletedFiles 배열에 삭제될 이미지 추가
         setDeletedFiles((prevDeletedFiles) => [...prevDeletedFiles, imageToDelete]);
       }
-
-      // 필터를 사용하여 선택된 이미지 목록에서 해당 이미지를 제거
-      const updatedImages = prevImages.filter((_, i) => i !== index);
-
-      //모집글 수정 시
-      if (recruitId) {
-        // 남은 이미지들을 remainingImages 상태에 저장
-        setRemainedImages(updatedImages);
-      }
-
-      // 필터를 사용하여 선택된 이미지 목록에서 해당 이미지를 제거
       return updatedImages;
     });
+    setSelectedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setRemainedImages((prev) => prev.filter((_, i) => i !== index));
   };
+  console.log("selectedFiles", selectedFiles);
 
   const handleSubmitButton = async () => {
     let hasError = false;
@@ -335,8 +329,8 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
     if (hasError) return;
 
     try {
-      const imageUrls = await uploadImages({ selectedFiles });
-      console.log('imageUrls');
+      const imageUrls = await uploadImages({ selectedFiles:selectedFiles });
+      console.log('imageUrls', imageUrls);
       let formattedStart: string | null = null;
       let formattedEnd: string | null = null;
       
@@ -620,19 +614,19 @@ if(resLinkCalendar.success){
             )}
 
             {recruitType !== 'ALWAYS' && (
-              <div className="flex flex-col sm:flex-row items-center w-[100%] mt-4">
+              <div className="flex flex-col sm:flex-row items-center w-[100%] mt-4 flex-wrap">
                 <div className="relative">
-                  <div className="flex flex-row">
+                  <div className="flex flex-row mb-2">
                     <div className="flex items-center relative">
                       <input
                         type="text"
                         readOnly
                         value={formatDate(startDate)}
                         className="
-    max-w-[177px] h-[55px] rounded-[5px] bg-white
-    border border-[#d6d6d6]
-    flex mr-[6px]
-  "
+     max-w-[177px] h-[55px] rounded-[5px] bg-white
+     border border-[#d6d6d6]
+     flex mr-[6px]
+   "
                         placeholder="YYYY-MM-DD"
                       />
                       <img
@@ -646,10 +640,10 @@ if(resLinkCalendar.success){
                       value={startTime}
                       onChange={(e) => setStartTime(e.target.value)}
                       className="
-    max-w-[90px] h-[55px] rounded-[5px] bg-white
-    border border-[#d6d6d6]
-    flex mr-[6px]
-"
+     max-w-[90px] h-[55px] rounded-[5px] bg-white
+     border border-[#d6d6d6]
+     flex mr-[6px]
+ "
                       placeholder="00:00"
                     />
                   </div>
@@ -672,8 +666,8 @@ if(resLinkCalendar.success){
                         readOnly
                         value={formatDate(endDate)}
                         className=" max-w-[177px] h-[55px] rounded-[5px] bg-white
-    border border-[#d6d6d6]
-    flex mr-[6px]"
+     border border-[#d6d6d6]
+     flex mr-[6px]"
                         placeholder="YYYY-MM-DD"
                       />
                       <img
@@ -687,8 +681,8 @@ if(resLinkCalendar.success){
                       value={endTime}
                       onChange={(e) => setEndTime(e.target.value)}
                       className="max-w-[90px] h-[55px] rounded-[5px] bg-white
-    border border-[#d6d6d6]
-    flex mr-[6px]"
+     border border-[#d6d6d6]
+     flex mr-[6px]"
                       placeholder="00:00"
                     />
                   </div>

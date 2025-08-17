@@ -184,7 +184,7 @@ export default function Header() {
               >
                 {isAdmin ? (
                   <div className="flex flex-row justify-center items-center">
-                    <span className="hidden sm:inline">{adminMe?.username}님</span>
+                    <span className="sm:inline">{adminMe?.username}님</span>
                     <ChevronDown size={12} />
                   </div>
                 ) : (
