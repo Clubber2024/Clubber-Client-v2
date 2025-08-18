@@ -1,13 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getMonth, getDate, getDay } from 'date-fns';
-import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Star } from 'lucide-react';
 import { CalendarData, NonAlwaysCalendar } from '@/types/calendar/calendarData';
 import CalendarModal from './CalendarModal';
+import Loading from '@/components/common/Loading';
+import { useLoginStore } from '@/stores/login/useLoginStore';
+import Modal from '@/components/common/Modal';
+import { useRouter } from 'next/navigation';
+import { addFavorite, deleteFavorite, getFavoriteStatus } from '../bookmark/api/bookmark';
 
 interface CalendarProps {
   calendarData: CalendarData | null;
@@ -15,12 +19,18 @@ interface CalendarProps {
 }
 
 export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarProps) {
+  const router = useRouter();
+  const { isLoggedIn } = useLoginStore();
+  const [favoriteStatuses, setFavoriteStatuses] = useState<{
+    [key: number]: { isFavorite: boolean; favoriteId?: number };
+  }>({});
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [modalMessage, setModalMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
-  const [selectedClubId, setSelectedClubId] = useState<number | null>(null);
+  const [selectedCalendarId, setSelectedCalendarId] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -40,6 +50,32 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
 
   const totalCells = curMonthFirstDay + curMonthLastDate > 35 ? 42 : 35;
 
+  // 즐겨찾기 상태 가져오기
+  useEffect(() => {
+    if (isLoggedIn && nonAlwaysCalendars.length > 0) {
+      const fetchFavoriteStatuses = async () => {
+        const statuses: { [key: number]: { isFavorite: boolean; favoriteId?: number } } = {};
+
+        for (const calendar of nonAlwaysCalendars) {
+          try {
+            const response = await getFavoriteStatus(calendar.clubId);
+            statuses[calendar.clubId] = {
+              isFavorite: response.isFavorite,
+              favoriteId: response.favoriteId,
+            };
+          } catch (error) {
+            console.error('즐겨찾기 상태 조회 실패:', error);
+            statuses[calendar.clubId] = { isFavorite: false };
+          }
+        }
+
+        setFavoriteStatuses(statuses);
+      };
+
+      fetchFavoriteStatuses();
+    }
+  }, [isLoggedIn, nonAlwaysCalendars]);
+
   const changeMonth = (offset: number) => {
     const newDate = new Date(currentDate);
     newDate.setMonth(currentDate.getMonth() + offset);
@@ -55,16 +91,13 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
   };
 
   if (!calendarData) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-lg">데이터를 불러오는 중...</div>
-      </div>
-    );
+    return <Loading />;
   }
 
-  const onClubClick = (clubId: number) => {
+  // 실제로 넘기는 건 calendarId
+  const onClubClick = (calendarId: number) => {
     setIsCalendarModalOpen(true);
-    setSelectedClubId(clubId);
+    setSelectedCalendarId(calendarId);
   };
 
   const onDateClick = (date: number, isCurrentMonth: boolean) => {
@@ -98,6 +131,75 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
     });
 
     return { startEvents, endEvents };
+  };
+
+  const handleStarClick = async (clubId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // 동아리 클릭 이벤트 방지
+
+    if (!isLoggedIn) {
+      setModalMessage('로그인이 필요한 서비스 입니다.\n로그인 화면으로 이동하시겠습니까?');
+      setIsLoginModalOpen(true);
+      return;
+    }
+
+    try {
+      const currentStatus = favoriteStatuses[clubId];
+
+      if (currentStatus?.isFavorite) {
+        // 즐겨찾기 해제
+        if (currentStatus.favoriteId) {
+          await deleteFavorite(clubId, currentStatus.favoriteId);
+        }
+
+        // 즉시 UI 상태 업데이트
+        setFavoriteStatuses((prev) => ({
+          ...prev,
+          [clubId]: {
+            isFavorite: false,
+            favoriteId: undefined,
+          },
+        }));
+
+        setModalMessage('즐겨찾기가 해제되었습니다.');
+        setIsModalOpen(true);
+      } else {
+        // 즐겨찾기 추가
+        await addFavorite(clubId);
+
+        // 즉시 UI 상태 업데이트
+        setFavoriteStatuses((prev) => ({
+          ...prev,
+          [clubId]: {
+            isFavorite: true,
+            favoriteId: Date.now(), // 임시 ID (실제로는 API 응답에서 받아야 함)
+          },
+        }));
+
+        setModalMessage('즐겨찾기에 추가되었습니다.');
+        setIsModalOpen(true);
+      }
+
+      // 백그라운드에서 실제 상태 동기화 (즐겨찾기 추가 시에만)
+      if (!currentStatus?.isFavorite) {
+        try {
+          const newStatus = await getFavoriteStatus(clubId);
+          setFavoriteStatuses((prev) => ({
+            ...prev,
+            [clubId]: {
+              isFavorite: newStatus.isFavorite,
+              favoriteId: newStatus.favoriteId,
+            },
+          }));
+        } catch (syncError) {
+          console.error('즐겨찾기 상태 동기화 실패:', syncError);
+          // 동기화 실패해도 UI는 이미 업데이트됨
+        }
+      }
+    } catch (error) {
+      console.error('즐겨찾기 처리 중 오류:', error);
+      setModalMessage('즐겨찾기 처리 중 오류가 발생했습니다.');
+      setIsModalOpen(true);
+    }
   };
 
   return (
@@ -145,7 +247,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
         </div>
 
         {/* 날짜 그리드 */}
-        <div className="grid grid-cols-7 gap-1 md:gap-2 p-2 md:p-4">
+        <div className="grid grid-cols-7 gap-1 md:gap-1.5 p-2 md:p-4">
           {Array.from({ length: totalCells }, (_, i) => {
             const date = i - curMonthFirstDay + 1;
             const currentMonthDate = date;
@@ -170,7 +272,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
             return (
               <Card
                 key={i}
-                className={`flex flex-col p-1.5 md:p-2 h-[100px] rounded-md gap-0 hover:shadow-md ${
+                className={`flex flex-col p-1.5 h-[110px] rounded-sm gap-0 hover:shadow-md ${
                   isCurrentMonth
                     ? 'bg-white hover:bg-white/80 transition-colors duration-300 cursor-pointer'
                     : 'bg-white/50'
@@ -190,7 +292,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
 
                   {/* PC에서는 상세 정보 표시, 모바일에서는 개수만 표시 */}
                   <div className="hidden md:flex flex-col gap-1 overflow-y-auto flex-1">
-                    {nonAlwaysCalendars.map((item, index) => {
+                    {nonAlwaysCalendars.map((item) => {
                       const isStartDate =
                         currentMonthDate === getDate(new Date(item.startAt)) &&
                         month === getMonth(new Date(item.startAt)) + 1;
@@ -205,20 +307,23 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                       const textColor = isStart ? 'text-blue-500' : 'text-red-500';
 
                       return (
-                        <div
-                          key={`${item.clubId}-${index}-${isStart ? 'start' : 'end'}`}
-                          className="flex items-center text-sm"
-                        >
+                        <div key={item.calendarId} className="flex items-start gap-0.5 text-sm">
                           <div
-                            onClick={() => onClubClick(item.clubId)}
-                            className="hover:scale-105 transition-all duration-300 hover:text-primary cursor-pointer"
+                            onClick={() => onClubClick(item.calendarId)}
+                            className="hover:scale-103 transition-all duration-300 hover:text-primary cursor-pointer flex-1 min-w-0 break-words"
                           >
                             <span className={`font-semibold ${textColor}`}>
                               {isStart ? '시작' : '마감'}
                             </span>
-                            <span className="ml-1">{item.clubName}</span>
+                            <span className="ml-1 break-words">{item.clubName}</span>
                           </div>
-                          <Star className="size-3 ml-1" strokeWidth={2} color="#FFD000" />
+                          <Star
+                            strokeWidth={2}
+                            color="#FFD000"
+                            fill={favoriteStatuses[item.clubId]?.isFavorite ? '#FFD000' : 'none'}
+                            className="size-4 mt-0.5 cursor-pointer transition-all duration-200 hover:scale-110"
+                            onClick={(e) => handleStarClick(item.clubId, e)}
+                          />
                         </div>
                       );
                     })}
@@ -314,10 +419,23 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                             {startEvents.map((item, index) => (
                               <div
                                 key={index}
-                                className="flex items-center justify-between p-3 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all duration-300 hover:scale-105 hover:shadow-md transform hover:-translate-y-1"
+                                className="flex items-center justify-between p-3 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all duration-300 hover:scale-103 hover:shadow-md transform hover:-translate-y-1"
                               >
                                 <div className="flex-1">
-                                  <div className="font-medium text-gray-900">{item.clubName}</div>
+                                  <div className="flex flex-row items-center gap-2">
+                                    <div className="font-medium text-gray-900">{item.clubName}</div>
+                                    <Star
+                                      strokeWidth={2}
+                                      color="#FFD000"
+                                      fill={
+                                        favoriteStatuses[item.clubId]?.isFavorite
+                                          ? '#FFD000'
+                                          : 'none'
+                                      }
+                                      className="size-4 mt-0.5 cursor-pointer transition-all duration-200 hover:scale-110"
+                                      onClick={(e) => handleStarClick(item.clubId, e)}
+                                    />
+                                  </div>
                                   <div className="text-xs text-blue-600 mt-1">
                                     {new Date(item.startAt).toLocaleDateString()} ~{' '}
                                     {new Date(item.endAt).toLocaleDateString()}
@@ -326,7 +444,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                                 <Button
                                   size="sm"
                                   onClick={() => {
-                                    onClubClick(item.clubId);
+                                    onClubClick(item.calendarId);
                                     setIsDateModalOpen(false);
                                   }}
                                   className="bg-blue-500 hover:bg-blue-600 text-white transition-all duration-200 hover:scale-110 active:scale-95"
@@ -350,10 +468,23 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                             {endEvents.map((item, index) => (
                               <div
                                 key={index}
-                                className="flex items-center justify-between p-3 bg-red-50 rounded-xl hover:bg-red-100 transition-all duration-300 hover:scale-105 hover:shadow-md transform hover:-translate-y-1"
+                                className="flex items-center justify-between p-3 bg-red-50 rounded-xl hover:bg-red-100 transition-all duration-300 hover:scale-103 hover:shadow-md transform hover:-translate-y-1"
                               >
                                 <div className="flex-1">
-                                  <div className="font-medium text-gray-900">{item.clubName}</div>
+                                  <div className="flex flex-row items-center gap-2">
+                                    <div className="font-medium text-gray-900">{item.clubName}</div>
+                                    <Star
+                                      strokeWidth={2}
+                                      color="#FFD000"
+                                      fill={
+                                        favoriteStatuses[item.clubId]?.isFavorite
+                                          ? '#FFD000'
+                                          : 'none'
+                                      }
+                                      className="size-4 mt-0.5 cursor-pointer transition-all duration-200 hover:scale-110"
+                                      onClick={(e) => handleStarClick(item.clubId, e)}
+                                    />
+                                  </div>
                                   <div className="text-xs text-red-600 mt-1">
                                     {new Date(item.endAt).toLocaleDateString()} ~{' '}
                                     {new Date(item.endAt).toLocaleDateString()}
@@ -362,7 +493,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                                 <Button
                                   size="sm"
                                   onClick={() => {
-                                    onClubClick(item.clubId);
+                                    onClubClick(item.calendarId);
                                     setIsDateModalOpen(false);
                                   }}
                                   className="bg-red-500 hover:bg-red-600 text-white transition-all duration-200 hover:scale-110 active:scale-95"
@@ -393,32 +524,32 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
 
       {/* 모달들 */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg">
-            <p>{modalMessage}</p>
-            <Button onClick={() => setIsModalOpen(false)} className="mt-4">
-              확인
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {isLoginModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg">
-            <p>{modalMessage}</p>
-            <Button onClick={() => setIsLoginModalOpen(false)} className="mt-4">
-              확인
-            </Button>
-          </div>
-        </div>
+        <Modal
+          message={modalMessage}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={() => {}}
+          showConfirmButton={false}
+        />
       )}
 
       {isCalendarModalOpen && (
         <CalendarModal
-          clubId={selectedClubId}
+          clubId={selectedCalendarId}
           isOpen={isCalendarModalOpen}
           onClose={() => setIsCalendarModalOpen(false)}
+          isAlways={false}
+          month={month}
+        />
+      )}
+
+      {isLoginModalOpen && (
+        <Modal
+          message={modalMessage}
+          onClose={() => setIsLoginModalOpen(false)}
+          onConfirm={() => {
+            router.push('/login');
+          }}
+          showConfirmButton={true}
         />
       )}
     </div>

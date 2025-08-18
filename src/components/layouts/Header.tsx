@@ -194,7 +194,7 @@ export default function Header() {
                 )}
               </div>
               {isOpenToggle ? (
-                <div className="w-[276px] h-[138px] border border-[#E3E3E3] rounded-[10px] shadow-[0px_0px_5px_0px_#0000001A] bg-white absolute right-1 z-1000 pl-7 pr-7 flex items-center flex-col">
+                <div className="w-[276px] h-[138px] border border-[#E3E3E3] rounded-[10px] shadow-[0px_0px_5px_0px_#0000001A] bg-white absolute top-5.5 right-1 z-1000 pl-7 pr-7 flex items-center flex-col">
                   {' '}
                   <div className="flex flex-row items-center justify-between h-[100px] w-full">
                     <UserRound size={50} strokeWidth={1} />

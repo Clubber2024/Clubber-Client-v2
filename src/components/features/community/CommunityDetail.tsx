@@ -141,8 +141,8 @@ export default function CommunityDetail({
 
             <Divider />
             {/* 내용 */}
-            <div className="prose max-w-none px-5 py-6">
-              <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+            <div className="prose mx-auto px-5 py-6">
+              <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere">
                 {item.content || '내용이 없습니다.'}
               </div>
             </div>
@@ -160,9 +160,9 @@ export default function CommunityDetail({
                 <div className="flex flex-row justify-between items-center gap-3 flex-1 text-sm">
                   <div className="flex flex-row">
                     <div className="font-semibold mb-1 mr-4 text-gray-800">이전</div>
-                    <div className="truncate">{prevItem.title}</div>
+                    <div className="truncate max-w-[200px] md:max-w-none">{prevItem.title}</div>
                   </div>
-                  <div className=" text-gray-400">
+                  <div className=" text-gray-400 flex-shrink-0">
                     {'date' in prevItem ? prevItem.date : prevItem.createdAt}
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export default function CommunityDetail({
                 <div className="flex flex-row justify-between items-center gap-3 flex-1 text-sm">
                   <div className="flex flex-row">
                     <div className="font-semibold mb-1 mr-4 text-gray-800">다음</div>
-                    <div className="truncate">{nextItem.title}</div>
+                    <div className="truncate max-w-[200px] md:max-w-none">{nextItem.title}</div>
                   </div>
                   <div className=" text-gray-400">
                     {'date' in nextItem ? nextItem.date : nextItem.createdAt}
