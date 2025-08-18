@@ -91,7 +91,7 @@ export default function Banner() {
           {BANNERS.map((banner, idx) => (
             <CarouselItem key={banner.id}>
               <Link href={banner.url}>
-                <div className="w-full h-56 md:h-86 rounded-xl overflow-hidden flex items-center justify-center relative">
+                <div className="w-full h-54 md:h-86 rounded-xl overflow-hidden flex items-center justify-center relative">
                   <Image
                     src={banner.mobileSrc}
                     alt={banner.alt}

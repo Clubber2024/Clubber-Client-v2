@@ -13,7 +13,7 @@ interface LoginState {
   accessToken: string | null;
   refreshToken: string | null;
   user: User | null;
-  
+
   // 액션
   setTokens: (accessToken: string, refreshToken: string) => void;
   setUser: (user: User) => void;
@@ -92,7 +92,14 @@ export const useLoginStore = create<LoginState>()(
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         user: state.user,
-      }), // 로그인 상태만 저장
+        isLoggedIn: !!state.accessToken, // accessToken 존재 여부로 로그인 상태 계산
+      }),
+      onRehydrateStorage: () => (state) => {
+        // 스토리지에서 복원 후 isLoggedIn 상태를 accessToken 기반으로 재계산
+        if (state) {
+          state.isLoggedIn = !!state.accessToken;
+        }
+      },
     }
   )
 );
