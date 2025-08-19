@@ -5,6 +5,7 @@ import Calendar from '@/components/features/calendar/Calendar';
 import AlwaysCalendar from '@/components/features/calendar/AlwaysCalendar';
 import { getCalendarData } from '@/components/features/calendar/api/calendar';
 import { CalendarData } from '@/types/calendar/calendarData';
+import Loading from '@/components/common/Loading';
 
 export default function CalendarPage() {
   const [calendarData, setCalendarData] = useState<CalendarData | null>(null);
@@ -35,11 +36,7 @@ export default function CalendarPage() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-lg">로딩 중...</div>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -53,7 +50,10 @@ export default function CalendarPage() {
   return (
     <div className="flex md:flex-row flex-col md:gap-4 md:max-w-6xl mx-auto">
       <div className="flex-1 flex flex-col">
-        <AlwaysCalendar alwaysCalendars={calendarData?.alwaysCalendars || []} />
+        <AlwaysCalendar
+          alwaysCalendars={calendarData?.alwaysCalendars || []}
+          month={calendarData?.month || 0}
+        />
       </div>
       <div className="flex-3 flex flex-col">
         <Calendar

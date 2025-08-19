@@ -1,15 +1,15 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import TitleDiv from '@/components/ui/title-div';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { StarIcon, Star } from 'lucide-react';
+import { StarIcon, Star, ChevronRightIcon } from 'lucide-react';
 import { getClubInfomation } from '@/components/features/club/api/clubCard';
-import { getFavoriteStatus, addFavorite, deleteFavorite, getFavorites } from '../bookmark/api/bookmark';
+import { addFavorite, deleteFavorite, getFavorites } from '../bookmark/api/bookmark';
 import { FavoriteItem } from '@/types/bookmark/bookmarkData';
 import Modal from '@/app/modal/Modal';
+import Image from 'next/image';
 
 export type Club = {
   instagram: string | null;
@@ -34,10 +34,10 @@ export interface ClubProps {
 }
 
 interface ClubInfoProps {
-  clubId?: string; 
+  clubId?: string;
 }
 
-export default function ClubInfo({clubId}:ClubInfoProps) {
+export default function ClubInfo({ clubId }: ClubInfoProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [club, setClub] = useState<ClubProps | null>(null);
@@ -52,6 +52,7 @@ export default function ClubInfo({clubId}:ClubInfoProps) {
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [activeTab, setActiveTab] = useState<'intro' | 'review'>('intro');
 
   useEffect(() => {
     // Check authentication status on component mount
@@ -65,7 +66,7 @@ export default function ClubInfo({clubId}:ClubInfoProps) {
     // const clubId = searchParams.get('clubId');
     if (clubId) {
       fetchClubInfoData(parseInt(clubId));
-      console.log("clubId", clubId);
+      console.log('clubId', clubId);
       if (accessToken && !isAdmin) {
         fetchFavoriteStatus(parseInt(clubId));
       }
@@ -79,17 +80,16 @@ export default function ClubInfo({clubId}:ClubInfoProps) {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const res = await getClubInfomation(clubId);
-      
+
       if (!res) {
         throw new Error('동아리 정보를 찾을 수 없습니다.');
       }
-      
+
       setClub(res);
       setClubInfo(res.clubInfo);
 
-      
       // Determine if it's a center club or college club
       if (res.clubType === '해당 없음') {
         setIsCenter(false);
@@ -107,11 +107,11 @@ export default function ClubInfo({clubId}:ClubInfoProps) {
   const fetchFavoriteStatus = async (clubId: number) => {
     if (isAdmin) return;
     if (!accessToken) return;
-    
+
     try {
       const res = await getFavorites();
-      console.log("res", res);
-      
+      console.log('res', res);
+
       // The response structure is: { userId: number, userFavorites: FavoriteItem[] }
       if (!res.userFavorites) {
         console.error('No userFavorites in response:', res);
@@ -119,13 +119,14 @@ export default function ClubInfo({clubId}:ClubInfoProps) {
         setFavoriteId(null);
         return;
       }
-      
+
       const userFavorites = res.userFavorites;
       const clubIds = userFavorites.map((item: FavoriteItem) => item.favoriteClub.clubId);
       const isFavoriteClub = clubIds.includes(clubId);
-      const favorite = userFavorites.find((item: FavoriteItem) => item.favoriteClub.clubId === clubId);
-      
-      
+      const favorite = userFavorites.find(
+        (item: FavoriteItem) => item.favoriteClub.clubId === clubId
+      );
+
       setIsStarred(isFavoriteClub);
       if (favorite) {
         setFavoriteId(favorite.favoriteId);
@@ -182,7 +183,10 @@ export default function ClubInfo({clubId}:ClubInfoProps) {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
-          <Button onClick={() => router.back()} className="bg-primary hover:bg-primary/90 text-white">
+          <Button
+            onClick={() => router.back()}
+            className="bg-primary hover:bg-primary/90 text-white"
+          >
             뒤로 가기
           </Button>
         </div>
@@ -195,7 +199,10 @@ export default function ClubInfo({clubId}:ClubInfoProps) {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-500 mb-4">동아리 정보를 찾을 수 없습니다.</p>
-          <Button onClick={() => router.back()} className="bg-primary hover:bg-primary/90 text-white">
+          <Button
+            onClick={() => router.back()}
+            className="bg-primary hover:bg-primary/90 text-white"
+          >
             뒤로 가기
           </Button>
         </div>
@@ -203,28 +210,33 @@ export default function ClubInfo({clubId}:ClubInfoProps) {
     );
   }
 
-  const onClickGoToRecruit = () =>{
-if(clubId){
-  router.push(`/recruitList?clubId=${clubId}`);
-} else{
-  return;
-}
-}
+  const onClickGoToRecruit = () => {
+    if (clubId) {
+      router.push(`/recruitList?clubId=${clubId}`);
+    } else {
+      return;
+    }
+  };
 
   return (
     <>
-   
-
-      <div className="ml-0 sm:ml-[10%] mr-0 sm:mr-[10%] mt-5 flex flex-col">
-        <Card className="mt-[60px] mb-9">
-          <div className="flex flex-row items-center pl-5 pr-5">
-            <img 
-              src={club?.imageUrl || 'https://image.ssuclubber.com/common/logo/soongsil_default.png'} 
-              className="w-[100px] sm:w-[150px] h-[100px] sm:h-[150px]"
+      <div className="max-w-5xl mx-auto sm:mx-[10%] flex flex-col">
+        <Card className="mx-10 mt-12 mb-17">
+          <div className="flex flex-row items-center px-5">
+            <Image
+              src={
+                club?.imageUrl || 'https://image.ssuclubber.com/common/logo/soongsil_default.png'
+              }
+              className="w-[100px] sm:w-[150px] h-[100px] sm:h-[150px] rounded-full mx-0 md:mx-4"
               onError={(e) => {
-                e.currentTarget.src = 'https://image.ssuclubber.com/common/logo/soongsil_default.png';
+                e.currentTarget.src =
+                  'https://image.ssuclubber.com/common/logo/soongsil_default.png';
               }}
+              alt="club-image"
+              width={100}
+              height={100}
             />
+
           
             <div className='ml-3'>
               <div className='flex flex-row items-center mb-2 sm:mb-0'>
@@ -233,135 +245,184 @@ if(clubId){
                 {!isAdmin && (
                   isStarred ? (
                     <Star 
-                      className='w-5 h-5 sm:w-6 sm:h-6 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
+                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
                       onClick={handleStarClick}
                     />
                   ) : (
                     <StarIcon 
-                      className='w-5 h-5 sm:w-6 sm:h-6 ml-2 mb-2 cursor-pointer text-yellow-500' 
+                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500' 
                       onClick={handleStarClick}
                     />
-                  )
-                )}
-               
+                  ))}
               </div>
-              
+
               {isCenter ? (
-                <Button className='mr-2 h-[33px] sm:h-[38px]'>
+                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
                   {club?.clubType} | {club?.division}
                 </Button>
               ) : (
-                <Button className='mr-2 h-[33px] sm:h-[38px]'>
+                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
                   {club?.college} | {club?.department}
                 </Button>
               )}
-              <Button className='border-primary text-primary mt-2 sm:mt-0 h-[31px] sm:h-[38px]' variant={'outline'} onClick={onClickGoToRecruit}>모집글 보러가기 {'>'}</Button>
-            </div>
-            </div>
-          
-        </Card>
-        
-        <Card className="rounded-[5px]">
-          <div className="pl-4 sm:pl-20 pr-4 sm:pr-20 mt-10 mb-10">
-            <div>
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mb-2.5">
-                소속분과
-              </p>
-              {isCenter ? (
-                <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] ">
-                  • {club?.clubType} | {club?.division}
-                </p>
-              ) : (
-                <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0]">
-                  • {club?.college} | {club?.department}
-                </p>
-              )}
-            </div>
-            
-            <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
-                소개
-              </p>
-              <div className="flex flex-row">
-                •
-                <p className="ml-1 font-pretendard font-normal text-[16px] leading-[22px] tracking-[0] whitespace-pre-line ">
-                  {club?.introduction || ''}
-                </p>
-              </div>
-            </div>
-            
-            <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[16px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
-                인스타/유튜브
-              </p>
-              <div className="space-y-1">
-                {clubInfo?.instagram && (
-                  <a 
-                    href={clubInfo.instagram} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="block text-blue-600 hover:underline"
-                  >
-                    • {clubInfo.instagram}
-                  </a>
-                )}
-                {clubInfo?.youtube && (
-                  <a 
-                    href={clubInfo.youtube} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="block text-blue-600 hover:underline"
-                  >
-                    • {clubInfo.youtube}
-                  </a>
-                )}
-               {!clubInfo?.youtube&&!clubInfo?.instagram&&(
-                <p className="ml-1 font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">•</p>
-               )}
-              </div>
-            </div>
-            
-            <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
-                대표 활동
-              </p>
-              <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
-                • {clubInfo?.activity || ''}
-              </p>
-            </div>
-            
-            <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
-                동아리장
-              </p>
-              <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
-                • {clubInfo?.leader || ''}
-              </p>
-            </div>
-            
-            <div className="mt-[30px]">
-              <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
-                동아리실
-              </p>
-              <p className="font-pretendard font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
-                • {clubInfo?.room || ''}
-              </p>
+              <Button className='mt-2 sm:mt-0 rounded-[3px] h-8 cursor-pointer' onClick={onClickGoToRecruit}>모집글 보러가기 <ChevronRightIcon className="size-4.5" /></Button>
             </div>
           </div>
         </Card>
+
+        {/* 탭 네비게이션 */}
+        <div className="mx-10 relative">
+          <div className="absolute -top-8 md:-top-6 left-1/2 transform -translate-x-1/2 z-10">
+            <div className="flex w-52 md:w-180 bg-[#c6e0f1] rounded-full shadow-sm">
+              <button
+                onClick={() => setActiveTab('intro')}
+                className={`flex-1 pl-6 pr-4 rounded-none font-medium transition-all duration-200 `}
+              >
+                <p
+                  className={`font-medium transition-all duration-200 text-center pt-3 pb-2.5 ${
+                    activeTab === 'intro'
+                      ? 'font-bold border-b-3 border-primary md:w-60 mx-auto'
+                      : 'text-gray-600 hover:text-primary'
+                  }`}
+                >
+                  소개
+                </p>
+              </button>
+              <button
+                onClick={() => setActiveTab('review')}
+                className={`flex-1 pr-6 pl-4 rounded-none font-medium transition-all duration-200 `}
+              >
+                <p
+                  className={`font-medium transition-all duration-200 text-center pt-3 pb-2.5 ${
+                    activeTab === 'review'
+                      ? 'font-bold border-b-3 border-primary md:w-60 mx-auto'
+                      : 'text-gray-600 hover:text-primary'
+                  }`}
+                >
+                  리뷰
+                </p>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 탭 컨텐츠 */}
+        {activeTab === 'intro' ? (
+          <Card className="mx-10">
+            <div className="pl-4 sm:pl-20 pr-4 sm:pr-20 my-10">
+              <div>
+                <p className=" font-semibold text-[18px] leading-[18px] tracking-[0] mb-2.5">
+                  소속분과
+                </p>
+                {isCenter ? (
+                  <p className=" font-normal text-[16px] leading-[18px] tracking-[0] ">
+                    • {club?.clubType} | {club?.division}
+                  </p>
+                ) : (
+                  <p className=" font-normal text-[16px] leading-[18px] tracking-[0]">
+                    • {club?.college} | {club?.department}
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-[30px]">
+                <p className=" font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+                  소개
+                </p>
+                <div className="flex flex-row">
+                  •
+                  <p className="ml-1  font-normal text-[16px] leading-[22px] tracking-[0] whitespace-pre-line ">
+                    {club?.introduction || ''}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-[30px]">
+                <p className=" font-semibold text-[16px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+                  인스타/유튜브
+                </p>
+                <div className="space-y-1">
+                  {clubInfo?.instagram && (
+                    <a
+                      href={clubInfo.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-blue-600 hover:underline"
+                    >
+                      • {clubInfo.instagram}
+                    </a>
+                  )}
+                  {clubInfo?.youtube && (
+                    <a
+                      href={clubInfo.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-blue-600 hover:underline"
+                    >
+                      • {clubInfo.youtube}
+                    </a>
+                  )}
+                  {!clubInfo?.youtube && !clubInfo?.instagram && (
+                    <p className="ml-1 font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                      •
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-[30px]">
+                <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+                  대표 활동
+                </p>
+                <p className="   font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                  • {clubInfo?.activity || ''}
+                </p>
+              </div>
+
+              <div className="mt-[30px]">
+                <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+                  동아리장
+                </p>
+                <p className=" font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                  • {clubInfo?.leader || ''}
+                </p>
+              </div>
+
+              <div className="mt-[30px]">
+                <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+                  동아리실
+                </p>
+                <p className=" font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                  • {clubInfo?.room || ''}
+                </p>
+              </div>
+            </div>
+          </Card>
+        ) : (
+          <Card className="mx-10">
+            <div className="pl-4 sm:pl-20 pr-4 sm:pr-20 my-10">
+              <div className="flex flex-col items-center justify-center">
+                <Image
+                  src={'/images/review.png'}
+                  alt="review"
+                  width={500}
+                  height={800}
+                  className="object-cover blur-xs mb-6 relative"
+                />
+                <div className="text-center absolute -bottom-40 left-50 md:-bottom-45 md:left-200 transform -translate-x-1/2 -translate-y-1/2 bg-transparent py-11 px-13 md:px-30">
+                  <p className="text-gray/900 font-taebaek text-2xl mb-4 font-medium">
+                    리뷰 기능 9월 중순 OPEN ‼️
+                  </p>
+                  <p className="text-gray-500 text-md drop-shadow-sm">곧 만나요!</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
       </div>
       {isOpenModal && (
-        <Modal 
-          isOpen={isOpenModal} 
-          message={modalMessage} 
-          onClose={() => setIsOpenModal(false)} 
-        />
+        <Modal isOpen={isOpenModal} message={modalMessage} onClose={() => setIsOpenModal(false)} />
       )}
     </>
   );
 }
-
-
-
-
-

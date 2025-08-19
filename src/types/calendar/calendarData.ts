@@ -15,7 +15,7 @@ export interface CalendarData {
 }
 
 export interface NonAlwaysCalendar {
-  // calendarId: number;
+  calendarId: number;
   clubId: number;
   clubName: string;
   recruitType: string;
@@ -28,6 +28,30 @@ export interface AlwaysCalendar {
   clubName: string;
   recruitType: string;
   calendarNum: number;
+}
+
+export interface AlwaysNextClubResponse {
+  success: boolean;
+  timeStamp: number[];
+  data: AlwaysNextClubContent;
+}
+
+export interface AlwaysNextClubContent {
+  content: AlwaysNextClubData[];
+  size: number;
+  hasNext: boolean;
+}
+
+export interface AlwaysNextClubData {
+  id: number;
+  title: string;
+  recruitType: string;
+  startAt: string;
+  endAt: string;
+  createdAt: string;
+  url: string;
+  recruitStatus: string;
+  writerRole: string;
 }
 
 export interface CalendarClubResponse {

@@ -1,12 +1,25 @@
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AlwaysCalendar as AlwaysCalendarType } from '@/types/calendar/calendarData';
+import CalendarModal from './CalendarModal';
 
 interface AlwaysCalendarProps {
   alwaysCalendars: AlwaysCalendarType[];
+  month: number;
 }
 
-export default function AlwaysCalendar({ alwaysCalendars }: AlwaysCalendarProps) {
+export default function AlwaysCalendar({ alwaysCalendars, month }: AlwaysCalendarProps) {
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+  const [selectedClubId, setSelectedClubId] = useState<number | null>(null);
+
+  const handleClubClick = async (calendar: AlwaysCalendarType) => {
+    setIsCalendarModalOpen(true);
+    setSelectedClubId(calendar.clubId);
+  };
+
   return (
     <div className="h-full bg-primary p-2 md:p-4 rounded-xl md:rounded-xl md:my-10">
       <Card className="bg-white p-6 md:rounded-none h-full gap-2 md:gap-6">
@@ -22,9 +35,13 @@ export default function AlwaysCalendar({ alwaysCalendars }: AlwaysCalendarProps)
             alwaysCalendars.map((calendar) => (
               <Button
                 key={calendar.clubId}
-                className="text-xs md:text-md w-fit px-2 md:px-3 py-0 md:py-0.5 justify-start rounded-md transition-colors bg-secondary text-gray-800 hover:bg-primary/70"
+                className="text-xs md:text-md w-fit px-2 py-0 md:py-0.5 justify-start rounded-md transition-colors bg-secondary text-gray-800 hover:bg-primary/70"
+                onClick={() => handleClubClick(calendar)}
               >
                 {calendar.clubName}
+                <span className="text-xs text-gray-500">
+                  {calendar.calendarNum !== 0 && `+${calendar.calendarNum}`}
+                </span>
               </Button>
             ))
           ) : (
@@ -32,6 +49,15 @@ export default function AlwaysCalendar({ alwaysCalendars }: AlwaysCalendarProps)
           )}
         </div>
       </Card>
+      {isCalendarModalOpen && (
+        <CalendarModal
+          clubId={selectedClubId}
+          isOpen={isCalendarModalOpen}
+          onClose={() => setIsCalendarModalOpen(false)}
+          isAlways={true}
+          month={month}
+        />
+      )}
     </div>
   );
 }
