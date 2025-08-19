@@ -203,8 +203,8 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
             </p>
             <Divider className="w-full" />
             <div className="flex flex-row justify-between w-full mt-2.5 mb-2.5">
-              <div className="flex flex-row justify-center items-start gap-2">
-                <span className="font-semibold text-[16px] leading-[100%] tracking-[0%] font-pretendard">
+              <div className="flex flex-row justify-start sm:justify-center items-start gap-2">
+                <span className="font-semibold text-[16px] leading-[150%] tracking-[0%] font-pretendard">
                   • 모집기간{' '}
                 </span>
                 <span className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard">

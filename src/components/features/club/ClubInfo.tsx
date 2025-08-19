@@ -233,12 +233,12 @@ if(clubId){
                 {!isAdmin && (
                   isStarred ? (
                     <Star 
-                      className='w-6 h-6 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
+                      className='w-5 h-5 sm:w-6 sm:h-6 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
                       onClick={handleStarClick}
                     />
                   ) : (
                     <StarIcon 
-                      className='w-6 h-6 ml-2 mb-2 cursor-pointer text-yellow-500' 
+                      className='w-5 h-5 sm:w-6 sm:h-6 ml-2 mb-2 cursor-pointer text-yellow-500' 
                       onClick={handleStarClick}
                     />
                   )
@@ -255,7 +255,7 @@ if(clubId){
                   {club?.college} | {club?.department}
                 </Button>
               )}
-              <Button className='mt-2 sm:mt-0 h-[33px] sm:h-[38px]' onClick={onClickGoToRecruit}>모집글 보러가기 {'>'}</Button>
+              <Button className='border-primary text-primary mt-2 sm:mt-0 h-[31px] sm:h-[38px]' variant={'outline'} onClick={onClickGoToRecruit}>모집글 보러가기 {'>'}</Button>
             </div>
             </div>
           
