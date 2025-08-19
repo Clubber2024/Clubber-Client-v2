@@ -114,14 +114,14 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
               </a>
             </div>
             <Divider className="w-full" />
-            <div ref={containerRef} className="w-[90%] overflow-x-auto ">
-              <div className="flex mt-10 gap-4">
+            <div ref={containerRef} className="w-[90%] overflow-x-auto">
+              <div className="flex mt-10 gap-4 justify-center min-w-fit px-[5%]">
                 {content.imageUrls.map((url: string, index: number) => (
                   <img
                     key={index}
                     src={url}
                     alt={`image-${index}`}
-                    className="h-auto object-container flex-shrink-0"
+                    className="h-auto max-w-[300px] sm:max-w-[500px] object-contain flex-shrink-0"
                   />
                 ))}
               </div>

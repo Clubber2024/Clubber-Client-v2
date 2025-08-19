@@ -35,11 +35,14 @@ export const postFindIdCode = async ({ email, clubId, authCode }: PostFindIdCode
       authCode: authCode,
     });
 
-    if (res.data.success) {
-      return res.data;
+    return res.data;
+  } catch (error: any) {
+    // 서버에서 에러 응답을 보낸 경우 (400, 401 등)
+    if (error.response && error.response.data) {
+      return error.response.data;
     }
-  } catch (error) {
-    throw error;
+    // 네트워크 에러 등 기타 에러
+    return { success: false, message: '네트워크 오류가 발생했습니다.' };
   }
 };
 

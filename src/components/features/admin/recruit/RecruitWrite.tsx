@@ -99,14 +99,21 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
       setIsCalendarLink(res.isCalendarLinked);
       
       const endDate = res.endAt;
+      // 시간대 문제를 방지하기 위해 로컬 시간으로 정확히 설정
       const fullDate = new Date(
         res.startAt[0],
         res.startAt[1] - 1,
         res.startAt[2],
-        res.startAt[3],
-        res.startAt[4]
+        res.startAt[3] || 0,
+        res.startAt[4] || 0
       );
-      const fullEndDate = new Date(endDate[0], endDate[1] - 1, endDate[2], endDate[3], endDate[4]);
+      const fullEndDate = new Date(
+        endDate[0], 
+        endDate[1] - 1, 
+        endDate[2], 
+        endDate[3] || 0, 
+        endDate[4] || 0
+      );
       console.log("fullDate", fullDate);
       console.log("fullEndDate", fullEndDate);
       const formattedStartTime = `${String(fullDate.getHours()).padStart(2, '0')}:${String(fullDate.getMinutes()).padStart(2, '0')}`;
@@ -135,8 +142,9 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
   //캘린더 관련 함수
   const formatDate = (date: Date) => {
+    // 로컬 시간대를 기준으로 정확한 날짜 포맷팅
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
@@ -172,8 +180,16 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
   const formatDateTime = (dateObjOrStr: Date, timeStr: string) => {
     // 1. date가 문자열이면 그대로 사용, 아니면 YYYY-MM-DD 형식으로 변환
-    const date =
-      typeof dateObjOrStr === 'string' ? dateObjOrStr : formatDate(dateObjOrStr); // formatDate 사용
+    let date: string;
+    if (typeof dateObjOrStr === 'string') {
+      date = dateObjOrStr;
+    } else {
+      // 시간대 문제를 방지하기 위해 로컬 시간 기준으로 직접 포맷팅
+      const year = dateObjOrStr.getFullYear();
+      const month = String(dateObjOrStr.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObjOrStr.getDate()).padStart(2, '0');
+      date = `${year}-${month}-${day}`;
+    }
 
     // 2. timeStr은 그대로 붙이기
     return `${date} ${timeStr}`;
@@ -285,15 +301,22 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
     setSelectedImages((prevImages) => {
       const imageToDelete = prevImages[index];
       const updatedImages = prevImages.filter((_, i) => i !== index);
+      
       if (recruitId) {
-        setDeletedFiles((prevDeletedFiles) => [...prevDeletedFiles, imageToDelete]);
+        // 새로 추가된 이미지인지 확인 (blob: URL로 시작하는지 체크)
+        const isNewlyAddedImage = imageToDelete.startsWith('blob:');
+        
+        // 기존 이미지만 deletedFiles에 추가
+        if (!isNewlyAddedImage) {
+          setDeletedFiles((prevDeletedFiles) => [...prevDeletedFiles, imageToDelete]);
+        }
       }
       return updatedImages;
     });
     setSelectedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     setRemainedImages((prev) => prev.filter((_, i) => i !== index));
   };
-  console.log("selectedFiles", selectedFiles);
+
 
   const handleSubmitButton = async () => {
     let hasError = false;
@@ -809,7 +832,10 @@ if(resLinkCalendar.success){
                     />
 
                     <div
-                      onClick={() => handleRemoveImage(index)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveImage(index);
+                      }}
                       className="absolute left-[90px] top-[5px] z-[10]
   text-red-500 rounded-[3px] border-none"
                     >

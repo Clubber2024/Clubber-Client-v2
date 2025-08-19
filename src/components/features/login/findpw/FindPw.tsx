@@ -67,8 +67,8 @@ export default function FindPw() {
       setEmailMessage('올바른 이메일 형식이 아닙니다.');
       return;
     } else {
-      setIsVerifyEmail(true);
-      setEmailMessage('인증번호를 보냈습니다.');
+      // setIsVerifyEmail(true);
+      // setEmailMessage('인증번호를 보냈습니다.');
       fetchEmailData();
     }
   };
@@ -96,8 +96,18 @@ export default function FindPw() {
   //api 관련
   const fetchEmailData = async () => {
     const res = await postFindPwEmail({ username: id, email: email });
+    if(res.success){
+      setIsVerifyEmail(true);
+      setIdMessage("");
+      setEmailMessage('인증번호를 보냈습니다.');
+      return;
+    } else{
+      console.log(res.reason);
+      setIdMessage(res.reason);
+      setIsVerifyEmail(false);
+      return;
+    }
 
-    console.log(res);
   };
 
   const fetchCodeData = async () => {
@@ -107,7 +117,11 @@ export default function FindPw() {
     if (res.success) {
       setIsVerifyCode(true);
       setEmailCodeMessage('인증되었습니다.');
+
     } else {
+      setIsVerifyCode(false);
+      setEmailCodeMessage('인증번호가 일치하지 않습니다.');
+    
       return;
     }
   };
@@ -202,6 +216,12 @@ export default function FindPw() {
               placeholder="아이디 입력"
               autoComplete="off"
             />
+            <p
+                className={`font-pretendard font-normal text-[10px] leading-[100%] tracking-[0] mt-2 text-red-400`}
+              >
+                {idMessage}
+              </p>
+
 
             <div>
               <p
@@ -259,7 +279,7 @@ export default function FindPw() {
                   </Button>
                 </div>
 
-                <p className="font-pretendard font-normal text-[10px] leading-[100%] tracking-[0] mt-2 text-primary whitespace-pre-line">
+                <p className={`font-pretendard font-normal text-[10px] leading-[100%] tracking-[0] mt-2 ${isVerifyCode ? 'text-primary' : 'text-red-400'} whitespace-pre-line`}>
                   {emailCodeMessage}
                 </p>
               </div>

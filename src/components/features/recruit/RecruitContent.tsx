@@ -12,6 +12,7 @@ import RecruitStatusLabel from '@/components/ui/recruit-status-label';
 import { getAccessToken, getIsAdmin } from '@/auth/AuthService';
 import { addFavorite, deleteFavorite, getFavoriteStatus } from '@/components/features/bookmark/api/bookmark';
 import { apiClient } from '@/lib/apiClient';
+import Modal from '@/app/modal/Modal';
 
 export interface RecruitContentProps {
   clubId: number;
@@ -54,8 +55,10 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
   const [isStarred, setIsStarred] = useState(false);
   const [isAdmin, setIsAdminState] = useState(false);
   const [isCenter, setIsCenter] = useState(false);
-  const [formattedStartAt, setFormattedStartAt] = useState<string | null>(null);
-  const [formattedEndAt, setFormattedEndAt] = useState<string | null>(null);
+  const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  // const [formattedStartAt, setFormattedStartAt] = useState<string | null>(null);
+  // const [formattedEndAt, setFormattedEndAt] = useState<string | null>(null);
 
   const fetchData = async () => {
     if (recruitId) {
@@ -102,7 +105,8 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
     try {
       const accessToken = getAccessToken();
       if (!accessToken) {
-        alert('로그인이 필요한 서비스입니다.');
+        setIsOpenLoginModal(true);
+        setModalMessage('로그인 후 이용해주세요.');
         return;
       }
 
@@ -167,7 +171,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
           
             <div className='ml-3'>
               <div className='flex flex-row items-center'>
-                <p className="mb-2 font-bold text-[18px]">{content?.clubName}</p>
+                <p className="mb-2 font-bold text-[20px]">{content?.clubName}</p>
                 
                 {!isAdmin && (
                   isStarred ? (
@@ -203,8 +207,8 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
             </p>
             <Divider className="w-full" />
             <div className="flex flex-row justify-between w-full mt-2.5 mb-2.5">
-              <div className="flex flex-row justify-center items-start gap-2">
-                <span className="font-semibold text-[16px] leading-[100%] tracking-[0%] font-pretendard">
+              <div className="flex flex-row justify-start sm:justify-center items-start gap-2">
+                <span className="font-semibold text-[16px] leading-[150%] tracking-[0%] font-pretendard">
                   • 모집기간{' '}
                 </span>
                 <span className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard">
@@ -238,13 +242,13 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
             <Divider className="w-full" />
 
             <div ref={containerRef} className="w-[90%] overflow-x-auto">
-              <div className="flex mt-10 gap-4">
+              <div className="flex mt-10 gap-4 justify-center min-w-fit px-[5%]">
                 {content.imageUrls.map((url: string, index: number) => (
                   <img
                     key={index}
                     src={url}
                     alt={`image-${index}`}
-                    className="h-auto object-container flex-shrink-0"
+                    className="h-auto max-w-[300px] sm:max-w-[500px] object-contain flex-shrink-0"
                   />
                 ))}
               </div>
@@ -259,6 +263,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
           ''
         )}
       </Container>
+      {isOpenLoginModal&&(<Modal isOpen={isOpenLoginModal} message={modalMessage} confirmText='로그인 하러가기' cancelText='취소' onConfirm={() => router.push('/login')} onCancel={() => setIsOpenLoginModal(false)} showConfirmButton={true}/>)}
     </>
   );
 }

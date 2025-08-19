@@ -88,16 +88,21 @@ export default function FindId() {
   //api 관련
   const fetchEmailData = async () => {
     const res = await postFindIdEmail({ email, clubId });
-    console.log('res', res);
+  
   };
 
   const fetchCodeData = async () => {
     const res = await postFindIdCode({ email: email, clubId: clubId, authCode: emailCode });
-    console.log('code', res);
-
+    console.log(res);
     if (res.success) {
       setEmailCodeMessage('인증되었습니다.');
       setIsVerifyCode(true);
+      return;
+    } else{
+      console.log('인증번호가 일치하지 않습니다.');
+      setEmailCodeMessage('인증번호가 일치하지 않습니다.');
+      setIsVerifyCode(false);
+      return;
     }
   };
 
@@ -193,7 +198,7 @@ export default function FindId() {
                 </Button>
               </div>
 
-              <p className="font-pretendard font-normal text-[10px] leading-[100%] tracking-[0] mt-2 text-primary">
+              <p className={`font-pretendard font-normal text-[10px] leading-[100%] tracking-[0] mt-2 ${isVerifyCode ? 'text-primary' : 'text-red-400'}`}>
                 {emailCodeMessage}
               </p>
             </div>

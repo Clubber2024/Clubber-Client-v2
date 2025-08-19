@@ -56,7 +56,7 @@ export default function SearchClub({
   setDepartment,
 }: SignUpSearchClubProps) {
   const [suggestion, setSuggestion] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(true); // 추천어 보이기 여부
+  const [showSuggestions, setShowSuggestions] = useState(false); // 추천어 보이기 여부
   const [clubTypes, setClubTypes] = useState([]);
   const [isType, setIsType] = useState(false);
   const [isName, setIsName] = useState(false);
@@ -163,7 +163,7 @@ export default function SearchClub({
   // }, [clubType]);
 
   useEffect(() => {
-    if (showSuggestions && !isName) {
+    if (showSuggestions && !isName && clubName.trim() !== '') {
       fetchSuggestions(clubName);
     }
   }, [clubName, fetchSuggestions, showSuggestions, isName]);
@@ -173,13 +173,19 @@ export default function SearchClub({
     const currentName = e.target.value;
     setClubName(currentName);
 
-    if (!isName) {
+    // 사용자가 타이핑을 시작할 때만 suggestion 보여주기
+    if (currentName.trim() !== '' && !isName) {
       setShowSuggestions(true);
+    } else if (currentName.trim() === '') {
+      setShowSuggestions(false);
+      setSuggestion([]);
     }
 
     if (currentName.length < 1) {
       setIsName(false);
       setIsType(false);
+      setShowSuggestions(false);
+      setSuggestion([]);
     }
   };
 
@@ -211,12 +217,15 @@ export default function SearchClub({
         setDepartment('ETC');
       }
     }
-    setShowSuggestions(false); //1. 슴기기
-    setClubName(club.clubName); //2. 변경 -> 여기서 다시 추천 리스트 뜸
+    
+    // 모든 상태를 한 번에 업데이트하여 리렌더링 최소화
+    setIsName(true);
+    setIsType(true);
+    setShowSuggestions(false);
+    setSuggestion([]); // suggestion 배열도 비우기
+    setClubName(club.clubName);
     setClubType(club.clubType);
     setClubId(club.clubId);
-    setIsType(true);
-    setIsName(true);
   };
 
   /*
@@ -253,7 +262,7 @@ export default function SearchClub({
               <li
                 key={index}
                 className="relative pl-[27px] p-[10px] text-xs hover:bg-[#dddddd] cursor-pointer"
-                onClick={() => handleClubNameSelect(club)}
+                onClick={()=>handleClubNameSelect(club)}
               >
                 <img src="/images/login/search2.png" className="absolute w-3.5 top-2.5 left-2 " />
                 {club.clubName}
