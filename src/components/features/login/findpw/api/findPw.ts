@@ -13,11 +13,14 @@ export const postFindPwEmail = async ({ username, email }: PostFindPwEmailProps)
       username: username,
     });
 
-    if (res.data.success) {
+    
       return res.data;
+    
+  } catch (error:any) {
+    if(error.response && error.response.data){
+      return error.response.data;
     }
-  } catch (error) {
-    throw error;
+    return {success:false, message:'네트워크 오류가 발생했습니다.'};
   }
 };
 
@@ -34,11 +37,14 @@ export const postFindPwCode = async ({ username, authCode }: PostFindPwCodeProps
       authCode: authCode,
     });
 
-    if (res.data.success) {
+   
       return res.data;
+  
+  } catch (error:any) {
+    if(error.response && error.response.data){
+      return error.response.data;
     }
-  } catch (error) {
-    throw error;
+    return {success:false, message:'네트워크 오류가 발생했습니다.'};
   }
 };
 

@@ -51,6 +51,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [activeTab, setActiveTab] = useState<'intro' | 'review'>('intro');
 
@@ -143,7 +144,8 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
   const handleStarClick = async () => {
     if (!accessToken) {
       // Redirect to login if not authenticated
-      router.push('/login');
+      setIsOpenLoginModal(true);
+      setModalMessage('로그인 후 이용해주세요.');
       return;
     }
     if (!clubId) return;
@@ -257,11 +259,11 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
               </div>
 
               {isCenter ? (
-                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
+                <Button className="mr-2 mb-2 rounded-[3px] h-8 hover:bg-primary">
                   {club?.clubType} | {club?.division}
                 </Button>
               ) : (
-                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
+                <Button className="mr-2 mb-2 rounded-[3px] h-8 hover:bg-primary">
                   {club?.college} | {club?.department}
                 </Button>
               )}
@@ -423,6 +425,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
       {isOpenModal && (
         <Modal isOpen={isOpenModal} message={modalMessage} onClose={() => setIsOpenModal(false)} />
       )}
+{isOpenLoginModal&&(<Modal isOpen={isOpenLoginModal} message={modalMessage} confirmText='로그인 하러가기' cancelText='취소' onConfirm={() => router.push('/login')} onCancel={() => setIsOpenLoginModal(false)} showConfirmButton={true}/>)}
     </>
   );
 }

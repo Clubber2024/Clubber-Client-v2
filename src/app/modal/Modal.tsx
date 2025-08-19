@@ -50,6 +50,7 @@ export default function Modal({
           }`}
           role="dialog"
           aria-modal="true"
+          onClick={(e) => e.stopPropagation()}
         >
           <p className="mb-7 font-medium">{message}</p>
           <div className="flex gap-3">
