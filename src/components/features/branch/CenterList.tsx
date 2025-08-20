@@ -13,8 +13,6 @@ interface Division {
 export default function CenterList() {
   const router = useRouter();
   const [divisions, setDivisions] = useState<Division[]>([]);
-  const firstRow = divisions.slice(0, 4);
-  const secondRow = divisions.slice(4, 7);
 
   const getCenterBranchData = async () => {
     try {

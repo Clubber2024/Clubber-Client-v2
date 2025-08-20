@@ -223,7 +223,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
   return (
     <>
       <div className="max-w-5xl mx-auto flex flex-col">
-        <Card className="mx-10 mt-12 mb-17">
+        <Card className="mx-4 sm:mx-10 mt-12 mb-17">
           <div className="flex flex-row items-center px-5">
             <Image
               src={
@@ -242,28 +242,28 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
           
             <div className='ml-3'>
               <div className='flex flex-row items-center mb-2 sm:mb-0'>
-                <p className="mb-2 font-bold text-[18px] w-fit">{club?.clubName}
+                <p className="mb-2 font-bold text-[20px] leading-[100%] tracking-[0] w-fit">{club?.clubName}
                 </p>
                 {!isAdmin && (
                   isStarred ? (
                     <Star 
-                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
+                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500 hover:scale-110 transition-all duration-200 ease-in-out' 
                       onClick={handleStarClick}
                     />
                   ) : (
                     <StarIcon 
-                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500' 
+                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 hover:scale-110 hover:fill-yellow-500  transition-all duration-200 ease-in-out' 
                       onClick={handleStarClick}
                     />
                   ))}
               </div>
 
               {isCenter ? (
-                <Button className="mr-2 mb-2 rounded-[3px] h-8 hover:bg-primary">
+                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
                   {club?.clubType} | {club?.division}
                 </Button>
               ) : (
-                <Button className="mr-2 mb-2 rounded-[3px] h-8 hover:bg-primary">
+                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
                   {club?.college} | {club?.department}
                 </Button>
               )}
@@ -275,7 +275,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
         {/* 탭 네비게이션 */}
         <div className="mx-10 relative">
           <div className="absolute -top-8 md:-top-6 left-1/2 transform -translate-x-1/2 z-10">
-            <div className="flex w-52 md:w-180 bg-[#c6e0f1] rounded-full shadow-sm">
+            <div className="flex w-70 md:w-180 bg-[#c6e0f1] rounded-full shadow-sm">
               <button
                 onClick={() => setActiveTab('intro')}
                 className={`flex-1 pl-6 pr-4 rounded-none font-medium transition-all duration-200 `}
@@ -310,7 +310,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
 
         {/* 탭 컨텐츠 */}
         {activeTab === 'intro' ? (
-          <Card className="mx-10">
+          <Card className="mx-4 sm:mx-10">
             <div className="pl-4 sm:pl-20 pr-4 sm:pr-20 my-10">
               <div>
                 <p className=" font-semibold text-[18px] leading-[18px] tracking-[0] mb-2.5">

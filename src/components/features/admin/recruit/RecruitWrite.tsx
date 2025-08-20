@@ -65,7 +65,7 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
   const [endCalendarIsOpen, setEndCalendarIsOpen] = useState(false);
   const [startTime, setStartTime] = useState('00:00');
-  const [endTime, setEndTime] = useState('00:00');
+  const [endTime, setEndTime] = useState('23:59');
   // const [isOngoing, setIsOngoing] = useState(false);
   const [recruitType, setRecruitType] = useState('');
   //캘린더 연동 유무
@@ -114,8 +114,6 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
         endDate[3] || 0, 
         endDate[4] || 0
       );
-      console.log("fullDate", fullDate);
-      console.log("fullEndDate", fullEndDate);
       const formattedStartTime = `${String(fullDate.getHours()).padStart(2, '0')}:${String(fullDate.getMinutes()).padStart(2, '0')}`;
       const formattedEndTime = `${String(fullEndDate.getHours()).padStart(2, '0')}:${String(fullEndDate.getMinutes()).padStart(2, '0')}`;
 
@@ -135,10 +133,6 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
     }
   }, [recruitId]);
 
-  // isCalendarLink 상태 변경 추적
-  useEffect(() => {
-    console.log('isCalendarLink 상태 변경:', isCalendarLink);
-  }, [isCalendarLink]);
 
   //캘린더 관련 함수
   const formatDate = (date: Date) => {
@@ -353,7 +347,6 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
 
     try {
       const imageUrls = await uploadImages({ selectedFiles:selectedFiles });
-      console.log('imageUrls', imageUrls);
       let formattedStart: string | null = null;
       let formattedEnd: string | null = null;
       
@@ -363,8 +356,6 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
       } else{
         formattedStart = formatDateTime(startDate, startTime);
         formattedEnd = formatDateTime(endDate, endTime);
-        console.log("formattedStart", formattedStart);
-        console.log("formattedEnd", formattedEnd);
       }
      
 
@@ -390,20 +381,18 @@ export default function RecruitWrite({ recruitId }: RecruitWriteProps) {
      
         if (res.success) {
           if(res.data && res.data.shouldCreateCalendar){
-            console.log("캘린더 연동 시도 중...");
             try {
               // 중복 검사
               if(isDuplicate){
 //중복 검사 완료했으므로 중복 안함
 // 캘린더 연동 진행
 const resLinkCalendar = await linkCalendar(recruitId);
-console.log("캘린더 연동 결과:", resLinkCalendar);
 
 if(resLinkCalendar.success){
   setIsModalOpen(true);
   setModalMessage('모집글 수정이 완료되었습니다.');
 } else {
-  console.error("캘린더 연동 실패:", resLinkCalendar);
+
   setIsModalOpen(true);
   setModalMessage('캘린더 연동을 실패했습니다. 다시 시도해주세요.');
 }
@@ -424,31 +413,27 @@ if(resLinkCalendar.success){
                   } else {
                     // 중복이 없으면 캘린더 연동 진행
                     const resLinkCalendar = await linkCalendar(recruitId);
-                    console.log("캘린더 연동 결과:", resLinkCalendar);
   
                     if(resLinkCalendar.success){
                       setIsModalOpen(true);
                       setModalMessage('모집글 수정이 완료되었습니다.');
                     } else {
-                      console.error("캘린더 연동 실패:", resLinkCalendar);
+                     
                       setIsModalOpen(true);
                       setModalMessage('모집글 수정이 완료되었습니다.');
                     }
                   }             
                 } else {
-                  console.error("중복 검사 실패:", resDuplicate);
                   setIsModalOpen(true);
                   setModalMessage('모집글 수정이 완료되었습니다.');
                 }     
               }
                
             } catch (error) {
-              console.error("캘린더 연동 중 에러:", error);
               setIsModalOpen(true);
               setModalMessage('모집글 수정이 완료되었습니다.');
             }
           } else {
-            console.log("캘린더 연동 조건 불충족:", res.data?.shouldCreateCalendar);
             setIsModalOpen(true);
             setModalMessage('모집글 수정이 완료되었습니다.');
           }
@@ -466,7 +451,7 @@ if(resLinkCalendar.success){
         });
         if (res.success) {
           if(res.data && res.data.isCalendarLinked && res.data.recruitId){
-            console.log("캘린더 연동 시도 중...");
+         
             try {
               const recruitId = res.data.recruitId;
 
@@ -474,13 +459,11 @@ if(resLinkCalendar.success){
 //중복 검사 없이 바로 캘린더 연동
  // 중복이 없으면 캘린더 연동 진행
  const resLinkCalendar = await linkCalendar(recruitId);
- console.log("캘린더 연동 결과:", resLinkCalendar);
 
  if(resLinkCalendar.success){
    setIsModalOpen(true);
    setModalMessage('모집글 작성이 완료되었습니다.');
  } else {
-   console.error("캘린더 연동 실패:", resLinkCalendar);
    setIsModalOpen(true);
    setModalMessage('모집글 작성이 완료되었습니다.');
  }
@@ -502,19 +485,19 @@ if(resLinkCalendar.success){
    } else {
      // 중복이 없으면 캘린더 연동 진행
      const resLinkCalendar = await linkCalendar(recruitId);
-     console.log("캘린더 연동 결과:", resLinkCalendar);
+     
 
      if(resLinkCalendar.success){
        setIsModalOpen(true);
        setModalMessage('모집글 작성이 완료되었습니다.');
      } else {
-       console.error("캘린더 연동 실패:", resLinkCalendar);
+     
        setIsModalOpen(true);
        setModalMessage('모집글 작성이 완료되었습니다.');
      }
    }             
  } else {
-   console.error("중복 검사 실패:", resDuplicate);
+  
    setIsModalOpen(true);
    setModalMessage('모집글 작성이 완료되었습니다.');
  }
@@ -637,9 +620,9 @@ if(resLinkCalendar.success){
             )}
 
             {recruitType !== 'ALWAYS' && (
-              <div className="flex flex-col sm:flex-row items-center w-[100%] mt-4 flex-wrap">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center w-[100%] mt-4 flex-wrap">
                 <div className="relative">
-                  <div className="flex flex-row mb-2">
+                  <div className="flex flex-row mb-0 sm:mb-2">
                     <div className="flex items-center relative">
                       <input
                         type="text"
@@ -679,7 +662,7 @@ if(resLinkCalendar.success){
                   </div>
                 </div>
 
-                <p className="ml-[5%] mr-[5%]">~</p>
+                <p className="mx-2 sm:mx-[5%]">~</p>
 
                 <div className="relative">
                   <div className="flex flex-row">
@@ -706,7 +689,7 @@ if(resLinkCalendar.success){
                       className="max-w-[90px] h-[55px] rounded-[5px] bg-white
      border border-[#d6d6d6]
      flex mr-[6px]"
-                      placeholder="00:00"
+                      placeholder="23:59"
                     />
                   </div>
                   <div>
@@ -728,12 +711,12 @@ if(resLinkCalendar.success){
               <Square onClick={() => setIsCalendarLink(true)} size={20} color="#d6d6d6" />
             )}
 
-            <span className="ml-2 font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] ">
+            <span className="ml-2 text-[16px] leading-[150%] tracking-[0] ">
               캘린더 연동
             </span>
           </div>
 
-          <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
+          <p className="font-semibold text-[18px] leading-[150%] tracking-[0] text-black mt-8">
             지원링크
           </p>
           <div className="bg-white mt-2">
@@ -785,7 +768,7 @@ if(resLinkCalendar.success){
           <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
             사진 (선택 / 최대 10장)
           </p>
-          <div className="flex bg-white mr-[10%]">
+          <div className="flex bg-white mx-0 sm:mr-[10%]">
             <div className="flex flex-wrap mt-2.5 bg-white">
               <button
                 className="

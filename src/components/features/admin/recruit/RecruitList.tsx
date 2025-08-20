@@ -72,7 +72,7 @@ export default function RecruitList() {
           나의 모집글
         </p>
       </TitleDiv>
-      <div className="ml-0 sm:ml-[10%] mr-0 sm:mr-[10%] mt-10 mb-10">
+      <div className="mx-2 sm:mx-[10%] mt-10 mb-10">
         {recruitList?.map((item) => (
           <Card
             key={item.recruitId}

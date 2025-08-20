@@ -69,7 +69,7 @@ export default function RecruitList({clubId}:{clubId:string}) {
               {recruitList.map((item) => (
                 <Card
                   key={item.recruitId}
-                  className="mb-6 h-[150px] sm:h-[200px] pl-4 sm:pl-[20px] pr-4 sm:pr-[20px] pt-4 sm:pt-5 pb-4 sm:pb-5 flex flex-row justify-between cursor-pointer"
+                  className="mb-1 sm:mb-6 mx-1 sm:mx-0 h-[150px] sm:h-[200px] pl-4 sm:pl-[20px] pr-4 sm:pr-[20px] pt-4 sm:pt-5 pb-4 sm:pb-5 flex flex-row justify-between cursor-pointer"
                 >
                   <div
                     onClick={() => router.push(`/recruitContent?recruitId=${item.recruitId}`)}
