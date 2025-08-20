@@ -90,7 +90,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
   };
 
   return (
-    <div className='w-full lg:w-[70%] sm:mx-auto flex justify-center items-center'>
+    <div className='w-full lg:w-[70%] mx-auto flex justify-center items-center'>
       <Container>
         <Divider className="shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] border-black mt-[20px] sm:mt-[46px]" />
         {content ? (
@@ -102,7 +102,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
             <p className="font-normal text-[14px] leading-[100%] tracking-[0%] font-pretendard text-[#a7a7a7] mb-[34px]">
               {content.createdAt} | 조회수 {content.totalView}
             </p>
-            <div className='w-full px-4  md:px-7'>
+            <div className='w-full px-4  md:px-7 lg:px-10'>
             <Divider className="w-full" />
             <div className="flex flex-col sm:flex-row justify-between w-full mt-2.5 mb-2.5">
               <div className="flex flex-row justify-start sm:justify-center items-start gap-2">

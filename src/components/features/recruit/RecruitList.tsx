@@ -73,18 +73,18 @@ export default function RecruitList({clubId}:{clubId:string}) {
                 >
                   <div
                     onClick={() => router.push(`/recruitContent?recruitId=${item.recruitId}`)}
-                    className="flex flex-row justify-between cursor-pointer w-full"
+                    className="flex flex-row justify-between cursor-pointer w-full h-full"
                   >
                     {item.imageUrl && (
                       <img src={item.imageUrl} className="w-[130px] sm:w-fit sm:min-w-[170px] aspect-square mr-2" />
                     )}
                     <div className="flex-1 min-w-0 flex flex-col">
-                      <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate whitespace-nowrap overflow-hidden w-full max-w-full cursor-pointer">
+                      <p className="font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate whitespace-nowrap overflow-hidden w-full max-w-full cursor-pointer">
                         {item.title}
                       </p>
-                      <p className="cursor-pointer font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-2 break-all w-full max-w-full overflow-hidden">
-                        {item.content}
-                      </p>
+                                             <p className="cursor-pointer text-[16px] leading-[140%] tracking-[0] text-[#888888] break-words w-full max-w-full flex-1 overflow-hidden">
+                         {item.content}
+                       </p>
                     </div>
                   </div>
                 </Card>

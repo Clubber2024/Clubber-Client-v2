@@ -249,7 +249,7 @@ export default function Header() {
             </div>
           )}
           <span className="md:mb-0.5">|</span>
-          <Link href="#" className="hover:underline">
+          <Link href="/community" className="hover:underline">
             공지사항
           </Link>
         </div>

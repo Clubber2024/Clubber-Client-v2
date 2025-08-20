@@ -253,7 +253,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
             <p className="text-[14px] leading-[100%] tracking-[0%] text-[#a7a7a7] mb-[34px]">
               {content.createdAt} | 조회수 {content.totalView}
             </p>
-            <div className='w-full px-5'>
+            <div className='w-full px-5 md:px-7 lg:px-10'>
             <Divider className="w-full" />
             <div className="flex flex-col sm:flex-row justify-between w-full mt-2.5 mb-2.5">
               <div className="flex flex-row justify-start sm:justify-center items-start gap-2">
@@ -283,7 +283,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
                 target="_blank"
                 rel="noopener noreferrer"
                 href={content.applyLink}
-                className="font-normal text-[16px] leading-[100%] tracking-[0%] font-pretendard"
+                className="text-[16px] leading-[100%] tracking-[0%] text-blue-800 hover:underline"
               >
                 {content.applyLink}
               </a>
