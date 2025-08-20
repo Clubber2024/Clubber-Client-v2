@@ -35,6 +35,12 @@ export default function CenterList() {
   const onClickDivision = (division: Division) => {
     router.push(`/center/${division.code}`);
   };
+
+  // 첫 번째 행 (4개 분과)
+  const firstRow = divisions.slice(0, 4);
+  // 두 번째 행 (나머지 분과들)
+  const secondRow = divisions.slice(4);
+
   return (
     <div className="md:max-w-6xl mx-auto px-10 md:px-0">
       <div className="flex flex-col items-center justify-center gap-5">
@@ -56,24 +62,26 @@ export default function CenterList() {
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-5">
-          {secondRow.map((division) => (
-            <div
-              key={division.code}
-              className="hover:scale-105 transition-all duration-300 bg-black/20 rounded-xl group cursor-pointer"
-              onClick={() => onClickDivision(division)}
-            >
-              {/* 분과 로고 */}
-              <Image
-                src={`/images/center/${division.code}.png`}
-                alt={`${division.title} 로고`}
-                width={200}
-                height={200}
-                className="group-hover:brightness-75 transition-all duration-300"
-              />
-            </div>
-          ))}
-        </div>
+        {secondRow.length > 0 && (
+          <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-5">
+            {secondRow.map((division) => (
+              <div
+                key={division.code}
+                className="hover:scale-105 transition-all duration-300 bg-black/20 rounded-xl group cursor-pointer"
+                onClick={() => onClickDivision(division)}
+              >
+                {/* 분과 로고 */}
+                <Image
+                  src={`/images/center/${division.code}.png`}
+                  alt={`${division.title} 로고`}
+                  width={200}
+                  height={200}
+                  className="group-hover:brightness-75 transition-all duration-300"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
