@@ -47,6 +47,7 @@ export const removeTokens = (): void => {
   try {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('isAdmin');
     console.log('토큰 제거 완료');
   } catch (error) {
     console.error('토큰 제거 실패:', error);

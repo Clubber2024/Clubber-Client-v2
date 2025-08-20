@@ -330,12 +330,12 @@ export default function Header() {
               중앙 동아리
             </Link>
             <Link
-              href="/"
+              href="/official"
               className={`hover:text-primary transition-all duration-300 hover:scale-105 ${
                 selectedMenu === 'official' ? 'text-primary scale-105' : ''
               }`}
             >
-              자치 기구
+              공식단체
             </Link>
             <Link
               href="/college"
