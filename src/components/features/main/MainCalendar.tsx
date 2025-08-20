@@ -37,7 +37,9 @@ export default function MainCalendar() {
   return (
     <Card className="p-6 h-full gap-4 md:gap-6">
       <div className="flex flex-row items-center justify-between">
-        <h3 className="text-md md:text-lg font-bold">오늘, 모집 마감 🔥</h3>
+        <Link href="/calendar" className="hover:text-primary transition-colors duration-300">
+          <h3 className="text-md md:text-lg font-bold">오늘, 모집 마감 🔥</h3>
+        </Link>
         <Link
           href="/calendar"
           className="size-10 cursor-pointer hover:bg-gray-200 transition-colors duration-300 rounded-full border-none flex items-center justify-center"
