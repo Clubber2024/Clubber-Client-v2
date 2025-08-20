@@ -99,7 +99,7 @@ export default function FindPw() {
     if(res.success){
       setIsVerifyEmail(true);
       setIdMessage("");
-      setEmailMessage('인증번호를 보냈습니다.');
+      setEmailMessage('인증번호를 보냈습니다. 인증번호가 오지 않으면 입력하신 정보가 회원정보와 일치하는지 확인해주세요.');
       return;
     } else{
       console.log(res.reason);
