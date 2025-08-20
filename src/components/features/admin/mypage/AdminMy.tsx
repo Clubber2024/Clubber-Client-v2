@@ -1,12 +1,17 @@
 'use client';
 
+import Modal from '@/app/modal/Modal';
+import ComingSoon from '@/components/common/ComingSoon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Divider from '@/components/ui/divider';
 import { Link } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function AdminMy() {
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
   const router = useRouter();
   return (
     <>
@@ -46,7 +51,7 @@ export default function AdminMy() {
                 모집일정 관리
               </Button>
               <Divider className="w-[230px]" />
-              <Button variant={'outline'} className="w-[210px] h-[40px]">
+              <Button variant={'outline'} className="w-[210px] h-[40px]" onClick={()=>setIsReviewModalOpen(true)}>
                 리뷰 관리
               </Button>
               <Divider className="w-[230px]" />
@@ -57,6 +62,7 @@ export default function AdminMy() {
           </div>
         </div>
       </div>
+      {isReviewModalOpen && <Modal isOpen={isReviewModalOpen} message='리뷰 관리 기능은 준비중입니다. Coming Soon!' onClose={()=>setIsReviewModalOpen(false)} />}
     </>
   );
 }

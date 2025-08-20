@@ -71,14 +71,17 @@ export interface PostImageFileProps {
 //동아리 로고 수정 시, presigned URL 가져오기
 export const postImageFile = async ({ imageFileExtension, imageFile }: PostImageFileProps) => {
   try { 
-    // 먼저 올바른 엔드포인트인지 확인하기 위해 다른 이미지 업로드 API와 동일한 패턴 사용
+    // imageFileExtension을 request body에 직접 포함
     const res = await apiClient.post(
-      `/v1/images/club/logo`,
-      {
-        params: {
-          imageFileExtension: imageFileExtension,
-        },
-      }
+      `/v1/images/club/logo?imageFileExtension=${imageFileExtension}`,
+      // {
+      //   imageFileExtension: imageFileExtension,
+      // // },
+      // {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // }
     );
     
     // 이미지 파일을 presigned URL로 업로드

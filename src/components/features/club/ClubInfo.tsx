@@ -51,6 +51,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [activeTab, setActiveTab] = useState<'intro' | 'review'>('intro');
 
@@ -143,7 +144,8 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
   const handleStarClick = async () => {
     if (!accessToken) {
       // Redirect to login if not authenticated
-      router.push('/login');
+      setIsOpenLoginModal(true);
+      setModalMessage('로그인 후 이용해주세요.');
       return;
     }
     if (!clubId) return;
@@ -237,39 +239,35 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
               height={100}
             />
 
-            <div className="ml-3">
-              <div className="flex flex-row items-center mb-2 sm:mb-0">
-                <p className="mb-2 ml-1 font-bold text-xl w-fit">{club?.clubName}</p>
-                {!isAdmin &&
-                  (isStarred ? (
-                    <Star
-                      className="size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500"
+          
+            <div className='ml-3'>
+              <div className='flex flex-row items-center mb-2 sm:mb-0'>
+                <p className="mb-2 font-bold text-[18px] w-fit">{club?.clubName}
+                </p>
+                {!isAdmin && (
+                  isStarred ? (
+                    <Star 
+                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500' 
                       onClick={handleStarClick}
                     />
                   ) : (
-                    <StarIcon
-                      className="size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500"
+                    <StarIcon 
+                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500' 
                       onClick={handleStarClick}
                     />
                   ))}
               </div>
 
               {isCenter ? (
-                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
+                <Button className="mr-2 mb-2 rounded-[3px] h-8 hover:bg-primary">
                   {club?.clubType} | {club?.division}
                 </Button>
               ) : (
-                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
+                <Button className="mr-2 mb-2 rounded-[3px] h-8 hover:bg-primary">
                   {club?.college} | {club?.department}
                 </Button>
               )}
-              <Button
-                className="mt-2 sm:mt-0 rounded-[3px] h-8 cursor-pointer"
-                onClick={onClickGoToRecruit}
-              >
-                모집글 보러가기
-                <ChevronRightIcon className="size-4.5" />
-              </Button>
+              <Button className='mt-2 sm:mt-0 rounded-[3px] h-8 cursor-pointer' onClick={onClickGoToRecruit}>모집글 보러가기 <ChevronRightIcon className="size-4.5" /></Button>
             </div>
           </div>
         </Card>
@@ -427,6 +425,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
       {isOpenModal && (
         <Modal isOpen={isOpenModal} message={modalMessage} onClose={() => setIsOpenModal(false)} />
       )}
+{isOpenLoginModal&&(<Modal isOpen={isOpenLoginModal} message={modalMessage} confirmText='로그인 하러가기' cancelText='취소' onConfirm={() => router.push('/login')} onCancel={() => setIsOpenLoginModal(false)} showConfirmButton={true}/>)}
     </>
   );
 }

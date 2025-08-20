@@ -302,11 +302,10 @@ const handleEndDateChange = (selectedData: Date) => {
 };
 
 const formatDateTime = (dateObjOrStr: Date, timeStr: string) => {
- 
   // 1. date가 문자열이면 그대로 사용, 아니면 YYYY-MM-DD 형식으로 변환
   const date =
-    typeof dateObjOrStr === 'string' ? dateObjOrStr : dateObjOrStr.toISOString().slice(0, 10);
-    
+    typeof dateObjOrStr === 'string' ? dateObjOrStr : formatDate(dateObjOrStr); // formatDate 사용
+
   // 2. timeStr은 그대로 붙이기
   return `${date} ${timeStr}`;
 };
@@ -497,35 +496,40 @@ const cancelModal2 = () => {
             <tr key={id} className="border-none md:border-b md:border-gray-200 hover:bg-gray-50">
               <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]"> {recruitTypeMap[recruitType] || recruitType}</td>
               <td className="py-4 px-4 text-gray-900">{title}</td>
-              <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c] hidden md:table-cell">{recruitType==='ALWAYS'?createdAt:startAt} ~ {recruitType==='ALWAYS'?'':endAt}</td>
-              <td className={`py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]`}>
+              <td className="py-4 px-4 whitespace-nowrap font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c] hidden md:table-cell">{recruitType==='ALWAYS'?createdAt:startAt} ~ {recruitType==='ALWAYS'?'':endAt}</td>
+              <td className={`py-4 px-4 whitespace-nowrap text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]`}>
                 {recruitStatus}
               </td>
-              <td className="py-4 px-4 text-gray-400 cursor-pointer hover:text-gray-700 text-right relative" onClick={()=>setIsOpenOption((prev)=>(prev === id? null : id))}>
+              <td className="py-4 px-4 text-right relative">
+                <span 
+                  className="text-gray-400 cursor-pointer hover:text-gray-700 active:scale-110 transition-transform duration-150 inline-block"
+                  onClick={()=>setIsOpenOption((prev)=>(prev === id? null : id))}
+                >
+                  ⋮
+                </span>
                 {isOpenOption === id &&(
-                  <div className="border-[1px] border-[#D6D6D6] shadow-[0_2px_4px_0_rgba(0,0,0,0.15)] w-[117px] h-[75px] absolute top-10 right-2 m-0  rounded-xs bg-white cursor-pointer">
+                  <div className="border-[1px] border-[#D6D6D6] shadow-[0_2px_4px_0_rgba(0,0,0,0.15)] w-[117px] h-[75px] absolute top-10 right-2 m-0  rounded-xs bg-white cursor-pointer z-10 ">
                   <p
-                    className="flex items-center text-[#a7a7a7] justify-between font-pretendard text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
+                    className="flex items-center text-[#a7a7a7] justify-between text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
                     onClick={()=>modifyCalendar(id)}
                   >
                     수정하기 <PencilLine size={15} color="#a7a7a7" className="ml-1" />
                   </p>
                   <Divider className="w-full" />
                   <p
-                    className="flex items-center text-[#fd3c56] justify-between font-pretendard text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
+                    className="flex items-center text-[#fd3c56] justify-between text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
                     onClick={()=>openModal(id)}
                   >
                     삭제하기 <Trash2 size={15} color="#fd3c56" className="ml-1" />
                   </p>
                 </div>)}
-                ⋮
               </td>
             </tr>
             <tr className="md:hidden border-b border-gray-200 md:border-none">
-              <td className="px-4 py-4 pt-0 font-normal text-[16px] leading-[100%] tracking-[0] text-left text-[#9c9c9c]">
+              <td className="px-4 py-4 pt-0 text-[16px] leading-[100%] tracking-[0] text-left text-[#9c9c9c]">
               기간 
               </td>
-               <td className="px-4 py-4 pt-0 font-normal text-[16px] leading-[100%] tracking-[0] text-left">{recruitType==='ALWAYS'?createdAt:startAt} ~ {recruitType==='ALWAYS'?'':endAt}</td>
+               <td className="px-4 py-4 pt-0 text-[16px] leading-[100%] tracking-[0] text-left">{recruitType==='ALWAYS'?createdAt:startAt} ~ {recruitType==='ALWAYS'?'':endAt}</td>
             </tr>
             </>
           ))}
@@ -560,7 +564,7 @@ const cancelModal2 = () => {
         />
       </div>
              {isOpenModal&&(<Modal isOpen={isOpenModal} message={modalMessage} onConfirm={confrimModal} onClose={closeModal} showConfirmButton={true}/>)}
-       {isOpenModal2&&(<Modal isOpen={isOpenModal2} message={modalMessage} confirmText='계속등록' cancelText="취소" onConfirm={confirmModal2} onCancel={cancelModal2} showConfirmButton={true}/>)}
+       {isOpenModal2&&(<Modal isOpen={isOpenModal2} message={modalMessage} confirmText='계속등록' cancelText="취소" onConfirm={confirmModal2} onCancel={cancelModal2} onClose={cancelModal2} showConfirmButton={true}/>)}
        {isOpenModal3&&(<Modal isOpen={isOpenModal3} message={modalMessage} onClose={closeModal3}/>)}
        {isLinkedModal&&(
          <Modal 
@@ -568,6 +572,7 @@ const cancelModal2 = () => {
            message={modalMessage}
            onConfirm={handleViewRecruitPost} 
            onCancel={handleUnlinkCalendar}
+           onClose={() => setIsLinkedModal(false)}
            showConfirmButton={true}
            confirmText="모집글 보러가기"
            cancelText="연동 끊기"
