@@ -157,12 +157,7 @@ const [startDate, setStartDate] = useState<Date>(new Date());
    
   }
 
-  const openModal = (id:number) => {
-    setSelectedId(id);
-    setIsOpenModal(true)
-    setModalMessage(`삭제한 글을 복구할 수 없습니다. \n삭제하시겠습니까?`)
-   
-  }
+
 
   const closeModal = () => {
     setIsOpenModal(false);
@@ -179,6 +174,23 @@ const [startDate, setStartDate] = useState<Date>(new Date());
     setIsLinkedConfirmModal(false);
 
   }
+
+  //삭제하기 버튼 클릭 시
+  const deleteCalendarModal = (id:number) => {
+    // 해당 아이템의 isCalendarLinked 확인
+    const targetItem = calendarList.find(item => item.id === id);
+    setSelectedId(id);
+
+  if(targetItem?.isCalendarLinked){
+    setModalMessage("해당 일정은 모집글과 연동되어 있습니다. 모집글을 먼저 삭제하거나, 연동을 해제한 후 일정을 삭제해 주세요.");
+    setIsLinkedModal(true);
+    return;
+  }
+//연동 안 되어있으면 바로 삭제제 가능
+   setIsOpenModal(true)
+   setModalMessage(`삭제한 글을 복구할 수 없습니다. \n삭제하시겠습니까?`)
+  
+ }
 
 //수정하기 버튼 클릭 시
   const modifyCalendar=async(id:number) => {
@@ -520,7 +532,7 @@ const cancelModal2 = () => {
                   <Divider className="w-full" />
                   <p
                     className="flex items-center text-[#fd3c56] justify-between text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
-                    onClick={()=>{openModal(id)
+                    onClick={()=>{deleteCalendarModal(id)
                       setIsOpenOption(null);
                     }}
                   >
