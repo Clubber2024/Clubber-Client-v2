@@ -383,7 +383,7 @@ const handleSubmitButton = async () => {
         if(res.success){
           setIsOpenWriteContent(false);
           setModalMessage("모집일정이 수정되었습니다.");
-          setIsOpenModal2(true);
+          setIsOpenModal3(true);
         }
       }
     } else {
@@ -491,7 +491,7 @@ const cancelModal2 = () => {
           </tr>
         </thead>
         <tbody>
-          {calendarList.map(({ id, recruitType, title, startAt, endAt, recruitStatus, createdAt }) => (
+          {calendarList.map(({ id, recruitType, title, startAt, endAt, recruitStatus, createdAt }:CalendarGetProps) => (
             <>
             <tr key={id} className="border-none md:border-b md:border-gray-200 hover:bg-gray-50">
               <td className="py-4 px-4 whitespace-nowrap font-pretendard font-normal text-[16px] leading-[100%] tracking-[0] text-center text-[#9c9c9c]"> {recruitTypeMap[recruitType] || recruitType}</td>
@@ -511,14 +511,18 @@ const cancelModal2 = () => {
                   <div className="border-[1px] border-[#D6D6D6] shadow-[0_2px_4px_0_rgba(0,0,0,0.15)] w-[117px] h-[75px] absolute top-10 right-2 m-0  rounded-xs bg-white cursor-pointer z-10 ">
                   <p
                     className="flex items-center text-[#a7a7a7] justify-between text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
-                    onClick={()=>modifyCalendar(id)}
+                    onClick={()=>{modifyCalendar(id)
+                      setIsOpenOption(null);
+                    }}
                   >
                     수정하기 <PencilLine size={15} color="#a7a7a7" className="ml-1" />
                   </p>
                   <Divider className="w-full" />
                   <p
                     className="flex items-center text-[#fd3c56] justify-between text-[16px] font-normal leading-none tracking-[0%] pl-4 pr-4 pt-2.5 pb-2.5 cursor-pointer"
-                    onClick={()=>openModal(id)}
+                    onClick={()=>{openModal(id)
+                      setIsOpenOption(null);
+                    }}
                   >
                     삭제하기 <Trash2 size={15} color="#fd3c56" className="ml-1" />
                   </p>
