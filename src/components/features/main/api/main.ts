@@ -32,3 +32,25 @@ export const getMainCalendar = async () => {
     return null;
   }
 };
+
+// 메인 페이지 공지사항 조회
+export const getMainNotice = async () => {
+  const res = await apiClient.get('/v1/notices/main-page');
+  if (res.data.success) {
+    return res.data.data;
+  } else {
+    console.error(res.data.message);
+    return null;
+  }
+};
+
+// 메인 페이지 faq 조회
+// export const getMainFaq = async () => {
+//   const res = await apiClient.get('/v1/faqs/main-page');
+//   if (res.data.success) {
+//     return res.data.data;
+//   } else {
+//     console.error(res.data.message);
+//     return null;
+//   }
+// }

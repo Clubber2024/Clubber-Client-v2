@@ -222,7 +222,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
 
   return (
     <>
-      <div className="max-w-5xl mx-auto sm:mx-[10%] flex flex-col">
+      <div className="max-w-5xl mx-auto flex flex-col">
         <Card className="mx-10 mt-12 mb-17">
           <div className="flex flex-row items-center px-5">
             <Image
@@ -411,7 +411,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
                   height={800}
                   className="object-cover blur-xs mb-6 relative"
                 />
-                <div className="text-center absolute -bottom-40 left-50 md:-bottom-45 md:left-200 transform -translate-x-1/2 -translate-y-1/2 bg-transparent py-11 px-13 md:px-30">
+                <div className="text-center absolute -bottom-40 left-50 md:-bottom-45 md:left-225 transform -translate-x-1/2 -translate-y-1/2 bg-transparent py-11 px-13">
                   <p className="text-gray/900 font-taebaek text-2xl mb-4 font-medium">
                     리뷰 기능 9월 중순 OPEN ‼️
                   </p>

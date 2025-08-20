@@ -34,6 +34,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const today = new Date();
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -49,6 +50,12 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
   const lastMonthLastDate = getDate(new Date(year, month - 1, 0));
 
   const totalCells = curMonthFirstDay + curMonthLastDate > 35 ? 42 : 35;
+
+  // 관리자 여부
+  useEffect(() => {
+    const adminStatus = localStorage.getItem('isAdmin');
+    setIsAdmin(adminStatus === 'true');
+  }, []);
 
   // 즐겨찾기 상태 가져오기
   useEffect(() => {
@@ -73,6 +80,9 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
       };
 
       fetchFavoriteStatuses();
+    } else if (!isLoggedIn) {
+      // 로그인하지 않은 경우 즐겨찾기 상태 초기화
+      setFavoriteStatuses({});
     }
   }, [isLoggedIn, nonAlwaysCalendars]);
 
@@ -272,7 +282,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
             return (
               <Card
                 key={i}
-                className={`flex flex-col p-1.5 h-[110px] rounded-sm gap-0 hover:shadow-md ${
+                className={`flex flex-col p-1.5 h-[110px] rounded-sm gap-0 hover:shadow-md scrollbar-hide ${
                   isCurrentMonth
                     ? 'bg-white hover:bg-white/80 transition-colors duration-300 cursor-pointer'
                     : 'bg-white/50'
@@ -317,13 +327,15 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                             </span>
                             <span className="ml-1 break-words">{item.clubName}</span>
                           </div>
-                          <Star
-                            strokeWidth={2}
-                            color="#FFD000"
-                            fill={favoriteStatuses[item.clubId]?.isFavorite ? '#FFD000' : 'none'}
-                            className="size-4 mt-0.5 cursor-pointer transition-all duration-200 hover:scale-110"
-                            onClick={(e) => handleStarClick(item.clubId, e)}
-                          />
+                          {!isAdmin && (
+                            <Star
+                              strokeWidth={2}
+                              color="#FFD000"
+                              fill={favoriteStatuses[item.clubId]?.isFavorite ? '#FFD000' : 'none'}
+                              className="size-4 mt-0.5 cursor-pointer transition-all duration-200 hover:scale-110"
+                              onClick={(e) => handleStarClick(item.clubId, e)}
+                            />
+                          )}
                         </div>
                       );
                     })}
@@ -424,17 +436,19 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                                 <div className="flex-1">
                                   <div className="flex flex-row items-center gap-2">
                                     <div className="font-medium text-gray-900">{item.clubName}</div>
-                                    <Star
-                                      strokeWidth={2}
-                                      color="#FFD000"
-                                      fill={
-                                        favoriteStatuses[item.clubId]?.isFavorite
-                                          ? '#FFD000'
-                                          : 'none'
-                                      }
-                                      className="size-4 mt-0.5 cursor-pointer transition-all duration-200 hover:scale-110"
-                                      onClick={(e) => handleStarClick(item.clubId, e)}
-                                    />
+                                    {!isAdmin && (
+                                      <Star
+                                        strokeWidth={2}
+                                        color="#FFD000"
+                                        fill={
+                                          favoriteStatuses[item.clubId]?.isFavorite
+                                            ? '#FFD000'
+                                            : 'none'
+                                        }
+                                        className="size-4 mt-0.5 cursor-pointer transition-all duration-200 hover:scale-110"
+                                        onClick={(e) => handleStarClick(item.clubId, e)}
+                                      />
+                                    )}
                                   </div>
                                   <div className="text-xs text-blue-600 mt-1">
                                     {new Date(item.startAt).toLocaleDateString()} ~{' '}

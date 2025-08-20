@@ -4,8 +4,8 @@ import Link from 'next/link';
 export default function GoToNotion() {
   return (
     <div className="bg-black rounded-2xl text-white h-full flex flex-col justify-between">
-      <div className="text-center">
-        <h3 className="text-2xl font-extrabold pt-6 mb-6">
+      <div className="text-center h-full p-0 m-0">
+        <h3 className="text-2xl font-extrabold pt-6 mb-8">
           클러버가 <br /> 궁금하시다면?
         </h3>
 
@@ -18,7 +18,7 @@ export default function GoToNotion() {
 
         {/* SNS 섹션 */}
         <div className="flex justify-end">
-          <div className="w-64 bg-white rounded-tl-3xl p-2.5 pb-2">
+          <div className="w-64  bg-white rounded-tl-3xl p-2.5 shadow-none">
             <div className="flex items-center justify-center">
               <span className="text-md text-black font-semibold mr-3"># 클러버 SNS</span>
 

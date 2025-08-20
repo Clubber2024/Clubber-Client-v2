@@ -12,6 +12,7 @@ interface CalendarModalProps {
   onClose: () => void;
   isAlways: boolean;
   month: number;
+  calendarNum?: number;
 }
 
 export default function CalendarModal({
@@ -20,6 +21,7 @@ export default function CalendarModal({
   onClose,
   isAlways,
   month,
+  calendarNum = 0,
 }: CalendarModalProps) {
   const [clubData, setClubData] = useState<CalendarClubData | null>(null);
   const [alwaysClubData, setAlwaysClubData] = useState<AlwaysNextClubData | null>(null);
@@ -37,14 +39,15 @@ export default function CalendarModal({
         setAllAlwaysData(response.data.content);
         setAlwaysClubData(response.data.content[0]);
         setHasNext(response.data.hasNext);
-        setSize(response.data.size + 1); // size + 1 = 실제 항목 개수 (size: 1이면 실제로는 2개)
+        // calendarNum + 1 = 실제 항목 개수 (calendarNum: 0이면 1개, 1이면 2개)
+        setSize(calendarNum + 1);
       } else {
         const response = await getCalendarClubData(clubId!);
         setClubData(response.data);
       }
     };
     fetchClubData();
-  }, [clubId, isOpen, isAlways, month]);
+  }, [clubId, isOpen, isAlways, month, calendarNum]);
 
   // 모집기간 포맷팅 함수
   const getRecruitmentPeriod = () => {

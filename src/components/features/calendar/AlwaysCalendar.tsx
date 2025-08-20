@@ -14,10 +14,12 @@ interface AlwaysCalendarProps {
 export default function AlwaysCalendar({ alwaysCalendars, month }: AlwaysCalendarProps) {
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
   const [selectedClubId, setSelectedClubId] = useState<number | null>(null);
+  const [selectedCalendarNum, setSelectedCalendarNum] = useState<number>(0);
 
   const handleClubClick = async (calendar: AlwaysCalendarType) => {
     setIsCalendarModalOpen(true);
     setSelectedClubId(calendar.clubId);
+    setSelectedCalendarNum(calendar.calendarNum);
   };
 
   return (
@@ -35,7 +37,7 @@ export default function AlwaysCalendar({ alwaysCalendars, month }: AlwaysCalenda
             alwaysCalendars.map((calendar) => (
               <Button
                 key={calendar.clubId}
-                className="text-xs md:text-md w-fit px-2 py-0 md:py-0.5 justify-start rounded-md transition-colors bg-secondary text-gray-800 hover:bg-primary/70"
+                className="text-xs md:text-md w-fit px-2 py-0 md:py-0.5 justify-start rounded-md transition-colors bg-primary/30 text-gray-800 hover:bg-primary/70"
                 onClick={() => handleClubClick(calendar)}
               >
                 {calendar.clubName}
@@ -56,6 +58,7 @@ export default function AlwaysCalendar({ alwaysCalendars, month }: AlwaysCalenda
           onClose={() => setIsCalendarModalOpen(false)}
           isAlways={true}
           month={month}
+          calendarNum={selectedCalendarNum}
         />
       )}
     </div>
