@@ -243,7 +243,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
           </div>
         </Card></div>
         <Container>
-        <Divider className="shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] border-black mt-[46px] " />
+        <Divider className="shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] border-black mt-[46px]" />
         {content ? (
           <div className="flex flex-col justify-center items-center mt-[30px]">
             <RecruitStatusLabel status={content.recruitStatus} />
