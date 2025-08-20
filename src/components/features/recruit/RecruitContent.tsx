@@ -202,7 +202,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
   };
 
   return (
-    <div className='w-full md:w-[70%]'>
+    <div className='w-full md:w-[70%] mx-auto'>
     <div className='flex justify-center mb-[-50px]'>
      <Card className="mt-[60px] w-[100%]">
           <div className="flex flex-row items-center px-5">
