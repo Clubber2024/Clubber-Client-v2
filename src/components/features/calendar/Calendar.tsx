@@ -301,7 +301,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                   </span>
 
                   {/* PC에서는 상세 정보 표시, 모바일에서는 개수만 표시 */}
-                  <div className="hidden md:flex flex-col gap-1 overflow-y-auto flex-1">
+                  <div className="hidden md:flex flex-col gap-1 overflow-y-auto scrollbar-hide flex-1">
                     {nonAlwaysCalendars.map((item) => {
                       const isStartDate =
                         currentMonthDate === getDate(new Date(item.startAt)) &&

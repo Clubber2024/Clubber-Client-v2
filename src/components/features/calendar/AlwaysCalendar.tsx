@@ -32,7 +32,7 @@ export default function AlwaysCalendar({ alwaysCalendars, month }: AlwaysCalenda
         </div>
 
         {/* 동아리 목록 */}
-        <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 overflow-x-auto md:overflow-x-visible">
+        <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 overflow-x-auto scrollbar-hide md:overflow-x-visible">
           {alwaysCalendars.length > 0 ? (
             alwaysCalendars.map((calendar) => (
               <Button
