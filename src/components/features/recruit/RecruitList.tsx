@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { getClubRecruitList, getRecruitList } from './api/recruit';
+import Loading from '@/components/common/Loading';
 
 interface RecruitListProps {
   recruitId: number;
@@ -27,6 +28,7 @@ export default function RecruitList({clubId}:{clubId:string}) {
   const [totalPages, setTotalPages] = useState(0);
   const [pageSize] = useState(8); // 한 페이지에 표시할 항목 수 (2행 4열)
   const [sort] = useState('desc'); // 정렬 기준
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
     // TODO: 일반 사용자용 모집글 조회 API 호출
@@ -34,6 +36,7 @@ export default function RecruitList({clubId}:{clubId:string}) {
     console.log(res);
     setRecruitList(res.content);
     setTotalPages(res.totalPages);
+    setIsLoading(false);
   };
 
   const fetchClubData = async () => {
@@ -41,6 +44,7 @@ export default function RecruitList({clubId}:{clubId:string}) {
     console.log(res);
     setRecruitList(res.content);
     setTotalPages(res.totalPages);
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -55,13 +59,17 @@ export default function RecruitList({clubId}:{clubId:string}) {
     setCurrentPage(selected + 1);
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <div className="flex justify-center mt-15 mb-20 ">
         <p className="font-[Pretendard Variable] font-semibold text-[30px] leading-[100%] tracking-[0%] text-center">
           모집글
         </p>
-        </div>
+      </div>
       <div className="mt-10 mb-10">
         {recruitList && recruitList.length > 0 ? (
           <>
@@ -82,9 +90,9 @@ export default function RecruitList({clubId}:{clubId:string}) {
                       <p className="font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate whitespace-nowrap overflow-hidden w-full max-w-full cursor-pointer">
                         {item.title}
                       </p>
-                                             <p className="cursor-pointer text-[16px] leading-[140%] tracking-[0] text-[#888888] break-words w-full max-w-full flex-1 overflow-hidden">
-                         {item.content}
-                       </p>
+                      <p className="cursor-pointer text-[16px] leading-[140%] tracking-[0] text-[#888888] break-words w-full max-w-full flex-1 overflow-hidden">
+                        {item.content}
+                      </p>
                     </div>
                   </div>
                 </Card>
@@ -104,12 +112,12 @@ export default function RecruitList({clubId}:{clubId:string}) {
               disabledLinkClassName="text-gray-400 cursor-not-allowed"
             />
           </>
-                 ) : (
-           <EmptyState 
-             title="모집글이 없습니다."
-             description="현재 등록된 모집글이 없습니다."
-           />
-         )}
+        ) : (
+          <EmptyState 
+            title="모집글이 없습니다."
+            description="현재 등록된 모집글이 없습니다."
+          />
+        )}
       </div>
     </>
   );
