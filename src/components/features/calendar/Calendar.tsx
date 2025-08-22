@@ -539,6 +539,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
       {/* 모달들 */}
       {isModalOpen && (
         <Modal
+          isOpen={isModalOpen}
           message={modalMessage}
           onClose={() => setIsModalOpen(false)}
           onConfirm={() => {}}
@@ -558,6 +559,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
 
       {isLoginModalOpen && (
         <Modal
+          isOpen={isLoginModalOpen}
           message={modalMessage}
           onClose={() => setIsLoginModalOpen(false)}
           onConfirm={() => {
