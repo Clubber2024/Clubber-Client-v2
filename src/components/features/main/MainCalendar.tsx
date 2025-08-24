@@ -35,7 +35,7 @@ export default function MainCalendar() {
   const todayYear = getYear(today);
 
   return (
-    <Card className="p-6 h-full gap-4 md:gap-6">
+    <Card className="p-6 pt-4 md:pt-6 h-full gap-4 md:gap-6">
       <div className="flex flex-row items-center justify-between">
         <Link href="/calendar" className="hover:text-primary transition-colors duration-300">
           <h3 className="text-md md:text-lg font-bold">오늘, 모집 마감 🔥</h3>
