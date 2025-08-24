@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { getMonth, getDate, getDay } from 'date-fns';
 import { ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { CalendarData, NonAlwaysCalendar } from '@/types/calendar/calendarData';
 import CalendarModal from './CalendarModal';
 import Loading from '@/components/common/Loading';
@@ -16,16 +15,25 @@ import { addFavorite, deleteFavorite, getFavoriteStatus } from '../bookmark/api/
 interface CalendarProps {
   calendarData: CalendarData | null;
   nonAlwaysCalendars: NonAlwaysCalendar[];
+  currentMonth: { year: number; month: number };
+  onMonthChange: (year: number, month: number) => void;
 }
 
-export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarProps) {
+export default function Calendar({
+  calendarData,
+  nonAlwaysCalendars,
+  currentMonth,
+  onMonthChange,
+}: CalendarProps) {
   const router = useRouter();
   const { isLoggedIn } = useLoginStore();
   const [favoriteStatuses, setFavoriteStatuses] = useState<{
     [key: number]: { isFavorite: boolean; favoriteId?: number };
   }>({});
 
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(() => {
+    return new Date(currentMonth.year, currentMonth.month - 1, 1);
+  });
   const [modalMessage, setModalMessage] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -56,6 +64,11 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
     const adminStatus = localStorage.getItem('isAdmin');
     setIsAdmin(adminStatus === 'true');
   }, []);
+
+  // currentMonth prop이 변경될 때 currentDate 동기화
+  useEffect(() => {
+    setCurrentDate(new Date(currentMonth.year, currentMonth.month - 1, 1));
+  }, [currentMonth.year, currentMonth.month]);
 
   // 즐겨찾기 상태 가져오기
   useEffect(() => {
@@ -98,6 +111,11 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
     }
 
     setCurrentDate(newDate);
+
+    // 부모 컴포넌트에 월 변경 알림 (API 호출을 위해)
+    const newYear = newDate.getFullYear();
+    const newMonth = newDate.getMonth() + 1;
+    onMonthChange(newYear, newMonth);
   };
 
   if (!calendarData) {
@@ -174,14 +192,14 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
         setIsModalOpen(true);
       } else {
         // 즐겨찾기 추가
-        await addFavorite(clubId);
+        const response = await addFavorite(clubId);
 
-        // 즉시 UI 상태 업데이트
+        // 즉시 UI 상태 업데이트 (실제 favoriteId 사용)
         setFavoriteStatuses((prev) => ({
           ...prev,
           [clubId]: {
             isFavorite: true,
-            favoriteId: Date.now(), // 임시 ID (실제로는 API 응답에서 받아야 함)
+            favoriteId: response.favoriteId,
           },
         }));
 
@@ -189,22 +207,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
         setIsModalOpen(true);
       }
 
-      // 백그라운드에서 실제 상태 동기화 (즐겨찾기 추가 시에만)
-      if (!currentStatus?.isFavorite) {
-        try {
-          const newStatus = await getFavoriteStatus(clubId);
-          setFavoriteStatuses((prev) => ({
-            ...prev,
-            [clubId]: {
-              isFavorite: newStatus.isFavorite,
-              favoriteId: newStatus.favoriteId,
-            },
-          }));
-        } catch (syncError) {
-          console.error('즐겨찾기 상태 동기화 실패:', syncError);
-          // 동기화 실패해도 UI는 이미 업데이트됨
-        }
-      }
+      // 백그라운드 동기화 제거 - 이미 실제 favoriteId를 받아왔음
     } catch (error) {
       console.error('즐겨찾기 처리 중 오류:', error);
       setModalMessage('즐겨찾기 처리 중 오류가 발생했습니다.');
@@ -213,43 +216,47 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
   };
 
   return (
-    <div className="flex justify-center items-center bg-primary md:my-10 mt-2 rounded-lg">
+    <div
+      className="flex justify-center items-center bg-white md:bg-primary md:my-10 mt-0 md:rounded-lg border-y-[0.5px] border-[#0000000a] md:border-none"
+      style={{
+        boxShadow:
+          '0 -1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.1)',
+      }}
+    >
       <div className="w-full">
         {/* 헤더 */}
-        <div className="flex flex-row justify-between items-center w-full px-5">
-          <div className="flex flex-row items-center">
-            <h1 className="text-white py-6 pl-2 text-4xl md:text-6xl font-bold">
+        <div className="flex flex-row justify-between items-center w-full px-3 md:px-5">
+          <div className="flex flex-row items-center mt-2 md:mt-0">
+            <h1 className="md:text-white text-black pt-2 pb-1 md:py-6 pl-2 text-xl md:text-6xl font-semibold md:font-bold">
               {year}.{String(month).padStart(2, '0')}
             </h1>
-            <div className="flex items-center ml-8 text-white">
+            <div className="flex items-center md:ml-8 text-white">
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-white hover:bg-white/20 py-4"
+                className="md:text-white text-black hover:bg-white/20 py-4 gap-0"
                 onClick={() => changeMonth(-1)}
               >
-                <ChevronLeft className="size-8 stroke-[2.5]" />
+                <ChevronLeft className="size-4 md:size-8 stroke-[2.5]" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-white font-extrabold hover:bg-white/20 p-2"
+                className="md:text-white text-black font-extrabold hover:bg-white/20 md:p-2 px-0 gap-0"
                 onClick={() => changeMonth(+1)}
               >
-                <ChevronRight className="size-8 stroke-[2.5]" />
+                <ChevronRight className="size-4 md:size-8 stroke-[2.5]" />
               </Button>
             </div>
           </div>
         </div>
 
         {/* 요일 헤더 */}
-        <div className="grid grid-cols-7 px-4 gap-1">
+        <div className="grid grid-cols-7 px-4 gap-5 md:gap-1">
           {weekDays.map((day) => (
             <div
               key={day}
-              className={`text-white font-bold p-2 text-center ${
-                day === '일' ? 'text-red-500' : ''
-              }`}
+              className="md:text-white text-black text-sm md:text-base font-semibold md:font-bold p-2 text-center"
             >
               {day}
             </div>
@@ -257,7 +264,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
         </div>
 
         {/* 날짜 그리드 */}
-        <div className="grid grid-cols-7 gap-1 md:gap-1.5 p-2 md:p-4">
+        <div className="grid grid-cols-7 gap-0 md:gap-1.5 px-4 md:p-4">
           {Array.from({ length: totalCells }, (_, i) => {
             const date = i - curMonthFirstDay + 1;
             const currentMonthDate = date;
@@ -279,23 +286,38 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
               ? getEventsForDate(date, month)
               : { startEvents: [], endEvents: [] };
 
+            // 그리드 위치에 따른 border 클래스 결정
+            const colIndex = i % 7;
+            const rowIndex = Math.floor(i / 7);
+            const isLastRow = rowIndex === Math.floor((totalCells - 1) / 7);
+
+            let borderClasses = '';
+            if (colIndex < 6) {
+              // 오른쪽 구분선 (마지막 열 제외)
+              borderClasses += 'border-r-[0.5px] border-[#70707080]';
+            }
+            if (rowIndex === 0) {
+              // 첫 번째 행의 위쪽 구분선
+              borderClasses += ' border-t-[0.5px] border-[#70707080]';
+            }
+            if (!isLastRow) {
+              // 아래쪽 구분선 (마지막 행 제외)
+              borderClasses += ' border-b-[0.5px] border-[#70707080]';
+            }
+
             return (
-              <Card
+              <div
                 key={i}
-                className={`flex flex-col p-1.5 h-[110px] rounded-sm gap-0 hover:shadow-md scrollbar-hide ${
+                className={`flex flex-col p-1.5 h-[90px] md:h-[110px] gap-0 hover:shadow-md scrollbar-hide ${borderClasses} ${
                   isCurrentMonth
-                    ? 'bg-white hover:bg-white/80 transition-colors duration-300 cursor-pointer'
+                    ? 'bg-white hover:bg-white/80 transition-colors duration-300'
                     : 'bg-white/50'
-                } ${isToday ? 'ring-2 ring-primary' : ''}`}
+                }`}
                 onClick={() => onDateClick(date, isCurrentMonth)}
               >
                 <div className="flex flex-col h-full">
                   <span
-                    className={`text-base ${isCurrentMonth ? 'text-gray-900' : 'text-gray-500'} ${
-                      isToday
-                        ? 'w-7 h-7 rounded-full bg-primary text-white text-center leading-7'
-                        : ''
-                    }`}
+                    className={`text-sm text-center font-semibold md:font-medium  md:text-left md:text-base ${isCurrentMonth ? 'text-gray-900' : 'text-gray-400'} ${isToday ? 'flex items-center justify-center size-6 md:size-7 rounded-full bg-primary text-white mx-auto md:mx-0' : ''}`}
                   >
                     {displayDate}
                   </span>
@@ -345,14 +367,14 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                   <div className="md:hidden flex flex-col gap-1 mt-auto justify-center">
                     {startEvents.length > 0 && (
                       <div className="flex items-center justify-center">
-                        <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded-full font-medium">
+                        <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium">
                           {startEvents.length}개
                         </span>
                       </div>
                     )}
                     {endEvents.length > 0 && (
                       <div className="flex items-center justify-center">
-                        <span className="text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded-full font-medium">
+                        <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
                           {endEvents.length}개
                         </span>
                       </div>
@@ -363,7 +385,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
                     )}
                   </div>
                 </div>
-              </Card>
+              </div>
             );
           })}
         </div>
@@ -539,6 +561,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
       {/* 모달들 */}
       {isModalOpen && (
         <Modal
+          isOpen={isModalOpen}
           message={modalMessage}
           onClose={() => setIsModalOpen(false)}
           onConfirm={() => {}}
@@ -558,6 +581,7 @@ export default function Calendar({ calendarData, nonAlwaysCalendars }: CalendarP
 
       {isLoginModalOpen && (
         <Modal
+          isOpen={isLoginModalOpen}
           message={modalMessage}
           onClose={() => setIsLoginModalOpen(false)}
           onConfirm={() => {
