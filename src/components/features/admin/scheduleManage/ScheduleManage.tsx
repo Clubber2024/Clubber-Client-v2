@@ -304,13 +304,20 @@ const handleStartDateChange = (selectedData: Date) => {
   setStartDate(selectedData);
   setCalendarIsOpen(false);     // 달력 닫기
   
-  // setCalendarIsOpen(false);
+  // 시작일자가 마감일자보다 늦은 경우 마감일자를 시작일자로 설정
+  if (selectedData > endDate) {
+    setEndDate(selectedData);
+  }
 };
 
 const handleEndDateChange = (selectedData: Date) => {
-  setEndDate(selectedData);
+  // 마감일자가 시작일자보다 이전인 경우 시작일자로 설정
+  if (selectedData < startDate) {
+    setEndDate(startDate);
+  } else {
+    setEndDate(selectedData);
+  }
   setEndCalendarIsOpen(false);
-  // setCalendarIsOpen(false);
 };
 
 const formatDateTime = (dateObjOrStr: Date, timeStr: string) => {
@@ -754,7 +761,7 @@ const cancelModal2 = () => {
                    )}
                    {endCalendarIsOpen && recruitType !== '상시모집' && (
                      <div className="absolute left-60 p-2 mt-2 z-10 bg-white shadow-md rounded-md border border-gray-300">
-                       <MyCalendar date={endDate} onChange={handleEndDateChange} />
+                       <MyCalendar date={endDate} onChange={handleEndDateChange} minDate={startDate} />
                      </div>
                    )}
                  </>

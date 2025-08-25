@@ -199,7 +199,7 @@ export default function Calendar({
           ...prev,
           [clubId]: {
             isFavorite: true,
-            favoriteId: response.favoriteId,
+            favoriteId: response?.favoriteId ?? undefined,
           },
         }));
 
