@@ -126,8 +126,8 @@ const closeModal = () => {
           비밀번호 변경
         </p>
       </TitleDiv>
-<div className="w-full sm:w-[463px] m-auto mt-[62px] flex flex-col items-center justify-center">
-<p className="w-full font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] mb-[11px] text-[#202123] text-left">
+<div className="w-[90%] sm:w-[463px] m-auto mt-[62px] flex flex-col items-center justify-center">
+<p className="w-full font-semibold text-[18px] leading-[120%] tracking-[0%] mb-[11px] text-[#202123] text-left">
           현재 비밀번호
         </p>
         <div className="relative w-full">
@@ -145,7 +145,7 @@ const closeModal = () => {
           <img
             src={isShowOldPwChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
             onClick={handleShowOldPwChecked}
-            className="w-[30px] absolute top-1/2 -translate-y-1/2 right-[20px]"
+            className="w-[25px] sm:w-[30px] absolute top-1/2 -translate-y-1/2 right-[20px]"
           />
         </div>
 
@@ -167,7 +167,7 @@ const closeModal = () => {
           <img
             src={isShowPwChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
             onClick={handleShowPwChecked}
-            className="w-[30px] absolute top-2.5 right-[20px]"
+            className="w-[25px] sm:w-[30px] absolute top-1/2 -translate-y-1/2 right-[20px]"
           />
         </div>
         <p
@@ -198,7 +198,7 @@ const closeModal = () => {
           <img
             src={isShowPwConfirmChecked ? '/images/login/eye.png' : '/images/login/eye-off.png'}
             onClick={handleShowPwConfirmChecked}
-            className="w-[30px] absolute top-2.5 right-[20px]"
+            className="w-[25px] sm:w-[30px] absolute top-1/2 -translate-y-1/2 right-[20px]"
           />
         </div>
         <p

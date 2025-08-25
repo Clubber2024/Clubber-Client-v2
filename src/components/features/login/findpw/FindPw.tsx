@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { patchResetPW, postFindPwCode, postFindPwEmail } from './api/findPw';
 import { useRouter } from 'next/navigation';
 import Modal from '@/app/modal/Modal';
+import Timer from '@/components/ui/timer';
 
 export default function FindPw() {
   const router = useRouter();
@@ -62,6 +63,12 @@ export default function FindPw() {
 
   const handleEmailVerificationButton = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    if(id === ""){
+      setIdMessage("아이디를 입력해주세요.");
+      return;
+    }
+    
     if (!emailRegex.test(email)) {
       setIsVerifyEmail(false);
       setEmailMessage('올바른 이메일 형식이 아닙니다.');
@@ -100,6 +107,8 @@ export default function FindPw() {
       setIsVerifyEmail(true);
       setIdMessage("");
       setEmailMessage('인증번호를 보냈습니다. 인증번호가 오지 않으면 입력하신 정보가 회원정보와 일치하는지 확인해주세요.');
+      setShowTimer(true);
+      setStart(Date.now());
       return;
     } else{
       console.log(res.reason);
@@ -263,7 +272,8 @@ export default function FindPw() {
                 >
                   인증번호 입력
                 </p>
-                <div className="flex flex-row">
+                <div className="flex flex-row justify-between">
+                  <div className="relative w-[262px]">
                   <Input
                     id="code"
                     name="code"
@@ -273,7 +283,11 @@ export default function FindPw() {
                     autoComplete="off"
                     className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
                   />
-                  {/* <div className={styles.timer_container}>{showTimer ? <Timer key={start} /> : ''}</div> */}
+                  {showTimer?<Timer key={start} className="absolute top-1/2 -translate-y-1/2 right-3"/>
+                  :""}
+                  </div>
+                  
+                 
                   <Button onClick={handleVerifyCode} className="h-[40px]  rounded-[5px] w-[90px] sm:w-[100px]">
                     인증번호 확인
                   </Button>

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { postFindId, postFindIdCode, postFindIdEmail } from './api/findId';
 import { useRouter } from 'next/navigation';
+import Timer from '@/components/ui/timer';
 
 export default function FindId() {
   const router = useRouter();
@@ -64,6 +65,9 @@ export default function FindId() {
       setIsVerifyEmail(true);
       fetchEmailData();
       setEmailMessage('인증번호를 전송했습니다. 인증번호가 오지 않으면 입력하신 정보가 회원정보와 일치하는지 확인해주세요.');
+      setShowTimer(true);
+      // 타이머 재시작을 위해 새로운 timestamp 설정
+      setStart(Date.now());
     }
   };
 
@@ -182,7 +186,8 @@ export default function FindId() {
               >
                 인증번호 입력
               </p>
-              <div className="flex flex-row">
+              <div className="flex flex-row justify-between">
+                <div className="relative w-[262px]">
                 <Input
                   id="code"
                   name="code"
@@ -192,7 +197,10 @@ export default function FindId() {
                   autoComplete="off"
                   className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
                 />
-                {/* <div className={styles.timer_container}>{showTimer ? <Timer key={start} /> : ''}</div> */}
+                {showTimer?<Timer key={start} className="absolute top-1/2 -translate-y-1/2 right-3"/>
+                :""}
+                </div>
+                
                 <Button onClick={handleVerifyCode} className="h-[40px] rounded-[5px] w-[90px] sm:w-[100px]">
                   인증번호 확인
                 </Button>

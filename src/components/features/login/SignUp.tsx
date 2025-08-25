@@ -7,6 +7,7 @@ import SearchClub from './signup/SearchClub';
 import axios from 'axios';
 import Modal from '@/app/modal/Modal';
 import { useRouter } from 'next/navigation';
+import Timer from '@/components/ui/timer';
 
 export default function SignUp() {
   const router = useRouter();
@@ -292,9 +293,11 @@ export default function SignUp() {
       // setIsVerifyEmail(true);
       // setEmailMessage('인증번호를 전송했습니다.');
       setEmailMessage(
-        '인증번호를 발송했습니다. 인증번호가 오지 않으면 입력하신 정보가 올바른지 확인해 주세요.'
+        '인증번호를 발송했습니다. 인증번호가 오지 않으면 입력하신 이메일이 올바른지 확인해 주세요.'
       );
       setIsCode(true);
+      setShowTimer(true);
+      setStart(Date.now());
     }
   };
 
@@ -578,7 +581,8 @@ mb-[9px]"
             >
               인증 코드
             </p>
-            <div className="flex flex-row">
+            <div className="flex flex-row justify-between">
+              <div className="relative w-[262px]">
               <Input
                 id="code"
                 name="code"
@@ -586,12 +590,16 @@ mb-[9px]"
                 onChange={onChangeCode}
                 placeholder="인증코드 입력"
                 autoComplete="off"
-                className="h-[40px] rounded-[5px] mr-2"
+                className="h-[40px] rounded-[5px] mr-2 text-xs sm:text-sm"
               />
-              {/* <div className={styles.timer_container}>{showTimer ? <Timer key={start} /> : ''}</div> */}
-              <Button onClick={handleVerfiyCode} className="h-[40px] rounded-[5px]">
+              {showTimer?<Timer key={start} className="absolute top-1/2 -translate-y-1/2 right-3"/>
+              :""}
+              </div>
+             
+              <Button onClick={handleVerfiyCode} className="h-[40px] w-[90px] sm:w-[100px] rounded-[5px] rounded-[5px]">
                 인증번호 확인
               </Button>
+              
             </div>
 
             <p className="font-pretendard font-normal text-[10px] leading-[100%] tracking-[0] mt-2 text-red-400">

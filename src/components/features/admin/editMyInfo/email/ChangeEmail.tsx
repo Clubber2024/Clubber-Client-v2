@@ -7,6 +7,7 @@ import Modal from "@/app/modal/Modal";
 import TitleDiv from "@/components/ui/title-div";
 import { useRouter } from "next/navigation";
 import { patchUpdateEmail, postUpdateCode, postUpdateEmail } from "./api/changeEmail";
+import Timer from "@/components/ui/timer";
 
 export default function ChangeEmail() {
   const router = useRouter();
@@ -21,6 +22,8 @@ export default function ChangeEmail() {
   const [emailCodeMessage, setEmailCodeMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [showTimer, setShowTimer] = useState(false);
+  const [start, setStart] = useState(0);
 
   // 이메일 인증 api
   const fetchUpdateEmail = async () => {
@@ -84,6 +87,8 @@ export default function ChangeEmail() {
       setIsVerifyEmail(true);
       fetchUpdateEmail();
       setEmailMessage('인증번호를 전송했습니다.');
+      setShowTimer(true);
+      setStart(Date.now());
     }
   };
 
@@ -120,16 +125,16 @@ export default function ChangeEmail() {
       <div className="w-full flex flex-col items-center justify-center mt-[10%] md:mt-[8%]">
         <div className="flex flex-col items-center">
           {/* 새 이메일 주소 */}
-          <div className="w-[463px] text-left mb-2">
-            <p className="font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] text-[#202123]">새 이메일 주소</p>
+          <div className="w-full md:w-[463px] text-left mb-2">
+            <p className="font-semibold text-[18px] leading-[120%] tracking-[0%] text-[#202123]">새 이메일 주소</p>
           </div>
-          <div className="flex flex-row items-center justify-between w-[463px] mb-0">
+          <div className="flex flex-row items-center justify-between w-full md:w-[463px] mb-0">
             <Input
               id="email"
               name="email"
               value={email}
               onChange={onChangeEmail}
-              className="rounded-[5px] w-[70%] h-[50px] text-[#202123] flex items-center pl-[11px] mt-[13px] mb-[70px] mr-[5px] text-[16px]font-normal"
+              className="rounded-[5px] w-[70%] h-[50px] text-[#202123] flex items-center pl-[11px] mt-[13px] mb-[70px] mr-[5px] text-[16px]"
               placeholder="새 이메일 입력"
               autoComplete="off"
             />
@@ -144,22 +149,26 @@ export default function ChangeEmail() {
           <p className={`w-[100%] mt-[-67px] mb-[20px] text-[11px] ${isVerifyEmail ? "text-primary" : "text-red-500"}`}>{emailMessage}</p>
 
           {/* 인증 코드 */}
-          <div className="w-[463px] text-left mb-1 mt-2">
-            <p className="font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] text-[#202123]">인증 코드</p>
+          <div className="w-full md:w-[463px] text-left mb-1 mt-2">
+            <p className="font-semibold text-[18px] leading-[120%] tracking-[0%] text-[#202123]">인증 코드</p>
           </div>
-          <div className="flex flex-row items-center justify-between w-[463px] mb-0">
+          <div className="flex flex-row items-center justify-between w-full md:w-[463px] mb-0">
+            <div className="relative w-[70%]">
             <Input
               id="code"
               name="code"
               value={emailCode}
               onChange={onChangeCode}
-              className="rounded-[5px] w-[70%] h-[50px] text-[#202123] flex items-center pl-[11px] mt-[13px] mb-[70px] mr-[5px] text-[16px] font-normal"
+              className="rounded-[5px] w-full h-[50px] text-[#202123] flex items-center pl-[11px] mt-[13px] mb-[70px] mr-[5px] text-[16px]"
               placeholder="인증코드 입력"
               autoComplete="off"
             />
+            {showTimer?<Timer key={start} className="absolute top-8 right-3"/>
+            :""}
+            </div>
             <Button
               onClick={handleVerfiyCode}
-              className={`${emailCode ? "bg-primary" : "bg-[#d6d6d6]"} w-[25%] h-[50px] rounded-[5px] border-none font-normal text-[15px] text-white cursor-pointer mt-[13px] mb-[70px]`}
+              className={`${emailCode ? "bg-primary" : "bg-[#d6d6d6]"} w-[25%] h-[50px] rounded-[5px] border-none text-[15px] text-white cursor-pointer mt-[13px] mb-[70px]`}
               type="button"
             >
               인증번호 확인
@@ -169,7 +178,7 @@ export default function ChangeEmail() {
 
           {/* 완료 버튼 */}
           <Button
-            className={`w-[463px] md:w-[463px] h-[50px] rounded-[5px] ${isNext ? "bg-primary" : "bg-[#9c9c9c80]"} text-white font-bold text-[16px] text-center mb-[20%] mt-[50px]`}
+            className={`w-full md:w-[463px] h-[50px] rounded-[5px] ${isNext ? "bg-primary" : "bg-[#9c9c9c80]"} text-white font-bold text-[16px] text-center mb-[20%] mt-[50px]`}
             onClick={onClickCompleteButton}
             disabled={!isNext}
           >

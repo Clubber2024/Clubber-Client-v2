@@ -257,30 +257,27 @@ export default function SearchClub({
     z-[1000] "
         >
           {' '}
-          {suggestion.length > 0 ? (
-            suggestion.map((club: Club, index) => (
-              <li
-                key={index}
-                className="relative pl-[27px] p-[10px] text-xs hover:bg-[#dddddd] cursor-pointer"
-                onClick={()=>handleClubNameSelect(club)}
-              >
-                <img src="/images/login/search2.png" className="absolute w-3.5 top-2.5 left-2 " />
-                {club.clubName}
-              </li>
-            ))
-          ) : (
+          {suggestion.length > 0 && suggestion.map((club: Club, index) => (
             <li
+              key={index}
               className="relative pl-[27px] p-[10px] text-xs hover:bg-[#dddddd] cursor-pointer"
-              onClick={() => {
-                setIsType(false);
-                setIsName(false);
-                setShowSuggestions(false);
-              }}
+              onClick={()=>handleClubNameSelect(club)}
             >
               <img src="/images/login/search2.png" className="absolute w-3.5 top-2.5 left-2 " />
-              기타(직접입력)
+              {club.clubName}
             </li>
-          )}
+          ))}
+          <li
+            className="relative pl-[27px] p-[10px] text-xs hover:bg-[#dddddd] cursor-pointer"
+            onClick={() => {
+              setIsType(false);
+              setIsName(false);
+              setShowSuggestions(false);
+            }}
+          >
+            <img src="/images/login/search2.png" className="absolute w-3.5 top-2.5 left-2 " />
+            기타(직접입력)
+          </li>
         </ul>
       )}
       {type === 'signup' && (

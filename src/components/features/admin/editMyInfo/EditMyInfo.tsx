@@ -19,6 +19,7 @@ export default function EditMyInfo() {
   const [email, setEmail] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
 
 
   // Fetch admin profile
@@ -38,14 +39,20 @@ export default function EditMyInfo() {
   };
 
   const fetchAdminContactData = async () => {
+    if(insta === "" && etc === ""){
+      setContactMessage("인스타그램 또는 기타 연락수단을 입력해주세요.");
+      return;
+    } 
     const res = await patchAdminContact({ instagram: insta, etc: etc });
     if (res.success) {
+      setContactMessage("");
       setModalMessage("회원 정보 수정이 완료되었습니다.");
       setIsModalOpen(true);
     } else {
       setModalMessage("회원 정보 수정에 실패했습니다.");
       setIsModalOpen(true);
     }
+  
   };
 
   useEffect(() => {
@@ -163,7 +170,7 @@ export default function EditMyInfo() {
           <p className="mt-[55px] font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] text-[#202123]">
             연락수단
           </p>
-        
+          <p className="w-full mt-2 mb-[-8px] text-[11px] text-red-500">{contactMessage}</p>
           <p className="font-[Pretendard Variable] font-semibold text-[18px] leading-[120%] tracking-[0%] text-[#202123] mt-[35px]">
             1. 인스타그램
           </p>
