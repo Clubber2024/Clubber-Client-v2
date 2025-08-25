@@ -14,8 +14,9 @@ export const getFavoritePage = async (
 };
 
 //즐겨찾기 추가
-export const addFavorite = async (clubId: number): Promise<void> => {
-  await apiClient.post(`/v1/clubs/${clubId}/favorites`);
+export const addFavorite = async (clubId: number): Promise<{ favoriteId: number }> => {
+  const response = await apiClient.post(`/v1/clubs/${clubId}/favorites`);
+  return response.data.data;
 };
 
 //즐겨찾기 삭제
