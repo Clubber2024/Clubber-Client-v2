@@ -474,7 +474,7 @@ const cancelModal2 = () => {
   return(
     <>
     <TitleDiv><p className="font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">모집일정 관리</p></TitleDiv>
-    <div className="w-full mt-15">
+    <div className="w-full lg:w-[70%] mx-auto mt-10">
       <span className="flex items-center text-[#707070] font-medium text-base leading-[100%] tracking-normal cursor-pointer mb-2 ml-1" onClick={()=>setIsOpenToggle((prev)=>!prev)}>옵션 <ChevronDown size={12} /></span>
     {isOpenToggle?(   <div className="flex space-x-8 text-sm text-gray-600 font-normal select-none flex-col w-full mt-1">
     {(Object.entries(optionsData) as [Category, readonly string[]][]).map(([category, options]) => (
