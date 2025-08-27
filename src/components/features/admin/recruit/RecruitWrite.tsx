@@ -547,13 +547,13 @@ if(resLinkCalendar.success){
   return (
     <>
       <TitleDiv>
-        <p className="font-pretendard font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">
+        <p className="font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">
           모집글 작성
         </p>
       </TitleDiv>
       <div className="flex items-center justify-center mt-[32px] mb-[32px] flex-col w-full">
         <div className="flex flex-col shadow-sm w-full sm:w-[80%] pl-4 sm:pl-8 pr-4 sm:pr-8 pb-[32px]">
-          <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
+          <p className="font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
             제목
           </p>
           <div className="bg-[#ffffff]">

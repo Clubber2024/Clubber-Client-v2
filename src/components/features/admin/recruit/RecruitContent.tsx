@@ -2,10 +2,14 @@
 
 import Container from '@/components/ui/container';
 import Divider from '@/components/ui/divider';
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { getAdminRecruitContent } from './api/recruit';
+import { deleteAdminRecruit, getAdminRecruitContent } from './api/recruit';
 import RecruitStatusLabel from '@/components/ui/recruit-status-label';
+import { Button } from '@/components/ui/button';
+import { PencilLine, Trash2 } from 'lucide-react';
+import TitleDiv from '@/components/ui/title-div';
+import { useRouter } from 'next/navigation';
+import Modal from '@/app/modal/Modal';
 
 export interface AdminRecruitContentProps {
   clubId: number;
@@ -28,11 +32,14 @@ interface RecruitContentProps {
 }
 export default function RecruitContent({ recruitId }: RecruitContentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const [content, setContent] = useState<AdminRecruitContentProps>();
   const [formattedStartAt, setFormattedStartAt] = useState<string | null>(null);
   const [formattedEndAt, setFormattedEndAt] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isImgModalOpen, setIsImgModalOpen] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const fetchData = async () => {
     if (recruitId) {
@@ -89,8 +96,41 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
     }, [imageUrls]);
   };
 
+  const openModalDeleteRecruit = () => {
+    setIsOpenModal(true);
+    setModalMessage('해당 모집글을 정말 삭제하시겠습니까?');
+  };
+
+  const handleDeleteRecruit = async () => {
+    if (!recruitId) {
+      console.error('recruitId is undefined');
+      return;
+    }
+    const recruitIdNumber = parseInt(recruitId, 10);
+    if (isNaN(recruitIdNumber)) {
+      console.error('Invalid recruitId:', recruitId);
+      return;
+    }
+    const res = await deleteAdminRecruit(recruitIdNumber);
+    console.log(res);
+    router.back();
+  };
+
+  const handleEditRecruit = () => {
+    router.push(`/admin/recruitWrite?recruitId=${recruitId}`);
+  };
+
   return (
-    <div className='w-full lg:w-[70%] mx-auto flex justify-center items-center'>
+<>
+<TitleDiv> <p className="font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">
+          모집글 작성
+        </p></TitleDiv>
+    <div className='w-full lg:w-[70%] mx-auto flex flex-col justify-center items-center'>
+   <div className='flex flex-row w-full justify-end gap-2 mt-12 mb-[-90px]'>
+      <Button className='rounded-[3px]' onClick={handleEditRecruit}> <PencilLine/>
+      수정</Button>
+      <Button variant={'outline'} className='rounded-[3px]' onClick={openModalDeleteRecruit}> <Trash2/>삭제</Button>
+     </div>
       <Container>
         <Divider className="shadow-[0px_1px_1px_0px_rgba(0,0,0,0.25)] border-black mt-[20px] sm:mt-[46px]" />
         {content ? (
@@ -235,5 +275,17 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
         </div>
       )}
     </div>
+    {isOpenModal && (
+      <Modal
+        isOpen={isOpenModal}
+        message={modalMessage}
+        onConfirm={handleDeleteRecruit}
+        onCancel={() => setIsOpenModal(false)}
+        showConfirmButton={true}
+        confirmText='삭제'
+        cancelText='취소'
+      />
+    )}
+    </>
   );
 }

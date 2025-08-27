@@ -186,7 +186,7 @@ const [startDate, setStartDate] = useState<Date>(new Date());
     setIsLinkedModal(true);
     return;
   }
-//연동 안 되어있으면 바로 삭제제 가능
+//연동 안 되어있으면 바로 삭제 가능
    setIsOpenModal(true)
    setModalMessage(`삭제한 글을 복구할 수 없습니다. \n삭제하시겠습니까?`)
   
