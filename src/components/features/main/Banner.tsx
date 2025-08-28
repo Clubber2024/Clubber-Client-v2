@@ -97,14 +97,14 @@ export default function Banner() {
                     alt={banner.alt}
                     fill
                     priority={idx === 0}
-                    className="md:hidden"
+                    className="sm:hidden"
                   />
                   <Image
                     src={banner.src}
                     alt={banner.alt}
                     fill
                     priority={idx === 0}
-                    className="hidden md:block"
+                    className="hidden sm:block"
                   />
                 </div>
               </Link>

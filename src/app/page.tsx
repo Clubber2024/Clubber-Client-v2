@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export default function MainPage() {
   return (
-    <div className="mx-4 md:max-w-6xl md:mx-auto">
+    <div>
       <HashTag />
 
       {/* 모바일: 캘린더 먼저, 그 다음 자주 찾는 서비스 */}
@@ -48,10 +48,10 @@ export default function MainPage() {
         <div className="flex-1">
           <GoToNotion />
         </div>
-        <Link href="/community?tab=notices" className="flex-1">
+        <div className="flex-1 min-w-0">
           <MainNotice />
-        </Link>
-        <Link href="/community?tab=faq" className="flex-1">
+        </div>
+        <Link href="/community?tab=faq" className="flex-1 min-w-0">
           <MainFaq />
         </Link>
       </div>

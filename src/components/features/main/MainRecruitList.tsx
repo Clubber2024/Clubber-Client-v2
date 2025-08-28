@@ -40,10 +40,10 @@ export default function MainRecruitList() {
         {recruitData?.map((recruit, idx) => (
           <div
             key={idx}
-            onClick={()=>router.push(`/recruitContent?recruitId=${recruit.recruitId}`)}
+            onClick={() => router.push(`/recruitContent?recruitId=${recruit.recruitId}`)}
             className="p-0 flex flex-row items-center justify-between text-[13px] md:text-sm hover:text-primary transition-colors cursor-pointer"
           >
-            <div>
+            <div className="flex items-center flex-1 min-w-0">
               <Badge
                 className="mr-2 h-6 rounded-3xl px-3 font-bold text-xs md:text-sm"
                 style={{
@@ -52,9 +52,9 @@ export default function MainRecruitList() {
               >
                 {recruit.recruitStatus}
               </Badge>
-              <span className="font-medium">{recruit.title}</span>
+              <span className="font-medium truncate">{recruit.title}</span>
             </div>
-            <span className="font-medium">{recruit.createdAt}</span>
+            <span className="font-medium ml-1">{recruit.createdAt}</span>
           </div>
         ))}
       </Card>

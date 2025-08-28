@@ -170,7 +170,7 @@ export default function CommunityDetail({
             ) : (
               <div className="flex p-4 border-b border-gray-200 text-sm">
                 <div className="flex flex-row gap-3 flex-1">
-                  <div className=" text-gray-500 mb-1 mr-4">이전</div>
+                  <div className=" text-gray-500 mb-1 mr-1">이전</div>
                   <div className=" text-gray-400">이전 글이 없습니다.</div>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function CommunityDetail({
             ) : (
               <div className="flex items-center p-4 border-b border-gray-200 text-sm">
                 <div className="flex flex-row gap-3 flex-1">
-                  <div className=" text-gray-500 mb-1 mr-4">다음</div>
+                  <div className=" text-gray-500 mb-1 mr-1">다음</div>
                   <div className=" text-gray-400">다음 글이 없습니다.</div>
                 </div>
               </div>
