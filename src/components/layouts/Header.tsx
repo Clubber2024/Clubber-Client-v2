@@ -361,7 +361,7 @@ export default function Header() {
 
       {/* 모바일 네비게이션 */}
       <div className="md:hidden border-t border-gray-200 bg-white">
-        <nav className="flex justify-center items-center py-4 space-x-5 min-[410px]:space-x-9 text-md font-semibold">
+        <nav className="flex justify-center items-center py-4 space-x-6 min-[376px]:space-x-8 min-[410px]:space-x-9 text-md font-semibold">
           <Link
             href="/summary"
             className={`text-gray-800 hover:text-primary transition-all duration-300 hover:scale-105 ${
