@@ -14,5 +14,9 @@ export default function OfficialList() {
     });
   }, []);
 
-  return <ClubList clubs={officialList.clubs} />;
+  return (
+    <div>
+      <ClubList clubs={officialList.clubs} />
+    </div>
+  );
 }

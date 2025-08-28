@@ -20,6 +20,10 @@ function CommunityContent() {
     if (tabParam && ['notices', 'faq', 'inquiries'].includes(tabParam)) {
       setActiveTab(tabParam);
     }
+    const noticeIdParam = searchParams.get('noticeId');
+    if (noticeIdParam) {
+      setSelectedItemId(Number(noticeIdParam));
+    }
   }, [searchParams]);
 
   const tabs = [
@@ -52,7 +56,7 @@ function CommunityContent() {
   }
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen md:max-w-6xl md:mx-auto mx-4 py-8">
       <div className="max-w-6xl md:max-w-5xl mx-auto px-5 md:px-10">
         {/* 페이지 제목 */}
         <h1 className="text-2xl font-bold text-center text-gray-900 my-8">커뮤니티</h1>

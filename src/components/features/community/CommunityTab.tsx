@@ -19,28 +19,39 @@ export default function CommunityTab({ type, onItemClick }: CommunityTabProps) {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [faq, setFaq] = useState<FaqItem[]>([]);
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
-  const [totalPages] = useState(1);
-  const [isLoading] = useState(false);
-  const [error] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 10;
   const sort = 'desc';
 
   const fetchNotices = async (page: number) => {
     try {
+      setIsLoading(true);
+      setError(null);
       const response = await getNoticeListData({ page, size: itemsPerPage, sort: sort });
       setNotices(response.data.content);
-      console.log(notices);
+      setTotalPages(response.data.totalPages);
+      console.log('Notices response:', response.data);
     } catch (error) {
       console.error('Error fetching notices:', error);
+      setError('공지사항을 불러오는 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchFaq = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
       const response = await getFaqListData({ page: 1, size: 10 });
       setFaq(response.data);
     } catch (error) {
       console.error('Error fetching faq:', error);
+      setError('FAQ를 불러오는 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,18 +88,22 @@ export default function CommunityTab({ type, onItemClick }: CommunityTabProps) {
         {/* 목록 */}
         {type == 'notices' && (
           <div>
-            {notices.map((item) => (
-              <div
-                key={item.noticeId}
-                className="flex justify-between items-center py-4 px-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => onItemClick(item)}
-              >
-                <div className="flex-1">
-                  <h3 className="text-gray-900 text-sm">{item.title}</h3>
+            {notices.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">등록된 공지사항이 없습니다.</div>
+            ) : (
+              notices.map((item) => (
+                <div
+                  key={item.noticeId}
+                  className="flex justify-between items-center py-4 px-3 border-b border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+                  onClick={() => onItemClick(item)}
+                >
+                  <div className="flex-1">
+                    <h3 className="text-gray-900 text-sm">{item.title}</h3>
+                  </div>
+                  <span className="text-gray-500 text-sm">{item.createdAt}</span>
                 </div>
-                <span className="text-gray-500 text-sm">{item.createdAt}</span>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
         {type == 'faq' && (
@@ -132,8 +147,8 @@ export default function CommunityTab({ type, onItemClick }: CommunityTabProps) {
         )}
         {type == 'inquiries' && <ComingSoon />}
 
-        {/* 페이지네이션 */}
-        {type == 'inquiries' || (
+        {/* 페이지네이션 - 공지사항일 때만 표시하고 totalPages가 1보다 클 때만 표시 */}
+        {type === 'notices' && totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 mt-8">
             <Button
               variant="outline"

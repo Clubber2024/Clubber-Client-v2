@@ -223,7 +223,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
   return (
     <>
       <div className="max-w-5xl mx-auto flex flex-col">
-        <Card className="mx-4 sm:mx-10 mt-12 mb-17">
+        <Card className="mx-4 sm:mx-10 mt-12 mb-10">
           <div className="flex flex-row items-center px-5">
             <Image
               src={
@@ -239,49 +239,54 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
               height={100}
             />
 
-          
-            <div className='ml-3'>
-              <div className='flex flex-row items-center mb-2 sm:mb-0'>
-                <p className="mb-2 font-bold text-[20px] leading-[100%] tracking-[0] w-fit">{club?.clubName}
+            <div className="ml-3">
+              <div className="flex flex-row items-center mb-2 sm:mb-0">
+                <p className="mb-2 text-sm md:text-md font-bold text-[20px] leading-[100%] tracking-[0] w-fit">
+                  {club?.clubName}
                 </p>
-                {!isAdmin && (
-                  isStarred ? (
-                    <Star 
-                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500 hover:scale-110 transition-all duration-200 ease-in-out' 
+                {!isAdmin &&
+                  (isStarred ? (
+                    <Star
+                      className="size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 fill-yellow-500 hover:scale-110 transition-all duration-200 ease-in-out"
                       onClick={handleStarClick}
                     />
                   ) : (
-                    <StarIcon 
-                      className='size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 hover:scale-110 hover:fill-yellow-500  transition-all duration-200 ease-in-out' 
+                    <StarIcon
+                      className="size-5.5 ml-2 mb-2 cursor-pointer text-yellow-500 hover:scale-110 hover:fill-yellow-500  transition-all duration-200 ease-in-out"
                       onClick={handleStarClick}
                     />
                   ))}
               </div>
 
               {isCenter ? (
-                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
+                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary text-sm md:text-md">
                   {club?.clubType} | {club?.division}
                 </Button>
               ) : (
-                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary">
+                <Button className="mr-2 rounded-[3px] h-8 hover:bg-primary text-sm md:text-md">
                   {club?.college} | {club?.department}
                 </Button>
               )}
-              <Button className='mt-2 sm:mt-0 rounded-[3px] h-8 cursor-pointer' onClick={onClickGoToRecruit}>모집글 보러가기 <ChevronRightIcon className="size-4.5" /></Button>
+              <Button
+                className="mt-2 sm:mt-0 rounded-[3px] h-8 cursor-pointer text-sm md:text-md"
+                onClick={onClickGoToRecruit}
+              >
+                모집글 보러가기 <ChevronRightIcon className="size-4.5" />
+              </Button>
             </div>
           </div>
         </Card>
 
         {/* 탭 네비게이션 */}
         <div className="mx-10 relative">
-          <div className="absolute -top-8 md:-top-6 left-1/2 transform -translate-x-1/2 z-10">
-            <div className="flex w-70 md:w-180 bg-[#c6e0f1] rounded-full shadow-sm">
+          <div className="absolute -top-6 md:-top-6 left-1/2 transform -translate-x-1/2 z-10">
+            <div className="flex w-64 md:w-180 bg-[#c6e0f1] rounded-full shadow-sm">
               <button
                 onClick={() => setActiveTab('intro')}
                 className={`flex-1 pl-6 pr-4 rounded-none font-medium transition-all duration-200 `}
               >
                 <p
-                  className={`font-medium transition-all duration-200 text-center pt-3 pb-2.5 ${
+                  className={`font-medium transition-all duration-200 text-center pt-3 pb-2.5 text-sm md:text-[17px] ${
                     activeTab === 'intro'
                       ? 'font-bold border-b-3 border-primary md:w-60 mx-auto'
                       : 'text-gray-600 hover:text-primary'
@@ -295,7 +300,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
                 className={`flex-1 pr-6 pl-4 rounded-none font-medium transition-all duration-200 `}
               >
                 <p
-                  className={`font-medium transition-all duration-200 text-center pt-3 pb-2.5 ${
+                  className={`font-medium transition-all duration-200 text-center pt-3 pb-2.5 text-sm md:text-[17px] ${
                     activeTab === 'review'
                       ? 'font-bold border-b-3 border-primary md:w-60 mx-auto'
                       : 'text-gray-600 hover:text-primary'
@@ -310,8 +315,8 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
 
         {/* 탭 컨텐츠 */}
         {activeTab === 'intro' ? (
-          <Card className="mx-4 sm:mx-10">
-            <div className="pl-4 sm:pl-20 pr-4 sm:pr-20 my-10">
+          <Card className="mx-4 md:mx-10">
+            <div className="px-7 md:px-20 my-10">
               <div>
                 <p className=" font-semibold text-[18px] leading-[18px] tracking-[0] mb-2.5">
                   소속분과
@@ -401,23 +406,15 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
             </div>
           </Card>
         ) : (
-          <Card className="mx-10">
-            <div className="pl-4 sm:pl-20 pr-4 sm:pr-20 my-10">
-              <div className="flex flex-col items-center justify-center">
-                <Image
-                  src={'/images/review.png'}
-                  alt="review"
-                  width={500}
-                  height={800}
-                  className="object-cover blur-xs mb-6 relative"
-                />
-                <div className="text-center absolute -bottom-40 left-50 md:-bottom-45 md:left-225 transform -translate-x-1/2 -translate-y-1/2 bg-transparent py-11 px-13">
-                  <p className="text-gray/900 font-taebaek text-2xl mb-4 font-medium">
-                    리뷰 기능 9월 중순 OPEN ‼️
-                  </p>
-                  <p className="text-gray-500 text-md drop-shadow-sm">곧 만나요!</p>
-                </div>
-              </div>
+          <Card className="mx-4 md:mx-10">
+            <div className="mx-auto">
+              <Image
+                src={'/images/review-pc.png'}
+                alt="review"
+                width={700}
+                height={700}
+                className="size-150 object-cover relative "
+              />
             </div>
           </Card>
         )}
@@ -425,7 +422,17 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
       {isOpenModal && (
         <Modal isOpen={isOpenModal} message={modalMessage} onClose={() => setIsOpenModal(false)} />
       )}
-{isOpenLoginModal&&(<Modal isOpen={isOpenLoginModal} message={modalMessage} confirmText='로그인 하러가기' cancelText='취소' onConfirm={() => router.push('/login')} onCancel={() => setIsOpenLoginModal(false)} showConfirmButton={true}/>)}
+      {isOpenLoginModal && (
+        <Modal
+          isOpen={isOpenLoginModal}
+          message={modalMessage}
+          confirmText="로그인 하러가기"
+          cancelText="취소"
+          onConfirm={() => router.push('/login')}
+          onCancel={() => setIsOpenLoginModal(false)}
+          showConfirmButton={true}
+        />
+      )}
     </>
   );
 }
