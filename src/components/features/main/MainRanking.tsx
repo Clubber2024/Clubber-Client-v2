@@ -16,13 +16,13 @@ export default function MainRanking() {
   const [rank, setRank] = useState<RankData[]>([]);
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
   }, []);
 
   const fetchData = async () => {
     const res = await getMainPopularClubs();
     setRank(res);
-    console.log(res);
+
   };
 
   return (
