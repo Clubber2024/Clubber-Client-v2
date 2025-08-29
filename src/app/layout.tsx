@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="flex min-h-screen flex-col md:max-w-6xl md:mx-auto mx-4">
+        <div className="flex min-h-screen flex-col md:max-w-6xl md:mx-auto">
           <Header />
           {/* Main 영역 -> flex-1 : 헤더와 푸터는 설정한 영역대로, 나머지 영역은 메인영역으로 */}
           <main className="flex-1">{children}</main>

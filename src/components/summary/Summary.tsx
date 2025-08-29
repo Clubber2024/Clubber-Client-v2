@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { SummaryData } from '@/types/summary/summaryData';
 import { getSummaryData } from './api/summary';
 import Link from 'next/link';
+import Loading from '../common/Loading';
 
 export default function Summary() {
   const [summaryData, setSummaryData] = useState<SummaryData[]>([]);
@@ -27,7 +28,7 @@ export default function Summary() {
   }, []);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64">로딩 중...</div>;
+    return <Loading />;
   }
 
   return (
@@ -45,7 +46,7 @@ export default function Summary() {
           {summaryData.map((summary, index) => (
             <div
               key={index}
-              className={`flex flex-col px-5 ${index !== summaryData.length - 1 ? 'border-r border-gray-300' : ''}`}
+              className={`flex flex-col px-5 ${index % 2 === 1 ? 'border-l md:border-l-0' : ''}`}
             >
               {/* 분과명 헤더 */}
               <h3
