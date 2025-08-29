@@ -82,5 +82,5 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -qa) || true
             sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-prod
-            sudo docker-compose -f docker-compose-prod.yml up -d
+            sudo docker-compose -f docker-compose-release.yml up -d
             docker image prune -f
