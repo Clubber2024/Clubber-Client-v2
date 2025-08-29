@@ -75,12 +75,12 @@ jobs:
         with:
           host: ${{ secrets.HOST_PROD }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY_RELEASE }}
+          key: ${{ secrets.SSH_KEY_PROD }}
           port: ${{ secrets.SSH_PORT }}
           debug: true
           timeout: 60s
           script: |
             sudo docker rm -f $(docker ps -qa) || true
             sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-prod
-            sudo docker-compose -f docker-compose-release.yml up -d
+            sudo docker-compose -f docker-compose-prod.yml up -d
             docker image prune -f
