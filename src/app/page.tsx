@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 export default function MainPage() {
   return (
-    <div>
+    <div className="mx-4 md:mx-auto">
       <HashTag />
 
       {/* 모바일: 캘린더 먼저, 그 다음 자주 찾는 서비스 */}
