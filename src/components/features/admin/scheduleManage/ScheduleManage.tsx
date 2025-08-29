@@ -1,7 +1,7 @@
 'use client'
 
 import TitleDiv from "@/components/ui/title-div";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { CalendarPros, deleteCalendar, deletedCalendarLink, getCalendar, getCalendarList, patchCalendar, postCalendar, postCalendarDuplicate } from "./api/scheduleManage";
 import ReactPaginate from "react-paginate";
 import { ChevronDown, PencilLine, Trash2 } from "lucide-react";
@@ -78,7 +78,7 @@ const [startDate, setStartDate] = useState<Date>(new Date());
   const [calendarIsOpen, setCalendarIsOpen] = useState(false);
   const [endCalendarIsOpen, setEndCalendarIsOpen] = useState(false);
   const [startTime, setStartTime] = useState('00:00');
-  const [endTime, setEndTime] = useState('00:00');
+  const [endTime, setEndTime] = useState('23:59');
   // const [isOngoing, setIsOngoing] = useState(false);
   const [recruitType, setRecruitType] = useState('');
   const [title, setTitle] = useState('');
@@ -93,6 +93,10 @@ const [startDate, setStartDate] = useState<Date>(new Date());
   const [url,setUrl] = useState('');
   //중복 확인 
   const [isConfirmDuplicate, setIsConfirmDuplicate] = useState(false);
+  
+  // 달력 ref
+  const startCalendarRef = useRef<HTMLDivElement>(null);
+  const endCalendarRef = useRef<HTMLDivElement>(null);
 
   const handleClick = (category: Category, option: string) => {
     setSelected((prev) => ({ ...prev, [category]: option }));
@@ -262,10 +266,29 @@ setModalMessage("연동이 해제되었습니다.");
       } else {
         console.log("모집글 URL이 없습니다:", selectedId);
       }
-      console.log("모집글 보러가기:", selectedId);
       setIsLinkedModal(false);
     }
   }
+
+// 달력 외부 클릭 감지
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (startCalendarRef.current && !startCalendarRef.current.contains(event.target as Node)) {
+      setCalendarIsOpen(false);
+    }
+    if (endCalendarRef.current && !endCalendarRef.current.contains(event.target as Node)) {
+      setEndCalendarIsOpen(false);
+    }
+  };
+
+  if (calendarIsOpen || endCalendarIsOpen) {
+    document.addEventListener('mousedown', handleClickOutside);
+  }
+
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [calendarIsOpen, endCalendarIsOpen]);
 
 useEffect(()=>{
   fetchCalendarList()
@@ -286,7 +309,7 @@ const handlePageChange = ({ selected }: { selected: number }) => {
 const handleToggleCalendar = () => {
   if (recruitType === 'ADDITIONAL' || recruitType === 'REGULAR') {
     setCalendarIsOpen(!calendarIsOpen);
-    console.log(recruitType);
+   
   } else {
     return;
   }
@@ -330,14 +353,11 @@ const formatDateTime = (dateObjOrStr: Date, timeStr: string) => {
 };
 
 const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  // setIsErrorTitle(false);
   setTitle(e.target.value);
-  console.log(e.target.value);
 };
 
 const handleApplyLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   setApplyLink(e.target.value);
-  console.log(e.target.value);
 };
 
 const cancelWriteButton= ()=>{
@@ -354,7 +374,7 @@ setIsOpenWriteContent(false);
   setStartDate(new Date());
   setEndDate( new Date());
   setStartTime("00:00")
-  setEndTime("00:00")
+  setEndTime("23:59")
   setErrorTitleMessage("");
   setIsErrorTitle(false);
   setIsErrorType(false);
@@ -440,8 +460,6 @@ const handleSubmitButton = async () => {
   }catch{}
 }
 
-
-
 //중복 확인 후 추가 등록 시
 const confirmModal2 = () => {
   setIsOpenModal2(false);
@@ -466,7 +484,7 @@ const cancelModal2 = () => {
   setStartDate(new Date());
   setEndDate(new Date());
   setStartTime("00:00")
-  setEndTime("00:00")
+  setEndTime("23:59")
 
 }
 
@@ -474,7 +492,7 @@ const cancelModal2 = () => {
   return(
     <>
     <TitleDiv><p className="font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">모집일정 관리</p></TitleDiv>
-    <div className="w-full lg:w-[70%] mx-auto mt-10">
+    <div className="w-full md:w-[80%] lg:w-[70%] mx-auto mt-10">
       <span className="flex items-center text-[#707070] font-medium text-base leading-[100%] tracking-normal cursor-pointer mb-2 ml-1" onClick={()=>setIsOpenToggle((prev)=>!prev)}>옵션 <ChevronDown size={12} /></span>
     {isOpenToggle?(   <div className="flex space-x-8 text-sm text-gray-600 font-normal select-none flex-col w-full mt-1">
     {(Object.entries(optionsData) as [Category, readonly string[]][]).map(([category, options]) => (
@@ -569,7 +587,7 @@ const cancelModal2 = () => {
   setStartDate(new Date());
   setEndDate(new Date());
   setStartTime("00:00");
-  setEndTime("00:00");
+  setEndTime("23:59");
   setRecruitType("");
 }}><PencilLine size={15} color="white" className="ml-1" />등록하기</Button>
 </div>
@@ -755,12 +773,12 @@ const cancelModal2 = () => {
 
                    {/* 달력 컴포넌트는 필요한 위치에 absolute로 띄우기 */}
                    {calendarIsOpen && recruitType !== '상시모집' && (
-                     <div className="absolute left-60 p-2 mt-2 z-10 bg-white shadow-md rounded-md border border-gray-300">
+                     <div ref={startCalendarRef} className="absolute left-5 md:left-60 p-2 mt-2 z-10 bg-white shadow-md rounded-md border border-gray-300">
                        <MyCalendar date={startDate} onChange={handleStartDateChange} />
                      </div>
                    )}
                    {endCalendarIsOpen && recruitType !== '상시모집' && (
-                     <div className="absolute left-60 p-2 mt-2 z-10 bg-white shadow-md rounded-md border border-gray-300">
+                     <div ref={endCalendarRef} className="absolute left-5 md:left-60 p-2 mt-2 z-10 bg-white shadow-md rounded-md border border-gray-300">
                        <MyCalendar date={endDate} onChange={handleEndDateChange} minDate={startDate} />
                      </div>
                    )}

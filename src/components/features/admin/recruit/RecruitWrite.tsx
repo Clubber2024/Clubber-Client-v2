@@ -579,7 +579,7 @@ if(resLinkCalendar.success){
             ''
           )}
 
-          <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
+          <p className="font-semibold text-[18px] leading-[100%] tracking-[0] text-black mt-8">
             모집기간
           </p>
           <div className="bg-white mt-2 ">
@@ -641,7 +641,7 @@ if(resLinkCalendar.success){
                         className="
      max-w-[177px] h-[55px] rounded-[5px] bg-white
      border border-[#d6d6d6]
-     flex mr-[6px]
+     flex mr-[6px] px-1
    "
                         placeholder="YYYY-MM-DD"
                       />
@@ -658,7 +658,7 @@ if(resLinkCalendar.success){
                       className="
      max-w-[90px] h-[55px] rounded-[5px] bg-white
      border border-[#d6d6d6]
-     flex mr-[6px]
+     flex mr-[6px] px-1
  "
                       placeholder="00:00"
                     />
@@ -683,7 +683,7 @@ if(resLinkCalendar.success){
                         value={formatDate(endDate)}
                         className=" max-w-[177px] h-[55px] rounded-[5px] bg-white
      border border-[#d6d6d6]
-     flex mr-[6px]"
+     flex mr-[6px] px-1"
                         placeholder="YYYY-MM-DD"
                       />
                       <img
@@ -698,7 +698,7 @@ if(resLinkCalendar.success){
                       onChange={(e) => setEndTime(e.target.value)}
                       className="max-w-[90px] h-[55px] rounded-[5px] bg-white
      border border-[#d6d6d6]
-     flex mr-[6px]"
+     flex mr-[6px] px-1"
                       placeholder="23:59"
                     />
                   </div>

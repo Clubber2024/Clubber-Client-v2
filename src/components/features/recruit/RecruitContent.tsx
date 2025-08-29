@@ -292,7 +292,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
            
             <Divider className="w-full" />
             <div className="mt-10 mb-25">
-              <p className="font-normal text-[16px] leading-[100%] tracking-[0%] font-pretendard text-center">
+              <p className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard text-center">
                 {content.content}
               </p>
             </div>
@@ -321,7 +321,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
                       key={index}
                       src={url}
                       alt={`image-${index}`}
-                      className="w-[150px] md:w-[190px] h-[150px] md:h-[190px] object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                      className="w-[150px] md:w-[190px] h-[150px] object-cover aspect-square cursor-pointer hover:opacity-80 transition-opacity"
                       onClick={() => openImageModal(index)}
                     />
                   ))}
@@ -338,16 +338,16 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
       {/* 이미지 확대 모달 */}
       {isImgModalOpen && content?.imageUrls && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
           onClick={closeImageModal}
         >
           <div 
-            className="relative max-w-4xl max-h-full p-4"
+            className="relative w-full h-full flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             {/* 닫기 버튼 */}
             <button
-              className="absolute top-4 right-4 text-white text-3xl font-bold hover:text-gray-300 z-10"
+              className="absolute top-4 right-4 text-white text-3xl font-bold hover:text-gray-300 z-20"
               onClick={closeImageModal}
             >
               &times;
@@ -357,13 +357,13 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
             <img
               src={content.imageUrls[currentImageIndex]}
               alt={`Large image ${currentImageIndex + 1}`}
-              className="max-w-full max-h-full object-contain"
+              className="max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] object-contain"
             />
             
             {/* 이전 버튼 */}
             {currentImageIndex > 0 && (
               <button
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold hover:text-gray-300 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold hover:text-gray-300 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center z-20"
                 onClick={prevImage}
               >
                 &#10094;
@@ -373,7 +373,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
             {/* 다음 버튼 */}
             {currentImageIndex < content.imageUrls.length - 1 && (
               <button
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold hover:text-gray-300 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold hover:text-gray-300 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center z-20"
                 onClick={nextImage}
               >
                 &#10095;
@@ -381,7 +381,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
             )}
             
             {/* 이미지 카운터 */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-3 py-1 rounded">
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-3 py-1 rounded z-20">
               {currentImageIndex + 1} / {content.imageUrls.length}
             </div>
           </div>

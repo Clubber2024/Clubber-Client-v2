@@ -2,7 +2,7 @@ name: CI-CD
 
 on:
   push:
-    branches: ['dev']
+    branches: ['main', 'dev']
 
 jobs:
   build-and-deploy:
@@ -26,19 +26,35 @@ jobs:
       - name: Build Next.js project
         run: npm run build --verbose
 
-      - name: Set environment variables for dev
+      - name: Set environment variables for main branch
+        if: github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.PROD_ENV }}" > .env
+
+      - name: Set environment variables for dev branch
+        if: github.ref == 'refs/heads/dev'
         run: echo "${{ secrets.DEV_ENV }}" > .env
 
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Build Docker image for main
+        if: github.ref == 'refs/heads/main'
+        run: docker build -t ${{ secrets.DOCKER_REPO }}/clubber-front-prod .
+
       - name: Build Docker image for dev
+        if: github.ref == 'refs/heads/dev'
         run: docker build -t ${{ secrets.DOCKER_REPO }}/clubber-front-dev .
 
+      - name: Push Docker image for main
+        if: github.ref == 'refs/heads/main'
+        run: docker push ${{ secrets.DOCKER_REPO }}/clubber-front-prod
+
       - name: Push Docker image for dev
+        if: github.ref == 'refs/heads/dev'
         run: docker push ${{ secrets.DOCKER_REPO }}/clubber-front-dev
 
       - name: Deploy to dev server
+        if: github.ref == 'refs/heads/dev'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST_DEV }}
@@ -49,4 +65,18 @@ jobs:
             sudo docker rm -f $(docker ps -qa) || true
             sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-dev
             sudo docker-compose -f docker-compose-dev.yml up -d
+            docker image prune -f
+
+      - name: Deploy to main server
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_PROD }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY_RELEASE }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            sudo docker rm -f $(docker ps -qa) || true
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-prod
+            sudo docker-compose -f docker-compose-prod.yml up -d
             docker image prune -f

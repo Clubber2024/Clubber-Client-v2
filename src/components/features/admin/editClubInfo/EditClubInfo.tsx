@@ -105,32 +105,63 @@ export default function EditClubInfo() {
               <p className=" font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 소개
               </p>
-              <div className="flex flex-row items-center">
-                •
-                <p className="ml-1 font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
-                  {club?.introduction?club.introduction:"동아리 소개가 없습니다."}
-                </p>
-              </div>
+                                <div className="flex flex-row items-start">
+                  <p className='text-[16px] mt-0 w-fit h-fit align-self-start pt-0 leading-none'> • </p>
+                  <p className="ml-1 font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                    {club?.introduction?club.introduction:""}
+                  </p>
+                </div>
             </div>
             <div className="mt-[30px]">
               <p className="font-pretendard font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 인스타 / 유튜브
               </p>
               <div className='flex flex-row items-center'>
-              <img src='/images/admin/insta.png' className='w-5 h-5 mr-1' />
-              <a className={clubInfo?.instagram ? "text-[16px]" : "text-gray-500 text-[16px]"} href={clubInfo?.instagram ? clubInfo.instagram : ''}> {clubInfo?.instagram?clubInfo.instagram:"동아리 인스타가 없습니다."}</a>
-              </div>
-              <div className='flex flex-row items-center mt-2'>
-              <img src='/images/admin/youtube.png' className='w-5 h-5 mr-1' /> <a className={clubInfo?.youtube ? "" : "text-gray-500"} href={clubInfo?.youtube ? clubInfo.youtube : ''}> {clubInfo?.youtube?clubInfo.youtube:"동아리 유튜브가 없습니다."}</a>
-              </div>
+              <div className="space-y-1">
+                  {clubInfo?.instagram && (
+                    <div className='flex flex-row items-start'>
+                    <p className='text-[16px] leading-[22px] mr-1'>•</p>
+                    <a
+                      href={clubInfo.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-blue-600 hover:underline break-all"
+                    >
+                       {clubInfo.instagram}
+                    </a>
+                    </div>
+                  )}
+                  {clubInfo?.youtube && (
+                    <div className='flex flex-row items-start'>
+                    <p className='text-[16px] leading-[22px] mr-1'>•</p>
+                    <a
+                      href={clubInfo.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-blue-600 hover:underline break-all"
+                    >
+                      {clubInfo.youtube}
+                    </a>
+                    </div>
+                  )}
+                  {!clubInfo?.youtube && !clubInfo?.instagram && (
+                    <p className="ml-1 font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                      •
+                    </p>
+                  )}
+                </div>
+                </div>
             </div>
             <div className="mt-[30px]">
               <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 대표 활동
               </p>
-              <p className="font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
-                • {clubInfo?.activity}
+              <div className='flex flex-row items-start'>
+              <p className='text-[16px] leading-none'>•</p>
+              <p className="ml-1 text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                {clubInfo?.activity}
               </p>
+              </div>
             </div>
             <div className="mt-[30px]">
               <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
@@ -153,7 +184,7 @@ export default function EditClubInfo() {
 
         <Button
           onClick={() => router.push('/admin/writeClubInfo')}
-          className="w-[120px] sm:w-[145px] h-[40px] sm:h-[45px] rouned-[5px] m-auto mt-10 sm:mt-15 cursor-pointer font-pretendard font-medium text-[16px] sm:text-[17px] leading-[120%] tracking-[0]"
+          className="w-[120px] sm:w-[145px] h-[40px] sm:h-[45px] rounded-[5px] m-auto mt-10 sm:mt-15 cursor-pointer font-medium text-[16px] sm:text-[17px] leading-[120%] tracking-[0]"
         >
           수정하기
         </Button>

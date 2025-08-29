@@ -67,7 +67,6 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
     // const clubId = searchParams.get('clubId');
     if (clubId) {
       fetchClubInfoData(parseInt(clubId));
-      console.log('clubId', clubId);
       if (accessToken && !isAdmin) {
         fetchFavoriteStatus(parseInt(clubId));
       }
@@ -98,7 +97,6 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
         setIsCenter(true);
       }
     } catch (error) {
-      console.error('Error fetching club info:', error);
       setError('동아리 정보를 불러오는데 실패했습니다.');
     } finally {
       setIsLoading(false);
@@ -111,11 +109,9 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
 
     try {
       const res = await getFavorites();
-      console.log('res', res);
 
       // The response structure is: { userId: number, userFavorites: FavoriteItem[] }
       if (!res.userFavorites) {
-        console.error('No userFavorites in response:', res);
         setIsStarred(false);
         setFavoriteId(null);
         return;
@@ -345,7 +341,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
               </div>
 
               <div className="mt-[30px]">
-                <p className=" font-semibold text-[16px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
+                <p className=" font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                   인스타/유튜브
                 </p>
                 <div className="space-y-1">
@@ -354,7 +350,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
                       href={clubInfo.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-blue-600 hover:underline"
+                      className="block text-blue-600 hover:underline break-all"
                     >
                       • {clubInfo.instagram}
                     </a>
@@ -364,7 +360,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
                       href={clubInfo.youtube}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block text-blue-600 hover:underline"
+                      className="block text-blue-600 hover:underline break-all"
                     >
                       • {clubInfo.youtube}
                     </a>

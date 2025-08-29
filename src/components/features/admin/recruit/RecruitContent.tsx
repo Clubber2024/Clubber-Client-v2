@@ -44,7 +44,6 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
   const fetchData = async () => {
     if (recruitId) {
       const res = await getAdminRecruitContent(recruitId);
-      console.log(res);
       setContent(res);
     }
   };
@@ -103,16 +102,13 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
 
   const handleDeleteRecruit = async () => {
     if (!recruitId) {
-      console.error('recruitId is undefined');
       return;
     }
     const recruitIdNumber = parseInt(recruitId, 10);
     if (isNaN(recruitIdNumber)) {
-      console.error('Invalid recruitId:', recruitId);
       return;
     }
     const res = await deleteAdminRecruit(recruitIdNumber);
-    console.log(res);
     router.back();
   };
 
@@ -125,7 +121,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
 <TitleDiv> <p className="font-semibold text-[20px] leading-[100%] tracking-[0] text-[#202123] ml-[10px]">
           모집글 작성
         </p></TitleDiv>
-    <div className='w-full lg:w-[70%] mx-auto flex flex-col justify-center items-center'>
+    <div className='w-full md:w-[80%] lg:w-[70%] mx-auto flex flex-col justify-center items-center'>
    <div className='flex flex-row w-full justify-end gap-2 mt-12 mb-[-90px]'>
       <Button className='rounded-[3px]' onClick={handleEditRecruit}> <PencilLine/>
       수정</Button>
@@ -136,7 +132,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
         {content ? (
           <div className="flex flex-col justify-center items-center mt-[30px] w-full">
             <RecruitStatusLabel status={content.recruitStatus} />
-            <p className="font-semibold text-[24px] leading-[100%] tracking-[0%] font-pretendard mt-[13px] mb-[14px]">
+            <p className="text-center font-semibold text-[24px] leading-[120%] tracking-[0%] font-pretendard mt-[13px] mb-[14px]">
               {content.title}
             </p>
             <p className="font-normal text-[14px] leading-[100%] tracking-[0%] font-pretendard text-[#a7a7a7] mb-[34px]">
@@ -180,7 +176,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
             <Divider className="w-full" />
         
             <div className="mt-10 mb-25">
-              <p className="font-normal text-[16px] leading-[100%] tracking-[0%] font-pretendard text-center">
+              <p className="font-normal text-[16px] leading-[150%] tracking-[0%] font-pretendard text-center">
                 {content.content}
               </p>
             </div>
@@ -208,7 +204,7 @@ export default function RecruitContent({ recruitId }: RecruitContentProps) {
                       key={index}
                       src={url}
                       alt={`image-${index}`}
-                      className="w-[150px] md:w-[190px] h-[150px] md:h-[190px] object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                      className="w-[150px] md:w-[190px] h-[150px] md:h-[190px] object-contain cursor-pointer hover:opacity-80 transition-opacity"
                       onClick={() => openImageModal(index)}
                     />
                   ))}
