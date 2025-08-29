@@ -59,8 +59,8 @@ jobs:
         with:
           host: ${{ secrets.HOST_DEV }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY_DEV }}
-          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT}}
           script: |
             sudo docker rm -f $(docker ps -qa) || true
             sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-dev
@@ -73,8 +73,8 @@ jobs:
         with:
           host: ${{ secrets.HOST_PROD }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY_RELEASE }}
-          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY}}
+          port: ${{ secrets.SSH_PORT}}
           script: |
             sudo docker rm -f $(docker ps -qa) || true
             sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-prod
