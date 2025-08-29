@@ -25,16 +25,6 @@ export default function Footer() {
     const updateUserState = () => {
       const adminStatus = getIsAdmin();
       const token = getAccessToken();
-      console.log(
-        'Footer useEffect - adminStatus:',
-        adminStatus,
-        'token:',
-        token,
-        'token exists:',
-        !!token
-      );
-      console.log('LocalStorage - accessToken:', localStorage.getItem('accessToken'));
-      console.log('LocalStorage - isAdmin:', localStorage.getItem('isAdmin'));
       setIsAdmin(adminStatus);
       setAccessToken(token);
       setIsUser(!adminStatus && !!token); // 관리자가 아니고 토큰이 있으면 일반 사용자
@@ -46,14 +36,12 @@ export default function Footer() {
     // 로컬스토리지 변경 감지
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'accessToken' || e.key === 'isAdmin') {
-        console.log('Storage changed:', e.key, e.newValue);
         updateUserState();
       }
     };
 
     // 커스텀 이벤트 리스너 추가 (같은 탭에서의 변경 감지)
     const handleCustomStorageChange = () => {
-      console.log('Custom storage event triggered');
       updateUserState();
     };
 
@@ -99,7 +87,6 @@ export default function Footer() {
         window.location.href = '/';
       }, 2000);
     } catch (error) {
-      console.error('회원탈퇴 오류:', error);
       setModalMessage('회원탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsModalOpen(true);
     } finally {
@@ -117,7 +104,7 @@ export default function Footer() {
 
   // 회원탈퇴 버튼이 클릭 가능한지 확인
   const canWithdraw = isAdmin || isUser;
-  console.log(isAdmin, isUser);
+  
   return (
     <>
       <footer className="w-screen h-[90px] md:h-[52px] bg-white border-t text-sm font-normal border-[#808080] mt-10 md:mt-30 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">

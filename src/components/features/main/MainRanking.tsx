@@ -30,7 +30,7 @@ export default function MainRanking() {
       <h2 className="font-bold text-[16px] md:text-lg py-3 mt-2 pr-8">조회수</h2>
 
       <Card>
-        <div className='text-center text-md font-bold text-gray-500'>
+        <div className='text-center text-lg font-bold text-gray-500 h-[152px] flex flex-col items-center justify-center'>
          
           D-1 <br/> 조회수 TOP 10 랭킹 공개!<br/>
          <p className='text-sm text-primary'> COMING SOON!</p>

@@ -68,14 +68,11 @@ export default function FindPw() {
       setIdMessage("아이디를 입력해주세요.");
       return;
     }
-    
     if (!emailRegex.test(email)) {
       setIsVerifyEmail(false);
       setEmailMessage('올바른 이메일 형식이 아닙니다.');
       return;
     } else {
-      // setIsVerifyEmail(true);
-      // setEmailMessage('인증번호를 보냈습니다.');
       fetchEmailData();
     }
   };
@@ -111,7 +108,6 @@ export default function FindPw() {
       setStart(Date.now());
       return;
     } else{
-      console.log(res.reason);
       setIdMessage(res.reason);
       setIsVerifyEmail(false);
       return;

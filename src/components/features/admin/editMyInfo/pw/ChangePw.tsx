@@ -38,7 +38,7 @@ export default function ChangePw() {
   
       // 1. 영문+숫자+특수문자 포함, 8~20자 (공백 제외)
       const passwordRegExp =
-        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~\-=`{}[\]:";'<>?,.\/])[^\s]{8,20}$/;
+        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~\-=`{}[\]":';.<>?,.\/])[^\s]{8,20}$/;
   
       // 2. 동일한 문자/숫자 4번 이상 연속 금지
       const consecutiveRegExp = /(.)\1\1\1/;
@@ -91,6 +91,13 @@ const handleSubmitChangePw = async () => {
     } 
     if(password !== passwordConfirm){
       setIsPasswordConfirm(false);
+      setIsOpenModal(true);
+      setModalMessage('새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다. 입력하신 비밀번호를 다시 확인해주세요.');
+      return;
+    }
+    if(!isPassword1 || !isPassword2){
+      setIsOpenModal(true);
+      setModalMessage('비밀번호는 영문, 숫자, 특수문자로 구성된 8자 이상 20자 이하만 가능합니다. 입력하신 비밀번호를 다시 확인해주세요.');
       return;
     }
     const res = await changePassword(oldPassword, password);

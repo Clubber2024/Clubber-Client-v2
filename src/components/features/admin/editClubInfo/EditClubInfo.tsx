@@ -105,9 +105,10 @@ export default function EditClubInfo() {
               <p className=" font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">
                 소개
               </p>
-              <div className="flex flex-row items-center">
-                •
+              <div className="flex flex-row">
+              •
                 <p className="ml-1 font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+               
                   {club?.introduction?club.introduction:"동아리 소개가 없습니다."}
                 </p>
               </div>
@@ -117,12 +118,34 @@ export default function EditClubInfo() {
                 인스타 / 유튜브
               </p>
               <div className='flex flex-row items-center'>
-              <img src='/images/admin/insta.png' className='w-5 h-5 mr-1' />
-              <a className={clubInfo?.instagram ? "text-[16px]" : "text-gray-500 text-[16px]"} href={clubInfo?.instagram ? clubInfo.instagram : ''}> {clubInfo?.instagram?clubInfo.instagram:"동아리 인스타가 없습니다."}</a>
-              </div>
-              <div className='flex flex-row items-center mt-2'>
-              <img src='/images/admin/youtube.png' className='w-5 h-5 mr-1' /> <a className={clubInfo?.youtube ? "" : "text-gray-500"} href={clubInfo?.youtube ? clubInfo.youtube : ''}> {clubInfo?.youtube?clubInfo.youtube:"동아리 유튜브가 없습니다."}</a>
-              </div>
+              <div className="space-y-1">
+                  {clubInfo?.instagram && (
+                    <a
+                      href={clubInfo.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-blue-600 hover:underline break-all"
+                    >
+                      • {clubInfo.instagram}
+                    </a>
+                  )}
+                  {clubInfo?.youtube && (
+                    <a
+                      href={clubInfo.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-blue-600 hover:underline break-all"
+                    >
+                      • {clubInfo.youtube}
+                    </a>
+                  )}
+                  {!clubInfo?.youtube && !clubInfo?.instagram && (
+                    <p className="ml-1 font-normal text-[16px] leading-[18px] tracking-[0] whitespace-pre-line">
+                      •
+                    </p>
+                  )}
+                </div>
+                </div>
             </div>
             <div className="mt-[30px]">
               <p className="font-semibold text-[18px] leading-[18px] tracking-[0] mt-2.5 mb-2.5">

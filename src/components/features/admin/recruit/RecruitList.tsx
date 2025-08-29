@@ -84,13 +84,13 @@ export default function RecruitList() {
             >
           
               {item.imageUrl && (
-                <img src={item.imageUrl} className="w-[130px] sm:w-fit sm:min-w-[170px] aspect-square mr-2" />
+                <img src={item.imageUrl} className="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] aspect-square mr-2 my-auto" />
               )}
-              <div className="flex-1 min-w-0 flex flex-col h-full" onClick={() => router.push(`/admin/recruitContent?recruitId=${item.recruitId}`)}>
-                <p className="font-pretendard font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate cursor-pointer w-full max-w-full overflow-hidden whitespace-nowrap">
+              <div className="flex-1 min-w-0 flex flex-col h-full mx-1 my-2" onClick={() => router.push(`/admin/recruitContent?recruitId=${item.recruitId}`)}>
+                <p className=" font-semibold text-[18px] leading-[100%] tracking-[0] text-[#202123] mb-[15px] truncate cursor-pointer w-full max-w-full overflow-hidden whitespace-nowrap">
                   {item.title}
                 </p>
-                <p className="cursor-pointer font-pretendard font-normal text-[16px] leading-[1] tracking-[0] text-[#888888] line-clamp-2 break-all w-full max-w-full overflow-hidden">
+                <p className="cursor-pointer font-normal text-[16px] leading-[120%] tracking-[0] text-[#888888] line-clamp-4 md:line-clamp-5 break-all w-full max-w-full overflow-hidden">
                   {item.content}
                 </p>
               </div>
