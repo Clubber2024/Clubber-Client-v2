@@ -75,7 +75,7 @@ jobs:
         with:
           host: ${{ secrets.HOST_PROD }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY_PROD }}
+          key: ${{ secrets.SSH_KEY_RELEASE }}
           port: ${{ secrets.SSH_PORT }}
           debug: true
           timeout: 60s
