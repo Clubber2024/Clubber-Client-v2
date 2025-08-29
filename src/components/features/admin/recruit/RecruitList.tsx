@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import TitleDiv from '@/components/ui/title-div';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ReactPaginate from 'react-paginate';
 import { deleteAdminRecruit, getAdminRecruit } from './api/recruit';
 import { Divide, EllipsisVertical, PencilLine, Trash2 } from 'lucide-react';
@@ -34,6 +34,7 @@ export default function RecruitList() {
   const [openToggleId, setOpenToggleId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mdoalmessage, setModalMessage] = useState('');
+  const toggleRef = useRef<HTMLDivElement>(null);
   
   const fetchData = async () => {
     const res = await getAdminRecruit(currentPage, pageSize);
@@ -45,6 +46,22 @@ export default function RecruitList() {
   useEffect(() => {
     fetchData();
   }, [currentPage]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (toggleRef.current && !toggleRef.current.contains(event.target as Node)) {
+        setOpenToggleId(null);
+      }
+    };
+
+    if (openToggleId !== null) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openToggleId]);
 
   const handlePageChange = ({ selected }: { selected: number }) => {
     setCurrentPage(selected + 1);
@@ -95,7 +112,7 @@ export default function RecruitList() {
                 </p>
               </div>
               
-              <div className="relative w-fit h-fit">
+              <div className="relative w-fit h-fit" ref={toggleRef}>
               <EllipsisVertical
                 size={18}
                 onClick={(e) => {
