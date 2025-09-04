@@ -16,7 +16,7 @@ export default function MainRanking() {
   const [rank, setRank] = useState<RankData[]>([]);
 
   useEffect(() => {
-    // fetchData();
+    fetchData();
   }, []);
 
   const fetchData = async () => {
@@ -30,13 +30,7 @@ export default function MainRanking() {
       <h2 className="font-bold text-[16px] md:text-lg py-3 mt-2 pr-8">조회수</h2>
 
       <Card>
-        <div className='text-center text-lg font-bold text-gray-500 h-[152px] flex flex-col items-center justify-center'>
-         
-          D-1 <br/> 조회수 TOP 10 랭킹 공개!<br/>
-         <p className='text-sm text-primary'> COMING SOON!</p>
-          </div>
-
-        {/* <div className="grid grid-cols-2 px-7 font-medium text-sm pb-1 cursor-pointer gap-6">
+        <div className="grid grid-cols-2 px-7 font-medium text-sm pb-1 cursor-pointer gap-6">
           <div className="space-y-3">
             {rank.slice(0, 5).map((club, idx) => (
               <p
@@ -59,7 +53,7 @@ export default function MainRanking() {
               </p>
             ))}
           </div>
-        </div> */}
+        </div>
       </Card>
     </>
   );
