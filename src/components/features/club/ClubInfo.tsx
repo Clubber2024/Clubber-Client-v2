@@ -10,6 +10,7 @@ import { addFavorite, deleteFavorite, getFavorites } from '../bookmark/api/bookm
 import { FavoriteItem } from '@/types/bookmark/bookmarkData';
 import Modal from '@/app/modal/Modal';
 import Image from 'next/image';
+import ClubReview from './review/ClubReview';
 
 export type Club = {
   instagram: string | null;
@@ -98,6 +99,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
       }
     } catch (error) {
       setError('동아리 정보를 불러오는데 실패했습니다.');
+      console.error('Error fetching club info:', error);
     } finally {
       setIsLoading(false);
     }
@@ -402,17 +404,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
             </div>
           </Card>
         ) : (
-          <Card className="mx-4 md:mx-10">
-            <div className="mx-auto">
-              <Image
-                src={'/images/review-pc.png'}
-                alt="review"
-                width={700}
-                height={700}
-                className="size-150 object-cover relative "
-              />
-            </div>
-          </Card>
+          <ClubReview />
         )}
       </div>
       {isOpenModal && (
