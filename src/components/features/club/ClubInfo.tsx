@@ -404,7 +404,8 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
             </div>
           </Card>
         ) : (
-          <ClubReview />
+          clubId && !isNaN(parseInt(clubId)) &&
+          <ClubReview clubId={parseInt(clubId)} />
         )}
       </div>
       {isOpenModal && (
