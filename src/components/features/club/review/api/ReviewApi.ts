@@ -1,5 +1,6 @@
 import { apiClient } from "@/lib/apiClient";
 
+//리뷰 통계
 export const getReviewsSortedByCount = async (clubId: number) => {
   try {
       const res = await apiClient.get(`/v1/clubs/${clubId}/reviews/keyword-stats`);
@@ -23,9 +24,18 @@ export const getReviewsSortedByCount = async (clubId: number) => {
   }
 };
 
-export const getReviews = async (clubId: number) => {
+interface ReviewRequest {
+    clubId: number;
+    page: number;
+    size: number;
+    // sort: string;
+    reviewSortType: string;
+}
+
+//한줄평 리뷰 리스트 조회회
+export const getReviews = async ({clubId, page, size, reviewSortType}: ReviewRequest) => {
   try {
-      const res = await apiClient.get(`/v1/clubs/${clubId}/reviews`);
+      const res = await apiClient.get(`/v1/clubs/${clubId}/reviews?page=${page}&size=${size}&sort=string&reviewSortType=${reviewSortType}`);
       console.log('res:', res.data.data);
       return res.data.data;
   } catch (error) {
@@ -33,3 +43,16 @@ export const getReviews = async (clubId: number) => {
       return null;
   }
 };
+
+//리뷰 좋아요 등록
+export const postReviewLike = async (clubId: number, id: number) => {
+  try {
+    const res = await apiClient.post(`/v1/clubs/${clubId}/reviews/like/${id}`);
+    return res.data.data;
+  } catch (error) {
+    console.error('Error posting review like: ', error);
+    return null;
+  }
+};
+
+//리뷰 신고 등록
