@@ -99,7 +99,7 @@ export const postCalendarDuplicate = async ({recruitType,startAt}:PostCalendarDu
       return res.data;
     }
   } catch (error) {
-    console.log("중복 확인 오류", error);
+
     throw error;
   }
 };

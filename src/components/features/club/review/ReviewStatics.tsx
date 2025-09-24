@@ -25,13 +25,12 @@ setReviews(res as any) ;
 }
 
 const sortedReviews = Object.entries(reviews);
-    console.log(sortedReviews);
 
-    const PercentageBar = ({ text, count, total }: { text: string, count: number, total: number }) => {
-        const percentage = (count / total) * 100;
-        const barColor = percentage === 0 ? 'bg-[#f2f2f2]' : `rgba(113, 177, 221, ${Math.min(0.3 + count / total, 1)})`;
+const PercentageBar = ({ text, count, total }: { text: string, count: number, total: number }) => {
+    const percentage = (count / total) * 100;
+    const barColor = percentage === 0 ? 'bg-[#f2f2f2]' : `rgba(113, 177, 221, ${Math.min(0.3 + count / total, 1)})`;
 
-        return (
+    return (
             <div className="h-[50px] w-full bg-[#f2f2f2] rounded-[10px] overflow-hidden relative">
                 <div 
                     className="h-full bg-[#f2f2f2] flex items-center px-2 rounded-[12px] md:justify-start justify-between" 
@@ -41,14 +40,12 @@ const sortedReviews = Object.entries(reviews);
                     <p className="text-[#71b1dd] bg-transparent font-bold absolute md:right-[15px] right-[14px] md:text-[14px] text-[13px] md:font-[700] font-[700]">{count}</p>
                 </div>
             </div>
-        );
-    };
+    );
+};
     const ReviewStats = ({ data }: { data: any }) => {
         // reduce -> acc + curr.count (누적값) , 0 (초기값)
         const total = data.reduce((acc: number, curr: any) => acc + curr[1], 0);
 
-        console.log('total: ', total);
-        console.log('data: ', data);
         return (
             <div className="flex flex-col gap-2">
                 {data.map(([text, count]: [string, number]) => (
@@ -63,7 +60,7 @@ const sortedReviews = Object.entries(reviews);
   return (
     
     <div className="flex flex-col gap-2 mx-auto w-[60%]">
-      <div className="flex flex-row items-center justify-between mt-20">
+      <div className="flex flex-row items-center justify-between mt-16">
         <h1 className="text-[24px] font-bold">이런 점이 좋았어요!</h1>
         <p className="flex flex-row items-center text-[14px] font-regular text-[#1954b2] cursor-pointer hover:text-[#1954b2]/80 transition-all duration-300 hover:font-bold">
           <PencilLine className="text-[#1954b2] size-4" />
