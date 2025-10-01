@@ -32,7 +32,7 @@ interface ReviewRequest {
     reviewSortType: string;
 }
 
-//한줄평 리뷰 리스트 조회회
+//한줄평 리뷰 리스트 조회
 export const getReviews = async ({clubId, page, size, reviewSortType}: ReviewRequest) => {
   try {
       const res = await apiClient.get(`/v1/clubs/${clubId}/reviews?page=${page}&size=${size}&sort=string&reviewSortType=${reviewSortType}`);
@@ -55,4 +55,29 @@ export const postReviewLike = async (clubId: number, id: number) => {
   }
 };
 
+interface ReviewReportRequest {
+  clubId: number;
+  id: number; //리뷰 id
+  reportReason: string;
+  detailReason: string | null;
+}
+
 //리뷰 신고 등록
+export const postReviewReport = async ({clubId, id, reportReason, detailReason}: ReviewReportRequest) => {
+  try {
+    const res = await apiClient.post(`/v1/clubs/${clubId}/reviews/report/${id}`,
+      {
+      reportReason: reportReason,
+      detailReason: detailReason,
+    });
+
+    if (res.data.success) {
+      return res.data.data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error posting review report: ', error);
+    return null;
+  }
+};

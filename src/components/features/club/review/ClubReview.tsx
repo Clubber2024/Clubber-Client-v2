@@ -7,7 +7,7 @@ import ReviewList from './ReviewList';
 export default function ClubReview({ clubId }: { clubId: number }) {
   return (
     <Card className="mx-4 md:mx-10">
-      <div className="mx-24">
+      <div className="mx-4 sm:mx-24">
         {/* <Image
           src={'/images/review-pc.png'}
           alt="review"
