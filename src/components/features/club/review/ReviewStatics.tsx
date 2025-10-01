@@ -59,7 +59,7 @@ const PercentageBar = ({ text, count, total }: { text: string, count: number, to
 
   return (
     
-    <div className="flex flex-col gap-2 mx-auto w-[60%]">
+    <div className="flex flex-col gap-2 mx-auto w-full sm:w-[60%]">
       <div className="flex flex-row items-center justify-between mt-16">
         <h1 className="text-[24px] font-bold">이런 점이 좋았어요!</h1>
         <p className="flex flex-row items-center text-[14px] font-regular text-[#1954b2] cursor-pointer hover:text-[#1954b2]/80 transition-all duration-300 hover:font-bold">

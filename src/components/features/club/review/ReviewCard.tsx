@@ -1,7 +1,10 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Ellipsis, ThumbsUp } from 'lucide-react';
-import { postReviewLike } from './api/ReviewApi';
+import { postReviewLike, postReviewReport } from './api/ReviewApi';
 import ReviewStatics from './ReviewStatics';
+import { useState } from 'react';
+import Modal from '@/app/modal/Modal';
+import { Button } from '@/components/ui/button';
 
 interface ReviewCardProps {
   clubId?: number;
@@ -17,6 +20,9 @@ interface ReviewCardProps {
 
 export default function ReviewCard({ review, clubId }: ReviewCardProps) {
   const isHidden = review?.reportStatus === "HIDDEN";
+  const [isOpenReport, setIsOpenReport] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [otherDetailReason, setOtherDetailReason] = useState('');
 
   const handleLike = async () => {
     console.log(clubId, review?.reviewId);
@@ -26,6 +32,21 @@ export default function ReviewCard({ review, clubId }: ReviewCardProps) {
     if (res) {
       console.log(res);
     }
+  };
+
+
+  const handleReport = async () => {
+    if (!clubId || !review?.reviewId) return;
+    const res = await postReviewReport({clubId, id: review?.reviewId, reportReason, detailReason: otherDetailReason});
+    if (res) {
+      console.log(res);
+    }
+  };
+
+  const handleCloseReport = () => {
+    setIsOpenReport(false);
+    setReportReason('');
+    setOtherDetailReason('');
   };
 
   return (
@@ -47,7 +68,14 @@ export default function ReviewCard({ review, clubId }: ReviewCardProps) {
             )}
 
           </div>
-          <div className="flex flex-row gap-2 items-center"> <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={handleLike}> <ThumbsUp size={12}/>추천</span> <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer">신고</span></div>
+          <div className="flex flex-row gap-2 items-center"> 
+            <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={handleLike}> 
+              <ThumbsUp size={12}/>추천
+            </span> 
+            <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={() => setIsOpenReport(true)}>
+              신고
+            </span>
+          </div>
         </CardHeader>
         <CardContent>
           <p>{review?.content || ''}</p>
@@ -64,10 +92,68 @@ export default function ReviewCard({ review, clubId }: ReviewCardProps) {
       
       {isHidden && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-lg">
-          <p className="text-[16px] font-medium text-[#707070]">
+          <p className="text-[16px] font-medium text-[#707070] mx-5 sm:mx-0">
             이 댓글은 운영 정책 위반으로 신고되어 숨김 처리되었습니다.
           </p>
         </div>
+      )}
+
+      {isOpenReport && (
+         <div
+         className="fixed flex inset-0 bg-black/50 z-50 justify-center items-center"
+        
+       >
+        <div
+                className={`fixed z-100 bg-white rounded-lg shadow-lg p-5 flex flex-col items-center text-left py-[35px] ${
+              'w-[100%] md:w-[80%] max-w-[813px] h-[410px]' 
+                }`}
+                role="dialog"
+                aria-modal="true"
+              >
+          <p className="text-[24px] font-semibold">신고하기</p>
+          <div className="w-full px-5 sm:px-15 mt-4">
+            <p className="text-[18px] font-semibold mb-4">신고사유</p>
+            <div className="flex flex-col gap-3 mb-3">
+              {[
+                { label: '욕설 및 비방', value: 'ABUSE' },
+                { label: '허위 정보', value: 'FALSE_INFORMATION' },
+                { label: '광고 및 스팸', value: 'ADVERTISEMENT_SPAM' },
+                { label: '개인정보 포함', value: 'PERSONAL_INFORMATION' },
+                { label: '기타', value: 'OTHER' },
+              ].map((option) => (
+                <div key={option.value} className="flex flex-row gap-2">
+                  {reportReason === option.value ? (
+                    <img
+                      src={`/images/admin/check-circle.png`}
+                      alt={`${option.label} 선택됨`}
+                      onClick={() => setReportReason(option.value)}
+                      className="w-[16px] h-[16px] cursor-pointer"
+                    />
+                  ) : (
+                    <input
+                      type="radio"
+                      id={option.value}
+                      name="report"
+                      value={option.value}
+                      checked={reportReason === option.value}
+                      onChange={(e) => setReportReason(e.target.value)}
+                      className="w-[16px] h-[16px] appearance-none border border-gray-400 rounded-[25px] cursor-pointer"
+                    />
+                  )}
+                  <label htmlFor={option.value} className="text-[16px] font-pretendard font-normal leading-none tracking-normal cursor-pointer" onClick={() => setReportReason(option.value)}>
+                    {option.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+            <input type="text" id="etc" name="etc" value={otherDetailReason} onChange={(e) => {reportReason==='OTHER'? setOtherDetailReason(e.target.value) : setOtherDetailReason('')}} placeholder="비방, 욕설, 광고, 잘못된 정보 등 신고 사유를 구체적으로 작성해주세요." className="w-full h-[48px] rounded-[5px] border border-[d6d6d6] px-3 py-2 text-[14px]" />
+          </div>
+          <div className="flex flex-row gap-2 w-full px-5 sm:px-15 mt-5">
+            <Button className="w-1/2 h-[48px] rounded-[5px] text-[16px]" onClick={handleReport}>신고하기</Button>
+            <Button className="w-1/2 h-[48px] rounded-[5px] text-[16px]" variant={"cancel"} onClick={handleCloseReport}>취소</Button>
+          </div>
+        </div>
+      </div>
       )}
     </Card>
   );

@@ -39,7 +39,7 @@ export default function ReviewList({ clubId }: { clubId: number }) {
           
 
   return (
-    <div className="flex flex-col gap-2 w-[80%] mx-auto mt-5">
+    <div className="flex flex-col gap-2 w-[100%] sm:w-[80%] mx-auto mt-5">
       <div className="flex flex-row gap-2 justify-end">
         <p 
           className={`${sort==='LIKE'?'text-[#202123] font-semibold':'text-[#707070]'} text-[14px] font-regular cursor-pointer hover:text-[#202123]/80 transition-all duration-300 hover:font-semibold`} 
