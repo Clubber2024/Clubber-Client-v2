@@ -85,6 +85,7 @@ export default function SignUp() {
       setAccessToken(localStorage.getItem('accessToken') || '');
       // localStorage 관련 작업 수행
     }
+
   }, []);
 
   //
@@ -124,7 +125,7 @@ export default function SignUp() {
       });
 
       if (res.data.success) {
-        setTotalModalMessage('회원가입을 완료하였습니다.');
+        setTotalModalMessage(`회원가입이 완료되었습니다.\n 관리자 승인 이후 입력하신 연락수단을 통해 연락드리겠습니다. 감사합니다.`);
         setIsTotalModalOpen(true);
         setCollege('');
         setDepartment('');

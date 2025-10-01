@@ -62,7 +62,13 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
     const adminStatus = localStorage.getItem('isAdmin');
     setAccessToken(token);
     setIsAdmin(adminStatus === 'true');
-  }, []);
+
+    // URL 파라미터에서 tab 정보 읽기
+    const tab = searchParams.get('tab');
+    if (tab === 'review') {
+      setActiveTab('review');
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // const clubId = searchParams.get('clubId');
@@ -404,7 +410,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
             </div>
           </Card>
         ) : (
-          <ClubReview clubId={clubId ? parseInt(clubId) : 0} />
+          clubId && !isNaN(parseInt(clubId)) && <ClubReview clubId={parseInt(clubId)} />
         )}
       </div>
       {isOpenModal && (

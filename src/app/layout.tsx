@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
+import GoogleAnalytics from '@/components/common/GoogleAnalytics';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}/>}
         <div className="flex min-h-screen flex-col md:max-w-6xl md:mx-auto">
           <Header />
           {/* Main 영역 -> flex-1 : 헤더와 푸터는 설정한 영역대로, 나머지 영역은 메인영역으로 */}

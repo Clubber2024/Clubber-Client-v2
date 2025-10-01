@@ -379,6 +379,8 @@ setIsOpenWriteContent(false);
   setIsErrorTitle(false);
   setIsErrorType(false);
   setErrorTypeMessage("");
+  setIsConfirmDuplicate(false); // 중복 확인 상태 초기화
+  setRecruitType(""); // 모집 타입도 초기화
    }
   
 }
@@ -426,17 +428,18 @@ const handleSubmitButton = async () => {
         }
       }
     } else {
-      if(isConfirmDuplicate){
-        const res = await postCalendar({title:title,recruitType:recruitType,startAt:formattedStart,endAt: formattedEnd,applyLink:applyLink})
-          if(res.success){
-            setIsOpenWriteContent(false);
-            setModalMessage("모집일정이 캘린더에 등록되었습니다.")
-            setIsOpenModal3(true);
-          }
-          return;
-      } else{
+      // if(isConfirmDuplicate){
+      //   const res = await postCalendar({title:title,recruitType:recruitType,startAt:formattedStart,endAt: formattedEnd,applyLink:applyLink})
+      //     if(res.success){
+      //       setIsOpenWriteContent(false);
+      //       setModalMessage("모집일정이 캘린더에 등록되었습니다.")
+      //       setIsOpenModal3(true);
+      //     }
+      //     return;
+      // } else{
       // 새 등록 모드일 때는 중복 확인 후 postCalendar 호출
       const duplicateConfirm = await postCalendarDuplicate({recruitType:recruitType, startAt:formattedStart});
+      console.log("중복 확인 결과", duplicateConfirm);
       if(duplicateConfirm.success){
         if(duplicateConfirm.data.isExist){
           const duplicateRecruitType = duplicateConfirm.data.recruitType;
@@ -446,8 +449,10 @@ const handleSubmitButton = async () => {
           setIsOpenWriteContent(false);
           setIsOpenModal2(true);
           setModalMessage(`해당 월에는 이미 ${recruitTypeText} 일정이 등록되어 있습니다. \n 중복 등록 시 사용자에게 혼란을 줄 수 있으니 확인 후 진행해 주세요.`)
-        }
-        } else{
+        } else {
+          // 중복이 없으면 바로 등록 진행
+          console.log("중복이 없으면 바로 등록 진행");
+          setIsConfirmDuplicate(false);
           const res = await postCalendar({title:title,recruitType:recruitType,startAt:formattedStart,endAt: formattedEnd,applyLink:applyLink})
           if(res.success){
             setIsOpenWriteContent(false);
@@ -455,6 +460,7 @@ const handleSubmitButton = async () => {
             setIsOpenModal3(true);
           }
         }
+      // } 
       }
     }
   }catch{}
@@ -485,6 +491,8 @@ const cancelModal2 = () => {
   setEndDate(new Date());
   setStartTime("00:00")
   setEndTime("23:59")
+  setIsConfirmDuplicate(false); // 중복 확인 상태 초기화
+  setRecruitType(""); // 모집 타입도 초기화
 
 }
 

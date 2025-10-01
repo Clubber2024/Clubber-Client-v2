@@ -96,9 +96,9 @@ export default function ReviewWritePage() {
 
   const handleModalClose = () => {
     setModal({ isOpen: false, message: '', showConfirmButton: false });
-    // 성공한 경우에만 메인 페이지로 리다이렉트
-    if (modal.message.includes('성공적으로')) {
-      router.push('/');
+    // 성공한 경우에만 해당 동아리 상세 페이지의 리뷰 탭으로 리다이렉트
+    if (modal.message.includes('성공적으로') && clubIdNumber) {
+      router.push(`/clubInfo?clubId=${clubIdNumber}&tab=review`);
     }
   };
 
