@@ -4,7 +4,7 @@ import ReviewStatics from './ReviewStatics';
 import Divider from '@/components/ui/divider';
 import ReviewList from './ReviewList';
 
-export default function ClubReview() {
+export default function ClubReview({ clubId }: { clubId: number }) {
   return (
     <Card className="mx-4 md:mx-10">
       <div className="mx-24">
@@ -15,7 +15,7 @@ export default function ClubReview() {
           height={700}
           className="size-150 object-cover relative "
         /> */}
-        <ReviewStatics />
+        <ReviewStatics clubId={clubId} />
         <Divider />
         <ReviewList />
       </div>
