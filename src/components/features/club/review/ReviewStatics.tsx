@@ -1,17 +1,19 @@
-import { PencilLine } from 'lucide-react';
+import { ChevronDown, PencilLine } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getReviewsSortedByCount } from './api/ReviewApi';
 
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 type ReviewKeywordStats = Record<string, number>;
 
 export default function ReviewStatics({ clubId }: { clubId: number }) {
   const [reviews, setReviews] = useState<ReviewKeywordStats>({});
+  const [limit, setLimit] = useState(5);
 
   useEffect(() => {
     const getReviewsSortedByCountApi = async () => {
-      const res = await getReviewsSortedByCount(clubId);
+      const res = await getReviewsSortedByCount(clubId, limit);
       if (res) {
         setReviews(res as ReviewKeywordStats);
       }
@@ -20,7 +22,7 @@ export default function ReviewStatics({ clubId }: { clubId: number }) {
     if (clubId && !isNaN(clubId)) {
       getReviewsSortedByCountApi();
     }
-  }, [clubId]);
+  }, [clubId, limit]);
 
   // clubId가 유효하지 않으면 조건부 렌더링
   if (!clubId || isNaN(clubId)) {
@@ -84,8 +86,9 @@ export default function ReviewStatics({ clubId }: { clubId: number }) {
           </p>
         </Link>
       </div>
-      <div>
+      <div className="flex flex-col gap-2">
         <ReviewStats data={sortedReviews} />
+        <Button variant="outline" onClick={() => setLimit(limit + 5)}> <ChevronDown className="text-[#1954b2] size-4" /> 더보기</Button>
       </div>
     </div>
   );

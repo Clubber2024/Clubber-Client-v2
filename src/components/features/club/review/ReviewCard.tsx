@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Ellipsis, ThumbsUp } from 'lucide-react';
-import { postReviewLike, postReviewReport } from './api/ReviewApi';
+import { deleteReviewLike, postReviewLike, postReviewReport } from './api/ReviewApi';
 import ReviewStatics from './ReviewStatics';
 import { useState } from 'react';
 import Modal from '@/app/modal/Modal';
@@ -14,21 +14,46 @@ interface ReviewCardProps {
     content?: string;
     keywords?: string[];
     likes?: number;
+    liked?: boolean;
     reportStatus?: "HIDDEN" | "VISIBLE";
   };
 }
 
 export default function ReviewCard({ review, clubId }: ReviewCardProps) {
-  const isHidden = review?.reportStatus === "HIDDEN";
+  const [reviews, setReviews] = useState(review);
+  const isHidden = reviews?.reportStatus === "HIDDEN";
   const [isOpenReport, setIsOpenReport] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [otherDetailReason, setOtherDetailReason] = useState('');
 
   const handleLike = async () => {
-    console.log(clubId, review?.reviewId);
-    if (!clubId || !review?.reviewId) return;
+    console.log(clubId, reviews?.reviewId);
+    if (!clubId || !reviews?.reviewId) return;
     
-    const res = await postReviewLike(clubId, review?.reviewId);
+    // 즉시 UI 업데이트
+    setReviews({
+      ...reviews,
+      liked: true,
+      likes: (reviews?.likes || 0) + 1
+    });
+    
+    const res = await postReviewLike(clubId, reviews?.reviewId);
+    if (res) {
+      console.log(res);
+    }
+  };
+
+  const deleteLike = async () => {
+    if (!clubId || !reviews?.reviewId) return;
+    
+    // 즉시 UI 업데이트
+    setReviews({
+      ...reviews,
+      liked: false,
+      likes: Math.max((reviews?.likes || 0) - 1, 0)
+    });
+    
+    const res = await deleteReviewLike(clubId, reviews?.reviewId);
     if (res) {
       console.log(res);
     }
@@ -36,8 +61,8 @@ export default function ReviewCard({ review, clubId }: ReviewCardProps) {
 
 
   const handleReport = async () => {
-    if (!clubId || !review?.reviewId) return;
-    const res = await postReviewReport({clubId, id: review?.reviewId, reportReason, detailReason: otherDetailReason});
+    if (!clubId || !reviews?.reviewId) return;
+    const res = await postReviewReport({clubId, id: reviews?.reviewId, reportReason, detailReason: otherDetailReason});
     if (res) {
       console.log(res);
     }
@@ -55,32 +80,33 @@ export default function ReviewCard({ review, clubId }: ReviewCardProps) {
         <CardHeader className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-1 items-center">
             <CardTitle className="text-[16px] font-bold mr-1">
-              {review?.reviewId? `익명${review?.reviewId}` : '익명'}
+              {reviews?.reviewId? `익명${reviews?.reviewId}` : '익명'}
             </CardTitle>
             <p className="text-[12px] font-regular text-[#9c9c9c]">
-              {review?.dateTime || ''}
+              {reviews?.dateTime || ''}
             </p>
-            {review?.likes && review?.likes > 0 && (
+            {reviews?.likes && reviews?.likes > 0 && (
             <span className="flex flex-row gap-0.5 items-center ml-0.5">
             <ThumbsUp size={12} className="text-[#fd3c56]"/>
-            <p className="text-[12px] font-regular text-[#fd3c56]">{review?.likes}</p>
+            <p className="text-[12px] font-regular text-[#fd3c56]">{reviews?.likes}</p>
             </span>
             )}
 
           </div>
           <div className="flex flex-row gap-2 items-center"> 
-            <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={handleLike}> 
-              <ThumbsUp size={12}/>추천
-            </span> 
+           
+             {reviews?.liked?  <span className="text-[12px] font-regular text-[#FD3C56] flex flex-row gap-1 items-center cursor-pointer" onClick={deleteLike}> <ThumbsUp size={12}/>추천 </span>: <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={handleLike}> <ThumbsUp size={12}/>추천 </span>}
+             
+             
             <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={() => setIsOpenReport(true)}>
               신고
             </span>
           </div>
         </CardHeader>
         <CardContent>
-          <p>{review?.content || ''}</p>
+          <p>{reviews?.content || ''}</p>
           <div className="flex flex-row flex-wrap gap-1">
-            {review?.keywords?.map((keyword, index) => (
+            {reviews?.keywords?.map((keyword, index) => (
               <p key={index} className="text-[14px] font-regular gap-3 w-fit h-[34px] bg-[#f6f6f8] rounded-[5px] px-3 py-2">
                 {keyword}
               </p>
