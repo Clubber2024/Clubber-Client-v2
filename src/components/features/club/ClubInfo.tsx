@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { StarIcon, Star, ChevronRightIcon } from 'lucide-react';
@@ -11,6 +11,10 @@ import { FavoriteItem } from '@/types/bookmark/bookmarkData';
 import Modal from '@/app/modal/Modal';
 import Image from 'next/image';
 import ClubReview from './review/ClubReview';
+import ReviewEdit from './review/write/ReviewEdit';
+import { getUserReviews } from './review/api/reviewWrite';
+import { patchReview } from './review/api/ReviewApi';
+import Loading from '@/components/common/Loading';
 
 export type Club = {
   instagram: string | null;
@@ -54,34 +58,14 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-  const [activeTab, setActiveTab] = useState<'intro' | 'review'>('intro');
-
-  useEffect(() => {
-    // Check authentication status on component mount
-    const token = localStorage.getItem('accessToken');
-    const adminStatus = localStorage.getItem('isAdmin');
-    setAccessToken(token);
-    setIsAdmin(adminStatus === 'true');
-
-    // URL 파라미터에서 tab 정보 읽기
-    const tab = searchParams.get('tab');
-    if (tab === 'review') {
-      setActiveTab('review');
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    // const clubId = searchParams.get('clubId');
-    if (clubId) {
-      fetchClubInfoData(parseInt(clubId));
-      if (accessToken && !isAdmin) {
-        fetchFavoriteStatus(parseInt(clubId));
-      }
-    } else {
-      setError('동아리 ID가 필요합니다.');
-      setIsLoading(false);
-    }
-  }, [searchParams, accessToken, isAdmin, clubId]);
+  const [activeTab, setActiveTab] = useState<'intro' | 'review' | 'edit'>('intro');
+  const [editReviewData, setEditReviewData] = useState<{
+    reviewId: number;
+    keywords: string[];
+    content: string;
+  } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditLoading, setIsEditLoading] = useState(false);
 
   const fetchClubInfoData = async (clubId: number) => {
     try {
@@ -111,37 +95,118 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
     }
   };
 
-  const fetchFavoriteStatus = async (clubId: number) => {
-    if (isAdmin) return;
-    if (!accessToken) return;
+  const fetchFavoriteStatus = useCallback(
+    async (clubId: number) => {
+      if (isAdmin) return;
+      if (!accessToken) return;
 
-    try {
-      const res = await getFavorites();
+      try {
+        const res = await getFavorites();
 
-      // The response structure is: { userId: number, userFavorites: FavoriteItem[] }
-      if (!res.userFavorites) {
+        if (!res.userFavorites) {
+          setIsStarred(false);
+          setFavoriteId(null);
+          return;
+        }
+
+        const userFavorites = res.userFavorites;
+        const clubIds = userFavorites.map((item: FavoriteItem) => item.favoriteClub.clubId);
+        const isFavoriteClub = clubIds.includes(clubId);
+        const favorite = userFavorites.find(
+          (item: FavoriteItem) => item.favoriteClub.clubId === clubId
+        );
+
+        setIsStarred(isFavoriteClub);
+        if (favorite) {
+          setFavoriteId(favorite.favoriteId);
+        } else {
+          setFavoriteId(null);
+        }
+      } catch (error) {
+        console.error('Error fetching favorite status:', error);
         setIsStarred(false);
         setFavoriteId(null);
-        return;
       }
+    },
+    [isAdmin, accessToken]
+  );
 
-      const userFavorites = res.userFavorites;
-      const clubIds = userFavorites.map((item: FavoriteItem) => item.favoriteClub.clubId);
-      const isFavoriteClub = clubIds.includes(clubId);
-      const favorite = userFavorites.find(
-        (item: FavoriteItem) => item.favoriteClub.clubId === clubId
+  const fetchEditReviewData = useCallback(async (reviewId: number) => {
+    setIsEditLoading(true);
+    try {
+      const userReviewsData = await getUserReviews();
+      const foundReview = userReviewsData.userReviews.find(
+        (review) => review.reviewId === reviewId
       );
-
-      setIsStarred(isFavoriteClub);
-      if (favorite) {
-        setFavoriteId(favorite.favoriteId);
-      } else {
-        setFavoriteId(null);
+      if (foundReview) {
+        setEditReviewData({
+          reviewId: foundReview.reviewId,
+          keywords: foundReview.keywords,
+          content: foundReview.content,
+        });
       }
-    } catch (error) {
-      console.error('Error fetching favorite status:', error);
-      setIsStarred(false);
-      setFavoriteId(null);
+    } catch {
+      setModalMessage('리뷰 데이터를 불러오는데 실패했습니다.');
+      setIsOpenModal(true);
+    } finally {
+      setIsEditLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Check authentication status on component mount
+    const token = localStorage.getItem('accessToken');
+    const adminStatus = localStorage.getItem('isAdmin');
+    setAccessToken(token);
+    setIsAdmin(adminStatus === 'true');
+
+    // URL 파라미터에서 tab 정보 읽기
+    const tab = searchParams.get('tab');
+    const reviewId = searchParams.get('reviewId');
+
+    if (tab === 'review') {
+      setActiveTab('review');
+    } else if (tab === 'edit' && reviewId) {
+      setActiveTab('edit');
+      fetchEditReviewData(parseInt(reviewId));
+    }
+  }, [searchParams, fetchEditReviewData]);
+
+  useEffect(() => {
+    // const clubId = searchParams.get('clubId');
+    if (clubId) {
+      fetchClubInfoData(parseInt(clubId));
+      if (accessToken && !isAdmin) {
+        fetchFavoriteStatus(parseInt(clubId));
+      }
+    } else {
+      setError('동아리 ID가 필요합니다.');
+      setIsLoading(false);
+    }
+  }, [searchParams, accessToken, isAdmin, clubId, fetchFavoriteStatus]);
+
+  const handleEditSubmit = async (content: string) => {
+    if (!editReviewData) return;
+
+    setIsSubmitting(true);
+    try {
+      const res = await patchReview(editReviewData.reviewId, content);
+      if (res) {
+        setModalMessage('리뷰가 성공적으로 수정되었습니다!');
+        setIsOpenModal(true);
+        // 리뷰 탭으로 전환
+        setActiveTab('review');
+        setEditReviewData(null);
+        // URL 업데이트 (reviewId 제거)
+        if (clubId) {
+          router.push(`/clubInfo?clubId=${clubId}&tab=review`);
+        }
+      }
+    } catch {
+      setModalMessage('리뷰 수정에 실패했습니다. 다시 시도해주세요.');
+      setIsOpenModal(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -177,11 +242,7 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">동아리 정보를 불러오는 중...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -286,7 +347,12 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
           <div className="absolute -top-6 md:-top-6 left-1/2 transform -translate-x-1/2 z-10">
             <div className="flex w-64 md:w-180 bg-[#c6e0f1] rounded-full shadow-sm">
               <button
-                onClick={() => setActiveTab('intro')}
+                onClick={() => {
+                  setActiveTab('intro');
+                  if (clubId) {
+                    router.push(`/clubInfo?clubId=${clubId}&tab=intro`);
+                  }
+                }}
                 className={`flex-1 pl-6 pr-4 rounded-none font-medium transition-all duration-200 `}
               >
                 <p
@@ -300,12 +366,19 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
                 </p>
               </button>
               <button
-                onClick={() => setActiveTab('review')}
-                className={`flex-1 pr-6 pl-4 rounded-none font-medium transition-all duration-200 `}
+                onClick={() => {
+                  setActiveTab('review');
+                  if (clubId) {
+                    router.push(`/clubInfo?clubId=${clubId}&tab=review`);
+                  }
+                }}
+                className={`flex-1 pr-6 pl-4 rounded-none font-medium transition-all duration-200 ${
+                  activeTab === 'edit' ? 'hidden' : ''
+                }`}
               >
                 <p
                   className={`font-medium transition-all duration-200 text-center pt-3 pb-2.5 text-sm md:text-[17px] ${
-                    activeTab === 'review'
+                    activeTab === 'review' || activeTab === 'edit'
                       ? 'font-bold border-b-3 border-primary md:w-60 mx-auto'
                       : 'text-gray-600 hover:text-primary'
                   }`}
@@ -407,6 +480,28 @@ export default function ClubInfo({ clubId }: ClubInfoProps) {
                   • {clubInfo?.room || ''}
                 </p>
               </div>
+            </div>
+          </Card>
+        ) : activeTab === 'edit' ? (
+          <Card className="mx-4 md:mx-10">
+            <div className="px-7 md:px-20 my-10">
+              {isEditLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loading />
+                </div>
+              ) : editReviewData ? (
+                <ReviewEdit
+                  keywords={editReviewData.keywords}
+                  initialContent={editReviewData.content}
+                  onSubmit={handleEditSubmit}
+                  isSubmitting={isSubmitting}
+                  clubId={clubId ? parseInt(clubId) : null}
+                />
+              ) : (
+                <div className="flex items-center justify-center py-8">
+                  <p className="text-gray-500">리뷰 데이터를 찾을 수 없습니다.</p>
+                </div>
+              )}
             </div>
           </Card>
         ) : (

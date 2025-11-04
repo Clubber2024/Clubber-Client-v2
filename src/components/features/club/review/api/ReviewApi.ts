@@ -87,3 +87,31 @@ export const postReviewReport = async ({
     return null;
   }
 };
+
+//리뷰 수정
+export const patchReview = async (reviewId: number, content: string) => {
+  try {
+    const res = await apiClient.patch(`/v1/users/review/${reviewId}`, { content });
+    if (res.status === 200 || res.data?.success) {
+      return res.data?.data || res.data || true;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error patching review: ', error);
+    return null;
+  }
+};
+
+//리뷰 삭제
+export const deleteReview = async (reviewId: number) => {
+  try {
+    const res = await apiClient.delete(`/v1/users/review/${reviewId}`);
+    if (res.status === 200) {
+      return true;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error deleting review: ', error);
+    return null;
+  }
+};

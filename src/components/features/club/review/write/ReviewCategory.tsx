@@ -64,21 +64,23 @@ export default function ReviewCategory({ onNext }: ReviewCategoryProps) {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <div className="flex flex-col justify-center items-center mb-8 gap-1">
-        <h2 className="text-lg font-bold">이 동아리, 어떤 게 마음에 들었나요?</h2>
-        <p className="text-sm text-[#707070] font-medium">
+    <div className="flex flex-col justify-center items-center px-4 sm:px-6">
+      <div className="flex flex-col justify-center items-center mb-4 sm:mb-6 md:mb-8 gap-1">
+        <h2 className="text-base sm:text-lg font-bold text-center px-2">
+          이 동아리, 어떤 게 마음에 들었나요?
+        </h2>
+        <p className="text-xs sm:text-sm text-[#707070] font-medium text-center px-2">
           동아리를 표현하는 키워드를 선택해주세요. (필수 3개 ~ 5개)
         </p>
       </div>
-      <Card className="bg-[#FCFDFF] pt-10 px-14 w-[90%] mx-auto">
-        <div className="grid grid-cols-4 gap-12 mx-auto">
+      <Card className="bg-[#FCFDFF] pt-4 sm:pt-6 md:pt-8 lg:pt-10 px-4 sm:px-6 md:px-10 lg:px-14 w-full sm:w-[95%] md:w-[90%] mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-12 mx-auto">
           {categoryList.map((category) => (
             <div
               key={category.reviewKeywordCategory}
-              className="flex flex-col gap-2 justify-start items-start mb-7"
+              className="flex flex-col gap-2 justify-start items-start mb-4 sm:mb-5 md:mb-7"
             >
-              <h3 className="text-sm font-semibold text-center mb-2">
+              <h3 className="text-xs sm:text-sm font-semibold text-left sm:text-center mb-2 w-full">
                 {getCategoryDisplayName(category.reviewKeywordCategory)}
               </h3>
               {category.keywords.map((keyword) => {
@@ -87,7 +89,7 @@ export default function ReviewCategory({ onNext }: ReviewCategoryProps) {
                   <Card
                     key={keyword.code}
                     onClick={() => handleKeywordClick(keyword.code)}
-                    className={`py-1.5 px-2.5 rounded-[5px] shadow-xs text-[13px] cursor-pointer hover:scale-102 transition-all duration-300 ${
+                    className={`py-1.5 px-2.5 sm:py-1.5 sm:px-2.5 rounded-[5px] shadow-xs text-[11px] sm:text-[12px] md:text-[13px] cursor-pointer hover:scale-102 transition-all duration-300 ${
                       isSelected
                         ? 'bg-[#71B1DD1A] text-[#5C94BA] border-[#5C94BA] hover:border-primary font-semibold'
                         : 'text-[#52555B] hover:bg-[#71B1DD1A] hover:text-primary hover:border-primary'
@@ -103,7 +105,7 @@ export default function ReviewCategory({ onNext }: ReviewCategoryProps) {
       </Card>
       <Button
         onClick={handleNext}
-        className="w-50 mx-auto bg-primary text-white text-sm font-semibold rounded-[3px] mt-8"
+        className="w-full sm:w-48 md:w-50 mx-auto bg-primary text-white text-sm font-semibold rounded-[3px] mt-6 sm:mt-8 px-4 py-2"
       >
         다음
       </Button>
