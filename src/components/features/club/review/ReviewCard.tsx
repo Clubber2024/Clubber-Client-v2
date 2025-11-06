@@ -24,7 +24,7 @@ export default function ReviewCard({ review, clubId }: ReviewCardProps) {
   const isHidden = reviews?.reportStatus === "HIDDEN";
   const [isOpenReport, setIsOpenReport] = useState(false);
   const [reportReason, setReportReason] = useState('');
-  const [otherDetailReason, setOtherDetailReason] = useState('');
+  const [otherDetailReason, setOtherDetailReason] = useState<string|null>(null);
 
   const handleLike = async () => {
     console.log(clubId, reviews?.reviewId);
@@ -71,7 +71,7 @@ export default function ReviewCard({ review, clubId }: ReviewCardProps) {
   const handleCloseReport = () => {
     setIsOpenReport(false);
     setReportReason('');
-    setOtherDetailReason('');
+    setOtherDetailReason(null);
   };
 
   return (
@@ -172,7 +172,7 @@ export default function ReviewCard({ review, clubId }: ReviewCardProps) {
                 </div>
               ))}
             </div>
-            <input type="text" id="etc" name="etc" value={otherDetailReason} onChange={(e) => {reportReason==='OTHER'? setOtherDetailReason(e.target.value) : setOtherDetailReason('')}} placeholder="비방, 욕설, 광고, 잘못된 정보 등 신고 사유를 구체적으로 작성해주세요." className="w-full h-[48px] rounded-[5px] border border-[d6d6d6] px-3 py-2 text-[14px]" />
+            <input type="text" id="etc" name="etc" value={otherDetailReason ?? ''} onChange={(e) => {reportReason==='OTHER'? setOtherDetailReason(e.target.value) : setOtherDetailReason(null)}} placeholder="비방, 욕설, 광고, 잘못된 정보 등 신고 사유를 구체적으로 작성해주세요." className="w-full h-[48px] rounded-[5px] border border-[d6d6d6] px-3 py-2 text-[14px]" />
           </div>
           <div className="flex flex-row gap-2 w-full px-5 sm:px-15 mt-5">
             <Button className="w-1/2 h-[48px] rounded-[5px] text-[16px]" onClick={handleReport}>신고하기</Button>
