@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import ReviewStatics from './ReviewStatics';
 import { Ellipsis, ThumbsUp, Pencil, Trash2 } from 'lucide-react';
-import { postReviewLike, postReviewReport, deleteReview } from './api/ReviewApi';
-// import ReviewStatics from './ReviewStatics';
+import { postReviewLike, postReviewReport, deleteReview, deleteReviewLike } from './api/ReviewApi';
 import { useState } from 'react';
 import Modal from '@/app/modal/Modal';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,8 @@ interface ReviewCardProps {
     content?: string;
     keywords?: string[];
     likes?: number;
-    reportStatus?: 'HIDDEN' | 'VISIBLE';
+    liked?: boolean;
+    reportStatus?: "HIDDEN" | "VISIBLE";
   };
   isOwnReview?: boolean;
   onReviewDeleted?: () => void;
@@ -37,20 +38,41 @@ export default function ReviewCard({
   const isHidden = review?.reportStatus === 'HIDDEN';
   const [isOpenReport, setIsOpenReport] = useState(false);
   const [reportReason, setReportReason] = useState('');
-  const [otherDetailReason, setOtherDetailReason] = useState('');
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [reviews, setReviews] = useState(review);
+  const [otherDetailReason, setOtherDetailReason] = useState<string|null>(null);
 
-  const handleLike = async () => {
-    if (!clubId || !review?.reviewId) return;
-
-    const res = await postReviewLike(clubId, review?.reviewId);
+   const handleLike = async () => {
+    console.log(clubId, reviews?.reviewId);
+    if (!clubId || !reviews?.reviewId) return;
+    
+    // 즉시 UI 업데이트
+    setReviews({
+      ...reviews,
+      liked: true,
+      likes: (reviews?.likes || 0) + 1
+    });
+    
+    const res = await postReviewLike(clubId, reviews?.reviewId);
     if (res) {
-      // 리뷰 목록 새로고침이 필요할 수 있음
-      window.location.reload();
+      console.log(res);
     }
   };
 
+  const deleteLike = async () => {
+    if (!clubId || !reviews?.reviewId) return;
+    
+    // 즉시 UI 업데이트
+    setReviews({
+      ...reviews,
+      liked: false,
+      likes: Math.max((reviews?.likes || 0) - 1, 0)
+    });
+    
+    const res = await deleteReviewLike(clubId, reviews?.reviewId);
+
   const handleReport = async () => {
+
     if (!clubId || !review?.reviewId) return;
     const res = await postReviewReport({
       clubId,
@@ -58,6 +80,7 @@ export default function ReviewCard({
       reportReason,
       detailReason: otherDetailReason,
     });
+
     if (res) {
       setIsOpenReport(false);
       setReportReason('');
@@ -69,7 +92,7 @@ export default function ReviewCard({
   const handleCloseReport = () => {
     setIsOpenReport(false);
     setReportReason('');
-    setOtherDetailReason('');
+    setOtherDetailReason(null);
   };
 
   const handleEdit = () => {
@@ -96,15 +119,28 @@ export default function ReviewCard({
         <CardHeader className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-1 items-center">
             <CardTitle className="text-[16px] font-bold mr-1">
-              {review?.reviewId ? `익명${review?.reviewId}` : '익명'}
+              {reviews?.reviewId? `익명${reviews?.reviewId}` : '익명'}
             </CardTitle>
-            <p className="text-[12px] font-regular text-[#9c9c9c]">{review?.dateTime || ''}</p>
-            {review?.likes && review?.likes > 0 && (
-              <span className="flex flex-row gap-0.5 items-center ml-0.5">
-                <ThumbsUp size={12} className="text-[#fd3c56]" />
-                <p className="text-[12px] font-regular text-[#fd3c56]">{review?.likes}</p>
-              </span>
+            <p className="text-[12px] font-regular text-[#9c9c9c]">
+              {reviews?.dateTime || ''}
+            </p>
+            {reviews?.likes && reviews?.likes > 0 && (
+            <span className="flex flex-row gap-0.5 items-center ml-0.5">
+            <ThumbsUp size={12} className="text-[#fd3c56]"/>
+            <p className="text-[12px] font-regular text-[#fd3c56]">{reviews?.likes}</p>
+            </span>
             )}
+
+          </div>
+          <div className="flex flex-row gap-2 items-center"> 
+           
+             {reviews?.liked?  <span className="text-[12px] font-regular text-[#FD3C56] flex flex-row gap-1 items-center cursor-pointer" onClick={deleteLike}> <ThumbsUp size={12}/>추천 </span>: <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={handleLike}> <ThumbsUp size={12}/>추천 </span>}
+             
+             
+            <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={() => setIsOpenReport(true)}>
+              신고
+            </span>
+
           </div>
           {isOwnReview ? (
             <DropdownMenu>
@@ -147,13 +183,11 @@ export default function ReviewCard({
           )}
         </CardHeader>
         <CardContent>
-          <p className="mb-2">{review?.content || ''}</p>
+
+          <p>{reviews?.content || ''}</p>
           <div className="flex flex-row flex-wrap gap-1">
-            {review?.keywords?.map((keyword, index) => (
-              <p
-                key={index}
-                className="text-[14px] font-regular gap-3 w-fit h-[34px] bg-[#f6f6f8] rounded-[5px] px-3 py-2"
-              >
+            {reviews?.keywords?.map((keyword, index) => (
+              <p key={index} className="text-[14px] font-regular gap-3 w-fit h-[34px] bg-[#f6f6f8] rounded-[5px] px-3 py-2">
                 {keyword}
               </p>
             ))}
@@ -244,6 +278,13 @@ export default function ReviewCard({
                 취소
               </Button>
             </div>
+
+            <input type="text" id="etc" name="etc" value={otherDetailReason ?? ''} onChange={(e) => {reportReason==='OTHER'? setOtherDetailReason(e.target.value) : setOtherDetailReason(null)}} placeholder="비방, 욕설, 광고, 잘못된 정보 등 신고 사유를 구체적으로 작성해주세요." className="w-full h-[48px] rounded-[5px] border border-[d6d6d6] px-3 py-2 text-[14px]" />
+          </div>
+          <div className="flex flex-row gap-2 w-full px-5 sm:px-15 mt-5">
+            <Button className="w-1/2 h-[48px] rounded-[5px] text-[16px]" onClick={handleReport}>신고하기</Button>
+            <Button className="w-1/2 h-[48px] rounded-[5px] text-[16px]" variant={"cancel"} onClick={handleCloseReport}>취소</Button>
+
           </div>
         </div>
       )}
