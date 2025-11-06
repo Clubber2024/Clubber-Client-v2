@@ -41,6 +41,8 @@ export default function ReviewCard({
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [reviews, setReviews] = useState(review);
   const [otherDetailReason, setOtherDetailReason] = useState<string|null>(null);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
    const handleLike = async () => {
     console.log(clubId, reviews?.reviewId);
@@ -86,7 +88,9 @@ export default function ReviewCard({
       setIsOpenReport(false);
       setReportReason('');
       setOtherDetailReason('');
-      window.location.reload();
+      
+      setIsOpenModal(true);
+      setModalMessage('리뷰신고가 접수되었습니다.');
     }
   };
 
@@ -131,18 +135,7 @@ export default function ReviewCard({
             <p className="text-[12px] font-regular text-[#fd3c56]">{reviews?.likes}</p>
             </span>
             )}
-
           </div>
-          {/* <div className="flex flex-row gap-2 items-center"> 
-           
-             {reviews?.liked?  <span className="text-[12px] font-regular text-[#FD3C56] flex flex-row gap-1 items-center cursor-pointer" onClick={deleteLike}> <ThumbsUp size={12}/>추천 </span>: <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={handleLike}> <ThumbsUp size={12}/>추천 </span>}
-             
-             
-            <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={() => setIsOpenReport(true)}>
-              신고
-            </span>
-
-          </div> */}
           {isOwnReview ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -270,13 +263,6 @@ export default function ReviewCard({
                 취소
               </Button>
             </div>
-
-            {/* <input type="text" id="etc" name="etc" value={otherDetailReason ?? ''} onChange={(e) => {reportReason==='OTHER'? setOtherDetailReason(e.target.value) : setOtherDetailReason(null)}} placeholder="비방, 욕설, 광고, 잘못된 정보 등 신고 사유를 구체적으로 작성해주세요." className="w-full h-[48px] rounded-[5px] border border-[d6d6d6] px-3 py-2 text-[14px]" /> */}
-          </div>
-          <div className="flex flex-row gap-2 w-full px-5 sm:px-15 mt-5">
-            <Button className="w-1/2 h-[48px] rounded-[5px] text-[16px]" onClick={handleReport}>신고하기</Button>
-            <Button className="w-1/2 h-[48px] rounded-[5px] text-[16px]" variant={"cancel"} onClick={handleCloseReport}>취소</Button>
-
           </div>
         </div>
       )}
@@ -289,6 +275,17 @@ export default function ReviewCard({
           onCancel={() => setIsOpenDeleteModal(false)}
           onConfirm={handleDelete}
           showConfirmButton={true}
+        />
+      )}
+
+      {isOpenModal && (
+        <Modal
+          isOpen={isOpenModal}
+          message={modalMessage}
+          onClose={() => {setIsOpenModal(false) 
+            window.location.reload();
+          }
+          }
         />
       )}
     </Card>
