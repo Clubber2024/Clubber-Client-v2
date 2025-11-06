@@ -107,6 +107,7 @@ export default function ReviewList({ clubId }: { clubId: number }) {
                 clubId={clubId}
                 isOwnReview={isOwnReview}
                 onReviewDeleted={handleReviewDeleted}
+             
               />
             );
           })
