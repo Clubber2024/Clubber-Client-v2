@@ -1,5 +1,4 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import ReviewStatics from './ReviewStatics';
 import { Ellipsis, ThumbsUp, Pencil, Trash2 } from 'lucide-react';
 import { postReviewLike, postReviewReport, deleteReview, deleteReviewLike } from './api/ReviewApi';
 import { useState } from 'react';
@@ -22,7 +21,7 @@ interface ReviewCardProps {
     keywords?: string[];
     likes?: number;
     liked?: boolean;
-    reportStatus?: "HIDDEN" | "VISIBLE";
+    reportStatus?: 'HIDDEN' | 'VISIBLE';
   };
   isOwnReview?: boolean;
   onReviewDeleted?: () => void;
@@ -39,22 +38,23 @@ export default function ReviewCard({
   const [isOpenReport, setIsOpenReport] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const likeCount = typeof review?.likes === 'number' ? review.likes : null;
   const [reviews, setReviews] = useState(review);
-  const [otherDetailReason, setOtherDetailReason] = useState<string|null>(null);
+  const [otherDetailReason, setOtherDetailReason] = useState<string | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
-   const handleLike = async () => {
+  const handleLike = async () => {
     console.log(clubId, reviews?.reviewId);
     if (!clubId || !reviews?.reviewId) return;
-    
+
     // 즉시 UI 업데이트
     setReviews({
       ...reviews,
       liked: true,
-      likes: (reviews?.likes || 0) + 1
+      likes: (reviews?.likes || 0) + 1,
     });
-    
+
     const res = await postReviewLike(clubId, reviews?.reviewId);
     if (res) {
       console.log(res);
@@ -63,19 +63,23 @@ export default function ReviewCard({
 
   const deleteLike = async () => {
     if (!clubId || !reviews?.reviewId) return;
-    
+
     // 즉시 UI 업데이트
     setReviews({
       ...reviews,
       liked: false,
-      likes: Math.max((reviews?.likes || 0) - 1, 0)
+      likes: Math.max((reviews?.likes || 0) - 1, 0),
     });
-    
-    const res = await deleteReviewLike(clubId, reviews?.reviewId);
+
+    try {
+      await deleteReviewLike(clubId, reviews?.reviewId);
+    } catch (error) {
+      console.error('deleteLike error:', error);
+      throw error;
+    }
   };
 
   const handleReport = async () => {
-
     if (!clubId || !review?.reviewId) return;
     const res = await postReviewReport({
       clubId,
@@ -88,7 +92,7 @@ export default function ReviewCard({
       setIsOpenReport(false);
       setReportReason('');
       setOtherDetailReason('');
-      
+
       setIsOpenModal(true);
       setModalMessage('리뷰신고가 접수되었습니다.');
     }
@@ -124,16 +128,14 @@ export default function ReviewCard({
         <CardHeader className="flex flex-row justify-between items-center">
           <div className="flex flex-row gap-1 items-center">
             <CardTitle className="text-[16px] font-bold mr-1">
-              {reviews?.reviewId? `익명${reviews?.reviewId}` : '익명'}
+              {reviews?.reviewId ? `익명${reviews?.reviewId}` : '익명'}
             </CardTitle>
-            <p className="text-[12px] font-regular text-[#9c9c9c]">
-              {reviews?.dateTime || ''}
-            </p>
-            {reviews?.likes && reviews?.likes > 0 && (
-            <span className="flex flex-row gap-0.5 items-center ml-0.5">
-            <ThumbsUp size={12} className="text-[#fd3c56]"/>
-            <p className="text-[12px] font-regular text-[#fd3c56]">{reviews?.likes}</p>
-            </span>
+            <p className="text-[12px] font-regular text-[#9c9c9c]">{review?.dateTime || ''}</p>
+            {likeCount !== null && (
+              <span className="flex flex-row gap-0.5 items-center ml-1.5 text-[#fd3c56]">
+                <ThumbsUp size={12} className="text-[#fd3c56]" />
+                <p className="text-[12px] font-regular text-[#fd3c56]">{likeCount}</p>
+              </span>
             )}
           </div>
           {isOwnReview ? (
@@ -160,19 +162,42 @@ export default function ReviewCard({
             </DropdownMenu>
           ) : (
             <div className="flex flex-row gap-2 items-center">
-              {reviews?.liked?  <span className="text-[12px] font-regular text-[#FD3C56] flex flex-row gap-1 items-center cursor-pointer" onClick={deleteLike}> <ThumbsUp size={12}/>추천 </span>: <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={handleLike}> <ThumbsUp size={12}/>추천 </span>}
-              <span className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer" onClick={() => setIsOpenReport(true)}>
-              신고
-            </span>
+              {reviews?.liked ? (
+                <span
+                  className="text-[12px] font-regular text-[#FD3C56] flex flex-row gap-1 items-center cursor-pointer"
+                  onClick={deleteLike}
+                >
+                  {' '}
+                  <ThumbsUp size={12} />
+                  추천{' '}
+                </span>
+              ) : (
+                <span
+                  className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer"
+                  onClick={handleLike}
+                >
+                  {' '}
+                  <ThumbsUp size={12} />
+                  추천{' '}
+                </span>
+              )}
+              <span
+                className="text-[12px] font-regular text-[#9c9c9c] flex flex-row gap-1 items-center cursor-pointer"
+                onClick={() => setIsOpenReport(true)}
+              >
+                신고
+              </span>
             </div>
           )}
         </CardHeader>
         <CardContent>
-
-          <p>{reviews?.content || ''}</p>
+          <p className="mb-2">{reviews?.content || ''}</p>
           <div className="flex flex-row flex-wrap gap-1">
             {reviews?.keywords?.map((keyword, index) => (
-              <p key={index} className="text-[14px] font-regular gap-3 w-fit h-[34px] bg-[#f6f6f8] rounded-[5px] px-3 py-2">
+              <p
+                key={index}
+                className="text-[14px] font-regular gap-3 w-fit h-[34px] bg-[#f6f6f8] rounded-[5px] px-3 py-2"
+              >
                 {keyword}
               </p>
             ))}
@@ -282,10 +307,10 @@ export default function ReviewCard({
         <Modal
           isOpen={isOpenModal}
           message={modalMessage}
-          onClose={() => {setIsOpenModal(false) 
+          onClose={() => {
+            setIsOpenModal(false);
             window.location.reload();
-          }
-          }
+          }}
         />
       )}
     </Card>
