@@ -16,6 +16,7 @@ import { getIsAdmin } from '@/auth/AuthService';
 import { getUserInfo } from '../features/login/api/kakaoLogin';
 import { User } from '@/types/login/kakaoLoginData';
 import { kakaoLogout, removeTokens } from '../features/login/api/kakaoLogin';
+import { useLoginStore } from '@/stores/login/useLoginStore';
 // import { adminsLogout } from '../features/login/api/login';
 
 interface AdminMeProps {
@@ -69,6 +70,7 @@ export default function Header() {
   const [isOpenToggle, setIsOpenToggle] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const logoutStore = useLoginStore((state) => state.logout);
 
   useEffect(() => {
     const token = getAccessToken();
@@ -105,6 +107,7 @@ export default function Header() {
     setAccessToken(null);
     setAdminMe(undefined);
     removeTokens();
+    logoutStore();
     setModalMessage('로그아웃 되었습니다.');
 
     window.dispatchEvent(new Event('storage'));
@@ -117,6 +120,7 @@ export default function Header() {
       setAccessToken(null);
       setUser(undefined);
       removeTokens();
+      logoutStore();
 
       setModalMessage('로그아웃 되었습니다.');
       setIsOpenModal(true);
@@ -127,6 +131,7 @@ export default function Header() {
       setAccessToken(null);
       setUser(undefined);
       removeTokens();
+      logoutStore();
       setModalMessage('로그아웃 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsOpenModal(true);
     }
