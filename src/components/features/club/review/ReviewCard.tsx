@@ -39,6 +39,7 @@ export default function ReviewCard({
   const [reportReason, setReportReason] = useState('');
   const [otherDetailReason, setOtherDetailReason] = useState('');
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const likeCount = typeof review?.likes === 'number' ? review.likes : null;
 
   const handleLike = async () => {
     if (!clubId || !review?.reviewId) return;
@@ -99,10 +100,10 @@ export default function ReviewCard({
               {review?.reviewId ? `익명${review?.reviewId}` : '익명'}
             </CardTitle>
             <p className="text-[12px] font-regular text-[#9c9c9c]">{review?.dateTime || ''}</p>
-            {review?.likes && review?.likes > 0 && (
-              <span className="flex flex-row gap-0.5 items-center ml-0.5">
+            {likeCount !== null && (
+              <span className="flex flex-row gap-0.5 items-center ml-1.5 text-[#fd3c56]">
                 <ThumbsUp size={12} className="text-[#fd3c56]" />
-                <p className="text-[12px] font-regular text-[#fd3c56]">{review?.likes}</p>
+                <p className="text-[12px] font-regular text-[#fd3c56]">{likeCount}</p>
               </span>
             )}
           </div>
