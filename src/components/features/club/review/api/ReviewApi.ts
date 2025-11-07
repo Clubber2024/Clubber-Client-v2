@@ -1,9 +1,9 @@
 import { apiClient } from '@/lib/apiClient';
 
 //리뷰 통계
-export const getReviewsSortedByCount = async (clubId: number) => {
+export const getReviewsSortedByCount = async (clubId: number,limit:number) => {
   try {
-    const res = await apiClient.get(`/v1/clubs/${clubId}/reviews/keyword-stats`);
+    const res = await apiClient.get(`/v1/clubs/${clubId}/reviews/keyword-stats?limit=${limit}`);
     if (res.data.success) {
       const reviews = res.data.data.keywordStats;
       console.log('reviews:', reviews);
@@ -53,6 +53,17 @@ export const postReviewLike = async (clubId: number, id: number) => {
     return res.data.data;
   } catch (error) {
     console.error('Error posting review like: ', error);
+    return null;
+  }
+};
+
+//리뷰 좋아요 삭제
+export const deleteReviewLike = async (clubId: number, id: number) => {
+  try {
+    const res = await apiClient.delete(`/v1/clubs/${clubId}/reviews/like/${id}`);
+    return res.data.data;
+  } catch (error) {
+    console.error('Error deleting review like: ', error);
     return null;
   }
 };

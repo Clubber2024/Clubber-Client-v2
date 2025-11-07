@@ -22,8 +22,8 @@ export default function ReviewList({ clubId }: { clubId: number }) {
 
   const sortOptions = {
     LIKE: '좋아요순',
-    LATEST: '최신순',
-    OLDEST: '오래된순',
+    ASC: '최신순',
+    DESC: '오래된순',
   };
 
   const fetchUserReviews = async () => {
@@ -41,6 +41,7 @@ export default function ReviewList({ clubId }: { clubId: number }) {
       setUserReviewIds(new Set());
     }
   };
+
 
   const fetchReviews = useCallback(async () => {
     const res = await getReviews({
@@ -79,17 +80,20 @@ export default function ReviewList({ clubId }: { clubId: number }) {
         >
           {sortOptions.LIKE}
         </p>
-        <p
-          className={`${sort === 'LATEST' ? 'text-[#202123] font-semibold' : 'text-[#707070]'} text-[14px] font-regular cursor-pointer hover:text-[#202123]/80 transition-all duration-300 hover:font-semibold`}
-          onClick={() => setSort('LATEST')}
+
+        <p 
+          className={`${sort==='ASC'?'text-[#202123] font-semibold':'text-[#707070]'} text-[14px] font-regular cursor-pointer hover:text-[#202123]/80 transition-all duration-300 hover:font-semibold`} 
+          onClick={() => setSort('ASC')}
         >
-          {sortOptions.LATEST}
+          {sortOptions.ASC}
         </p>
-        <p
-          className={`${sort === 'OLDEST' ? 'text-[#202123] font-semibold' : 'text-[#707070]'} text-[14px] font-regular cursor-pointer hover:text-[#202123]/80 transition-all duration-300 hover:font-semibold`}
-          onClick={() => setSort('OLDEST')}
+
+        <p 
+          className={`${sort==='DESC'?'text-[#202123] font-semibold':'text-[#707070]'} text-[14px] font-regular cursor-pointer hover:text-[#202123]/80 transition-all duration-300 hover:font-semibold`} 
+          onClick={() => setSort('DESC')}
+
         >
-          {sortOptions.OLDEST}
+          {sortOptions.DESC}
         </p>
       </div>
       <div className="flex flex-col gap-4 mt-4">
@@ -103,6 +107,7 @@ export default function ReviewList({ clubId }: { clubId: number }) {
                 clubId={clubId}
                 isOwnReview={isOwnReview}
                 onReviewDeleted={handleReviewDeleted}
+             
               />
             );
           })
