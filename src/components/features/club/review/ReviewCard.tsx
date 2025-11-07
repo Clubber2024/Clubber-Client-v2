@@ -191,7 +191,7 @@ export default function ReviewCard({
           )}
         </CardHeader>
         <CardContent>
-          <p>{reviews?.content || ''}</p>
+          <p className="mb-2">{reviews?.content || ''}</p>
           <div className="flex flex-row flex-wrap gap-1">
             {reviews?.keywords?.map((keyword, index) => (
               <p
