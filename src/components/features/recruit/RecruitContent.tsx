@@ -56,6 +56,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
   const [isAdmin, setIsAdminState] = useState(false);
   const [isCenter, setIsCenter] = useState(false);
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [isImgModalOpen, setIsImgModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -111,17 +112,23 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
         setModalMessage('로그인 후 이용해주세요.');
         return;
       }
-
-      if (!club?.clubId) return;
+      if (!content?.clubId) return;
 
       if (isStarred) {
-        // 즐겨찾기 삭제
-        await deleteFavorite(club.clubId, 0); // favoriteId는 실제로는 API에서 받아와야 함
+        // 즐겨찾기 삭제 - favoriteId를 먼저 조회해서 사용
+        const favoriteStatus = await getFavoriteStatus(content.clubId);
+        if (favoriteStatus.favoriteId) {
+          await deleteFavorite(content.clubId, favoriteStatus.favoriteId);
+        }
         setIsStarred(false);
+        setIsModalOpen(true);
+        setModalMessage('즐겨찾기에서 삭제되었습니다.');
       } else {
         // 즐겨찾기 추가
-        await addFavorite(club.clubId);
+        await addFavorite(content.clubId);
         setIsStarred(true);
+        setIsModalOpen(true);
+        setModalMessage('즐겨찾기에 추가되었습니다.');
       }
     } catch (error) {
       console.error('즐겨찾기 처리 실패:', error);
@@ -389,6 +396,7 @@ export default function RecruitContent({ recruitId }: RecruitContentComponentPro
       )}
       
       {isOpenLoginModal&&(<Modal isOpen={isOpenLoginModal} message={modalMessage} confirmText='로그인 하러가기' cancelText='취소' onConfirm={() => router.push('/login')} onCancel={() => setIsOpenLoginModal(false)} showConfirmButton={true}/>)}
+      {isModalOpen&&(<Modal isOpen={isModalOpen} message={modalMessage} onClose={() => setIsModalOpen(false)} showConfirmButton={false}/>)}
       </div>
   );
 }

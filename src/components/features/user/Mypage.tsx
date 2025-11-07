@@ -1,24 +1,15 @@
 'use client';
 
-import Modal from '@/app/modal/Modal';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 export default function Mypage() {
   const router = useRouter();
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-
-  useEffect(() => {
-    // 비회원이 /mypage 진입하는 경우, 로그인이 필요한 서비스임을 알리는 모달창 띄워주기
-  }, []);
 
   const onClickReview = () => {
-      setIsOpenModal(true);
-      setModalMessage('이 기능은 지금 열심히 준비 중이에요. Coming soon!');
-  }
+    router.push('/mypage/reviews');
+  };
 
   return (
     <>
@@ -37,27 +28,20 @@ export default function Mypage() {
               className="w-[135px] h-[135px]  z-10 absolute top-25"
             />
             <Card className="w-[380px] h-[450px] z-1 mt-[50px] flex items-center pt-20">
-            <Button
+              <Button
                 variant={'outline'}
                 className="w-[210px] h-[40px]"
                 onClick={() => router.push('/bookmark')}
               >
                 나의 즐겨찾기
               </Button>
-              <Button
-                variant={'outline'}
-                className="w-[210px] h-[40px]"
-                onClick={onClickReview}
-              >
+              <Button variant={'outline'} className="w-[210px] h-[40px]" onClick={onClickReview}>
                 내가 쓴 리뷰
               </Button>
-
-             
             </Card>
           </div>
         </div>
       </div>
-      {isOpenModal&&(<Modal isOpen={isOpenModal} message={modalMessage} onClose={()=>setIsOpenModal(false)}/>)}
     </>
   );
 }

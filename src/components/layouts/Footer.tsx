@@ -87,6 +87,7 @@ export default function Footer() {
         window.location.href = '/';
       }, 2000);
     } catch (error) {
+      console.error('회원탈퇴 오류:', error);
       setModalMessage('회원탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsModalOpen(true);
     } finally {
@@ -104,7 +105,7 @@ export default function Footer() {
 
   // 회원탈퇴 버튼이 클릭 가능한지 확인
   const canWithdraw = isAdmin || isUser;
-  
+
   return (
     <>
       <footer className="w-screen h-[90px] md:h-[52px] bg-white border-t text-sm font-normal border-[#808080] mt-10 md:mt-30 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
