@@ -6,16 +6,11 @@ export const getReviewsSortedByCount = async (clubId: number,limit:number) => {
     const res = await apiClient.get(`/v1/clubs/${clubId}/reviews/keyword-stats?limit=${limit}`);
     if (res.data.success) {
       const reviews = res.data.data.keywordStats;
-      console.log('reviews:', reviews);
-
       const sortedReviews = Object.entries(reviews)
         .sort(([, countA], [, countB]) => (countB as number) - (countA as number)) // value 값 내림차순
         .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}); // Convert back to object
-      console.log('sorted:', sortedReviews);
-
       return sortedReviews;
     } else {
-      console.error('Failed to fetch reviews');
       return null;
     }
   } catch (error) {
@@ -28,7 +23,6 @@ interface ReviewRequest {
   clubId: number;
   page: number;
   size: number;
-  // sort: string;
   reviewSortType: string;
 }
 
@@ -38,7 +32,6 @@ export const getReviews = async ({ clubId, page, size, reviewSortType }: ReviewR
     const res = await apiClient.get(
       `/v1/clubs/${clubId}/reviews?page=${page}&size=${size}&sort=string&reviewSortType=${reviewSortType}`
     );
-    console.log('res:', res.data.data);
     return res.data.data;
   } catch (error) {
     console.error('Error fetching reviews: ', error);
@@ -53,7 +46,7 @@ export const postReviewLike = async (clubId: number, id: number) => {
     return res.data.data;
   } catch (error) {
     console.error('Error posting review like: ', error);
-    return null;
+    return false;
   }
 };
 
@@ -64,7 +57,7 @@ export const deleteReviewLike = async (clubId: number, id: number) => {
     return res.data.data;
   } catch (error) {
     console.error('Error deleting review like: ', error);
-    return null;
+    throw error;
   }
 };
 
