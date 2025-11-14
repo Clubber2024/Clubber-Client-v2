@@ -38,16 +38,15 @@ export default function ReviewCard({
   const [isOpenReport, setIsOpenReport] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  const likeCount = typeof review?.likes === 'number' ? review.likes : null;
+  // const likeCount = typeof review?.likes === 'number' ? review.likes : null;
   const [reviews, setReviews] = useState(review);
   const [otherDetailReason, setOtherDetailReason] = useState<string | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [isOpenLikeModal, setIsOpenLikeModal] = useState(false);
 
   const handleLike = async () => {
-    console.log(clubId, reviews?.reviewId);
     if (!clubId || !reviews?.reviewId) return;
-
     // 즉시 UI 업데이트
     setReviews({
       ...reviews,
@@ -55,29 +54,43 @@ export default function ReviewCard({
       likes: (reviews?.likes || 0) + 1,
     });
 
-    const res = await postReviewLike(clubId, reviews?.reviewId);
-    if (res) {
-      console.log(res);
+    try{
+      await postReviewLike(clubId, reviews?.reviewId);
+    } catch (error) {
+      setIsOpenLikeModal(true);
+      setModalMessage('좋아요 기능이 제한된 리뷰입니다.');
+      setReviews({
+        ...reviews,
+        liked: true,
+        likes: Math.max((reviews?.likes || 0) , 0)
+      });
     }
+    
   };
 
   const deleteLike = async () => {
     if (!clubId || !reviews?.reviewId) return;
-
-    // 즉시 UI 업데이트
+    //즉시 상태 없데이트트
     setReviews({
       ...reviews,
       liked: false,
       likes: Math.max((reviews?.likes || 0) - 1, 0),
     });
-
-    try {
-      await deleteReviewLike(clubId, reviews?.reviewId);
-    } catch (error) {
-      console.error('deleteLike error:', error);
-      throw error;
-    }
+    
+ try{
+  await deleteReviewLike(clubId, reviews?.reviewId);
+ } catch (error) {
+  setIsOpenLikeModal(true);
+  setModalMessage('좋아요 기능이 제한된 리뷰입니다.');
+ setReviews({
+  ...reviews,
+  liked: true,
+  likes: Math.max((reviews?.likes || 0) , 0)
+ });
+ }
+      
   };
+
 
   const handleReport = async () => {
     if (!clubId || !review?.reviewId) return;
@@ -131,10 +144,10 @@ export default function ReviewCard({
               {reviews?.reviewId ? `익명${reviews?.reviewId}` : '익명'}
             </CardTitle>
             <p className="text-[12px] font-regular text-[#9c9c9c]">{review?.dateTime || ''}</p>
-            {likeCount !== null && (
+            {reviews?.likes !== null && (
               <span className="flex flex-row gap-0.5 items-center ml-1.5 text-[#fd3c56]">
                 <ThumbsUp size={12} className="text-[#fd3c56]" />
-                <p className="text-[12px] font-regular text-[#fd3c56]">{likeCount}</p>
+                <p className="text-[12px] font-regular text-[#fd3c56]">{reviews?.likes}</p>
               </span>
             )}
           </div>
@@ -310,6 +323,17 @@ export default function ReviewCard({
           onClose={() => {
             setIsOpenModal(false);
             window.location.reload();
+          }}
+        />
+      )}
+
+{isOpenLikeModal && (
+        <Modal
+          isOpen={isOpenLikeModal}
+          message={modalMessage}
+          onClose={() => {
+            setIsOpenLikeModal(false);
+            
           }}
         />
       )}
