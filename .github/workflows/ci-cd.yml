@@ -1,86 +1,86 @@
-name: CI-CD
+# name: CI-CD
 
-on:
-  push:
-    branches: ['main', 'dev']
+# on:
+#   push:
+#     branches: ['main', 'dev']
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.x]
+#     strategy:
+#       matrix:
+#         node-version: [20.x]
 
-    steps:
-      - uses: actions/checkout@v3
+#     steps:
+#       - uses: actions/checkout@v3
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
+#       - name: Use Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
-        run: npm install
+#       - name: Install dependencies
+#         run: npm install
 
-      - name: Build Next.js project
-        run: npm run build --verbose
+#       - name: Build Next.js project
+#         run: npm run build --verbose
 
-      - name: Set environment variables for main branch
-        if: github.ref == 'refs/heads/main'
-        run: echo "${{ secrets.PROD_ENV }}" > .env
+#       - name: Set environment variables for main branch
+#         if: github.ref == 'refs/heads/main'
+#         run: echo "${{ secrets.PROD_ENV }}" > .env
 
-      - name: Set environment variables for dev branch
-        if: github.ref == 'refs/heads/dev'
-        run: echo "${{ secrets.DEV_ENV }}" > .env
+#       - name: Set environment variables for dev branch
+#         if: github.ref == 'refs/heads/dev'
+#         run: echo "${{ secrets.DEV_ENV }}" > .env
 
-      - name: Docker login
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+#       - name: Docker login
+#         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image for main
-        if: github.ref == 'refs/heads/main'
-        run: docker build -t ${{ secrets.DOCKER_REPO }}/clubber-front-prod .
+#       - name: Build Docker image for main
+#         if: github.ref == 'refs/heads/main'
+#         run: docker build -t ${{ secrets.DOCKER_REPO }}/clubber-front-prod .
 
-      - name: Build Docker image for dev
-        if: github.ref == 'refs/heads/dev'
-        run: docker build -t ${{ secrets.DOCKER_REPO }}/clubber-front-dev .
+#       - name: Build Docker image for dev
+#         if: github.ref == 'refs/heads/dev'
+#         run: docker build -t ${{ secrets.DOCKER_REPO }}/clubber-front-dev .
 
-      - name: Push Docker image for main
-        if: github.ref == 'refs/heads/main'
-        run: docker push ${{ secrets.DOCKER_REPO }}/clubber-front-prod
+#       - name: Push Docker image for main
+#         if: github.ref == 'refs/heads/main'
+#         run: docker push ${{ secrets.DOCKER_REPO }}/clubber-front-prod
 
-      - name: Push Docker image for dev
-        if: github.ref == 'refs/heads/dev'
-        run: docker push ${{ secrets.DOCKER_REPO }}/clubber-front-dev
+#       - name: Push Docker image for dev
+#         if: github.ref == 'refs/heads/dev'
+#         run: docker push ${{ secrets.DOCKER_REPO }}/clubber-front-dev
 
-      - name: Deploy to dev server
-        if: github.ref == 'refs/heads/dev'
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST_DEV }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY_DEV }}
-          port: ${{ secrets.SSH_PORT }}
-          debug: true
-          timeout: 60s
-          script: |
-            sudo docker rm -f $(docker ps -qa) || true
-            sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-dev
-            sudo docker-compose -f docker-compose-dev.yml up -d
-            docker image prune -f
+#       - name: Deploy to dev server
+#         if: github.ref == 'refs/heads/dev'
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.HOST_DEV }}
+#           username: ${{ secrets.SSH_USERNAME }}
+#           key: ${{ secrets.SSH_KEY_DEV }}
+#           port: ${{ secrets.SSH_PORT }}
+#           debug: true
+#           timeout: 60s
+#           script: |
+#             sudo docker rm -f $(docker ps -qa) || true
+#             sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-dev
+#             sudo docker-compose -f docker-compose-dev.yml up -d
+#             docker image prune -f
 
-      - name: Deploy to main server
-        if: github.ref == 'refs/heads/main'
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST_PROD }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY_PROD }}
-          port: ${{ secrets.SSH_PORT }}
-          debug: true
-          timeout: 60s
-          script: |
-            sudo docker rm -f $(docker ps -qa) || true
-            sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-prod
-            sudo docker-compose -f docker-compose-prod.yml up -d
-            docker image prune -f
+#       - name: Deploy to main server
+#         if: github.ref == 'refs/heads/main'
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.HOST_PROD }}
+#           username: ${{ secrets.SSH_USERNAME }}
+#           key: ${{ secrets.SSH_KEY_PROD }}
+#           port: ${{ secrets.SSH_PORT }}
+#           debug: true
+#           timeout: 60s
+#           script: |
+#             sudo docker rm -f $(docker ps -qa) || true
+#             sudo docker pull ${{ secrets.DOCKER_REPO }}/clubber-front-prod
+#             sudo docker-compose -f docker-compose-prod.yml up -d
+#             docker image prune -f
